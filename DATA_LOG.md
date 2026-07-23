@@ -1,6 +1,8 @@
 # WDS Final Project — Data Log & Codebook
 
-**Research question:** What factors explain the difference in homelessness rates between California and Florida?
+**Research question:** What factors explain the divergence in homelessness rates between California and Florida from 2010 through 2025?
+
+**Current stage:** Preliminary EDA. The broad directional trends are expected to remain similar as the data are refined, but exact values and estimated relationships may change. Current charts identify candidate explanations and do not establish causal effects.
 
 **Unit of analysis:** State × Year (California and Florida only), 2010–2025.
 **Master merge key:** `state` + `year`. Everyone's factor columns join onto this.
@@ -137,3 +139,4 @@ Run `python3 scripts/build_policy.py` from the `Final Project/` folder (requires
 - **2026-07-21** — Neev — Added factor 36 (`state_homeless_funding_per_capita` + raw `state_homeless_funding_musd`) in `data/raw/state_homeless_funding_manual.csv`. CA ~$0→$73/capita peak (2021)→$2.7 (2025); FL <$1 until ~$4/capita (2024-25). **Flagged as lowest-confidence factor** (methodology §9): scope choice swings values 4–5×, and CA 2014-17 + all FL 2010-22 are order-of-magnitude estimates. **All 7 policy factors (30–36) now complete.**
 - **2026-07-21** — Neev — Received the full team-merged dataset `data/DSA Group 10.xlsx` (32 rows × 38 vars, all sectors). Superseded `combined_data.xlsx` → renamed `combined_data_OLD.xlsx`. NOTE: merged file's first column is an unnamed "California 2010" label (needs splitting into state+year); two trailing empty columns; **Housing sector (rent/home price/vacancy/etc.) is not in the file**; substance-use-rate column looks like placeholder data — flag during sanity checks.
 - **2026-07-22** — Neev — Step 4 (multicollinearity): added `scripts/step4_multicollinearity.R` (readxl + corrplot + caret) → `outputs/step4_corr_heatmap.png` and `outputs/step4_high_corr_pairs.csv`. FINDING: multicollinearity is pervasive — **150 of 465 pairs (32%) have |r| ≥ 0.8**; caret would drop 23 of 31 variables. Expected given n=32 and the strong CA-vs-FL split (most variables just separate the two states). Do NOT blindly drop by the automatic rule; pick one representative per concept cluster before LASSO.
+- **2026-07-23** — Chart/EDA update — Restated the project goal as explaining the post-2010 California–Florida divergence in homelessness rates. Selected six main preliminary EDA charts covering the outcome divergence, affordability, rental vacancy, housing stock, permitted supply, and bed capacity. Ordered guide: `charts/KEY_CHARTS.md`; reproducible list: `charts/key_chart_manifest.csv`.
