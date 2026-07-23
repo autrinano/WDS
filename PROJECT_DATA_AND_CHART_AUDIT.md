@@ -1,5 +1,11 @@
 # Team data and chart audit
 
+## Goal of the study
+
+The study seeks to explain why homelessness rates diverged between California and Florida from 2010 through 2025. The working mechanisms are differences in housing affordability, rental-market tightness, housing stock and new supply, economic conditions, policy, and homelessness-service capacity.
+
+This is preliminary EDA. It establishes the divergence and identifies candidate explanations for later time-aware modeling. The broad directional patterns are expected to remain stable as the data are refined, but exact values and associations may change. None of the preliminary charts establishes causation.
+
 ## Scope
 
 This audit covers the California–Florida state-year panel for 2010–2025, the integrated team spreadsheet, and the project chart suite. The unit of observation is one state-year, giving 32 rows. The current team dataset has 63 variables: 43 original or standardized fields, 4 integrated housing fields not present in the original sheet, and 16 added analysis variables. The all-missing `foreclosure_rate` field is retained so the requested metric and its unresolved coverage gap remain explicit.
@@ -147,6 +153,19 @@ The original chart archive and duplicate root-level PNG files were removed after
 The new charts use rates or normalized measures when state size matters, retain time on the horizontal axis when it is analytically important, show the 2021 disruption, avoid treating the disrupted count as continuous evidence, and limit correlation analysis to a selected set after removing state means. Scatterplots facet California and Florida, encode year by color, exclude 2021, show the usable observation count, and omit fitted regression lines. All relationship charts remain descriptive and should not be described as causal effects.
 
 Scatterplots exclude the target itself, raw homelessness totals and components, the change version of the homelessness outcome, the PIT warning flag, ratios with homelessness in the denominator, the temporary plotting copy of the target, and the all-missing foreclosure field. Exact exclusions and reasons are stored in `charts/scatterplot_exclusions.csv`.
+
+## Six key preliminary EDA charts
+
+The recommended main narrative uses:
+
+1. homelessness rate over time, to establish the divergence being explained;
+2. home-price-to-income ratio, to compare affordability pressure;
+3. rental vacancy rate, to compare rental-market tightness;
+4. housing units per 1,000 residents, to compare housing-stock availability;
+5. permits per 1,000 housing units, to compare the flow of newly authorized supply; and
+6. homelessness and bed capacity per 10,000 residents, to compare service-system capacity alongside the outcome.
+
+The ordered paths, variables, and design reasons are stored in `charts/key_chart_manifest.csv`. `charts/KEY_CHARTS.md` provides a presentation-ready guide and preliminary interpretation boundaries.
 
 ## Reproducible build order
 

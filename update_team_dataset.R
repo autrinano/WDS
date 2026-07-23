@@ -27,9 +27,10 @@ backup_file <- file.path(project_dir, "raw_data", "DSA_Group_10_Sheet1_original.
 housing_file <- file.path(project_dir, "housing_metrics_CA_FL_2010_2025.csv")
 cpi_file <- file.path(project_dir, "raw_data", "fred_CPIAUCSL.csv")
 
-stopifnot(file.exists(team_file), file.exists(housing_file), file.exists(cpi_file))
+stopifnot(file.exists(housing_file), file.exists(cpi_file))
 
 if (!file.exists(backup_file)) {
+  stopifnot(file.exists(team_file))
   file.copy(team_file, backup_file, overwrite = FALSE)
 }
 

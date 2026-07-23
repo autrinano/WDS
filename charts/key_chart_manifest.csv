@@ -1,0 +1,7 @@
+display_order,category,title,variables,path,design_reason
+1,Outcomes,Homelessness rate over time,homeless_rate_per_10k,charts/01_outcomes/homelessness_rate_over_time.png,Preserves time ordering and explicitly flags the 2021 measurement disruption.
+2,Housing,Home price-to-income ratio,home_price_to_income_ratio,charts/02_housing/home_price_to_income_ratio.png,Combines price and income into an interpretable affordability measure.
+3,Housing,Rental vacancy rate,rental_vacancy_rate,charts/02_housing/rental_vacancy_rate.png,Direct time comparison of a central housing-market tightness measure.
+4,Housing,"Housing units per 1,000 residents",housing_units_per_capita,charts/02_housing/housing_units_per_1000_residents.png,Rescales the complete per-capita series to an intuitive denominator.
+5,Housing,"Permits per 1,000 housing units",permits_per_1000_housing_units,charts/02_housing/permits_per_1000_housing_units.png,Normalizes permits for the very different size of the two housing stocks.
+6,Economy and services,Homelessness and bed capacity,homeless_rate_per_10k; total_beds_per_10k,charts/03_economy_and_services/homelessness_and_bed_capacity.png,Uses a common population denominator and separates states into readable panels.

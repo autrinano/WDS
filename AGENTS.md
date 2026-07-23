@@ -2,7 +2,9 @@
 
 ## Project overview
 
-This folder supports a final project comparing housing-market factors associated with homelessness in California and Florida from 2010 through 2025. The analysis is intended to examine whether housing costs, market tightness, housing supply, tenure, evictions, and related conditions help explain differences in homelessness between the two states.
+The goal of the study is to explain why homelessness rates diverged between California and Florida from 2010 through 2025. The analysis examines whether differences in housing affordability, rental-market tightness, housing stock and new supply, economic conditions, policy, and homelessness-service capacity are associated with the different state trajectories.
+
+The current work is preliminary exploratory data analysis. Its purpose is to establish the outcome divergence and identify plausible explanatory patterns for later modeling, not to make causal claims. The broad directional trends are expected to remain the same as sources and variables are refined, although exact values, sample sizes, and estimated relationships may change.
 
 The unit of observation is one state-year. The processed panel contains 32 rows: California and Florida for each year from 2010 through 2025. `state_year` is the merge key used to align these housing variables with the team's homelessness, policy, funding, and demographic data.
 
@@ -20,6 +22,8 @@ The unit of observation is one state-year. The processed panel contains 32 rows:
 - `charts/chart_manifest.csv`: authoritative list of current chart files.
 - `charts/scatterplot_inventory.csv`: variables included in the factor scatterplots and their usable sample sizes.
 - `charts/scatterplot_exclusions.csv`: variables excluded from factor scatterplots and the reason for each exclusion.
+- `charts/KEY_CHARTS.md`: goal-aligned guide to the six charts recommended for the preliminary EDA narrative.
+- `charts/key_chart_manifest.csv`: reproducible ordered list of those six charts.
 - `housing_metrics_CA_FL_2010_2025.xlsx`: formatted Excel deliverable with the panel, metric guide, missingness summary, and raw-file index.
 - `housing_metrics_CA_FL_2010_2025.csv`: machine-readable version of the processed panel.
 - `build_housing_metrics.R`: reproducible R pipeline that downloads, cleans, combines, validates, and exports the housing data.

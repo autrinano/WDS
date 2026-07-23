@@ -1095,6 +1095,26 @@ write_csv(
   scatterplot_exclusions,
   file.path(output_root, "scatterplot_exclusions.csv")
 )
+
+key_chart_paths <- c(
+  "charts/01_outcomes/homelessness_rate_over_time.png",
+  "charts/02_housing/home_price_to_income_ratio.png",
+  "charts/02_housing/rental_vacancy_rate.png",
+  "charts/02_housing/housing_units_per_1000_residents.png",
+  "charts/02_housing/permits_per_1000_housing_units.png",
+  "charts/03_economy_and_services/homelessness_and_bed_capacity.png"
+)
+key_chart_manifest <- manifest |>
+  filter(path %in% key_chart_paths) |>
+  mutate(display_order = match(path, key_chart_paths)) |>
+  arrange(display_order) |>
+  select(display_order, everything())
+stopifnot(nrow(key_chart_manifest) == 6)
+write_csv(
+  key_chart_manifest,
+  file.path(output_root, "key_chart_manifest.csv")
+)
+
 write_csv(manifest, file.path(output_root, "chart_manifest.csv"))
 
 cat(
