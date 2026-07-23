@@ -1,0 +1,12 @@
+variable,reason
+year,Time is already shown directly in the time-series charts.
+homeless_rate_per_10k,This is the scatterplot outcome.
+homeless_rate_for_plot,"Temporary plotting copy of the outcome, not a dataset variable."
+total_homeless,Raw total is mechanically and population-related to the rate outcome.
+sheltered_homeless,Component of the total homelessness count.
+unsheltered_homeless,Component of the total homelessness count.
+homeless_rate_change_per_10k,Alternate homelessness outcome derived from the target.
+pit_count_caution_flag,Data-quality flag rather than a substantive factor.
+beds_per_100_homeless,Contains homelessness rate in its denominator.
+funding_per_homeless_person,Contains total homelessness in its denominator.
+foreclosure_rate,All 32 values are missing.

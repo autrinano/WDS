@@ -1,0 +1,52 @@
+variable,category,definition,source_status,available_non2021_rows
+shelter_beds_per_10k,Service capacity and funding,"Shelter beds per 10,000 residents.",source verification needed,30
+psh_beds_per_10k,Service capacity and funding,"Permanent supportive housing beds per 10,000 residents.",source verification needed,30
+state_homeless_funding_musd,Service capacity and funding,"Recorded state homelessness funding, millions of nominal dollars.",source verification needed,30
+state_homeless_funding_per_capita,Service capacity and funding,Recorded state homelessness funding per resident.,source verification needed,30
+anticamping_strictness,Policy and safety net,Anticamping Strictness,source verification needed,30
+medicaid_expansion,Policy and safety net,Medicaid Expansion,source verification needed,30
+tanf_max_benefit_3person,Policy and safety net,Tanf Max Benefit 3person,source verification needed,30
+ssi_state_supplement,Policy and safety net,Ssi State Supplement,source verification needed,30
+minimum_wage,Policy and safety net,Minimum Wage,source verification needed,30
+personal_income_per_capita,Economy,Personal Income per Capita,source verification needed,30
+median_household_income,Economy,Median Household Income,source verification needed,28
+poverty_rate,Economy,Poverty Rate,source verification needed,28
+labor_force_participation,Economy,Labor Force Participation,source verification needed,30
+unemployment_rate,Economy,Unemployment Rate,source verification needed,30
+substance_use_disorder_rate,Health and social conditions,Substance Use Disorder Rate,source verification needed,30
+serious_mental_illness_rate,Health and social conditions,Serious Mental Illness Rate,source verification needed,30
+uninsured_rate,Health and social conditions,Uninsured Rate,source verification needed,30
+high_school_graduation_rate,Education,High School Graduation Rate,source verification needed,30
+average_student_debt_per_borrower,Education,Average Student Debt per Borrower,source verification needed,30
+avg_in_state_tuition,Education,Avg in State Tuition,source verification needed,30
+state_population,Demographics,State Population,source verification needed,30
+population_density,Demographics,State population per square mile of Census land area.,derivation documented; verify component sources,30
+population_growth_rate_pct,Demographics,"Year-over-year population growth within state, percent.",derivation documented; verify component sources,28
+pct_age_18_24,Demographics,Pct Age 18 24,source verification needed,26
+pct_age_65plus,Demographics,Pct Age 65plus,source verification needed,26
+avg_household_size,Demographics,Avg Household Size,source verification needed,26
+avg_temp_f,Climate,Avg Temp f,source verification needed,30
+precip_in,Climate,Precip in,source verification needed,30
+cooling_degree_days,Climate,Cooling Degree Days,source verification needed,30
+median_rent,Housing cost and supply,"Median gross rent, nominal dollars per month.",documented,28
+median_home_price,Housing cost and supply,Annual median of Zillow monthly state median sale price.,documented,30
+rent_as_pct_income,Housing cost and supply,Median gross rent as a percentage of household income.,documented,10
+rent_burden_share,Housing instability,Share of renter households meeting the Eviction Lab rent-burden definition.,documented,18
+rental_vacancy_rate,Housing cost and supply,"Annual rental vacancy rate, percent.",documented,30
+homeownership_rate,Housing cost and supply,"Annual homeownership rate, percent.",documented,30
+housing_units_per_capita,Housing cost and supply,Estimated housing units divided by resident population.,documented,30
+new_housing_permits,Housing cost and supply,Private housing units authorized by building permits.,documented,30
+housing_supply_growth_rate,Housing cost and supply,Within-vintage annual percent change in housing units.,documented,26
+eviction_filing_rate,Housing instability,Modeled eviction filings per 100 renter homes.,documented,18
+cpi_u,Economy,Annual average U.S. CPI-U index.,documented,30
+unsheltered_share_pct,Homelessness outcome,"Unsheltered count divided by total homelessness count, percent; 2021 is suppressed.",derivation documented; verify component sources,30
+total_beds_per_10k,Service capacity and funding,"Shelter plus PSH beds per 10,000 residents.",derivation documented; verify component sources,30
+estimated_housing_units,Housing cost and supply,Housing units per capita multiplied by state population.,derivation documented; verify component sources,30
+permits_per_1000_housing_units,Housing cost and supply,"Authorized housing units per 1,000 estimated housing units.",derivation documented; verify component sources,30
+home_price_to_income_ratio,Housing affordability,Median sale price divided by median household income.,derivation documented; verify component sources,28
+real_median_rent_2025_usd,Housing affordability,Median rent expressed in constant 2025 dollars.,documented,28
+real_median_home_price_2025_usd,Housing affordability,Median home sale price expressed in constant 2025 dollars.,documented,30
+real_personal_income_per_capita_2025_usd,Economy,Personal income per capita in constant 2025 dollars.,derivation documented; verify component sources,30
+real_median_household_income_2025_usd,Economy,Median household income in constant 2025 dollars.,derivation documented; verify component sources,28
+real_minimum_wage_2025_usd,Policy and safety net,State minimum wage in constant 2025 dollars.,derivation documented; verify component sources,30
+real_home_price_growth_pct,Housing affordability,Year-over-year growth in inflation-adjusted median home price.,documented,28

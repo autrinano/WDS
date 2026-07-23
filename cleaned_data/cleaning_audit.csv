@@ -1,0 +1,64 @@
+variable,type,available_rows,missing_rows,unique_nonmissing,minimum,maximum,treatment
+foreclosure_rate,logical,0,32,0,,,Drop from analysis; all values unavailable.
+rent_as_pct_income,numeric,12,20,9,32.2,35.2,Use ACS B25071 only; do not combine with renter burden share.
+eviction_filing_rate,numeric,18,14,18,2.18,5.77,Use only in the 2010-2018 eviction panel; no imputation.
+rent_burden_share,numeric,18,14,6,40.32,45.13,Use Eviction Lab 2010-2018 panel only; do not combine with B25071.
+homeless_rate_change_per_10k,numeric,26,6,26,-4.1,5.4,"Keep 2010, 2021, and 2022 missing by design."
+avg_household_size,numeric,28,4,15,2.47,2.98,Preserve observed values; verify source and use complete cases as needed.
+housing_supply_growth_rate,numeric,28,4,28,0.286200264588499,1.99080977983328,Keep 2010 and 2020 missing by design; use a dedicated panel.
+pct_age_18_24,numeric,28,4,19,7.9,10.6,Preserve observed values; verify source and use complete cases as needed.
+pct_age_65plus,numeric,28,4,28,11.4,21.8,Preserve observed values; verify source and use complete cases as needed.
+beds_per_100_homeless,numeric,30,2,30,58.4119187950229,137.599309153713,Keep 2021 suppressed because the PIT denominator is disrupted.
+funding_per_homeless_person,numeric,30,2,27,0,16207.9278922114,Keep 2021 suppressed because the PIT denominator is disrupted.
+home_price_to_income_ratio,numeric,30,2,30,2.54926845488805,7.96763912723707,Preserve observed values; verify source and use complete cases as needed.
+median_household_income,numeric,30,2,30,44070,100600,Preserve observed values; verify source and use complete cases as needed.
+median_rent,numeric,30,2,16,957,2036,Observed through 2024; exclude 2025 in rent-specific analysis.
+population_growth_rate_pct,numeric,30,2,30,-0.948398150486862,2.64367350778034,Keep first year missing because no prior panel year is available.
+poverty_rate,numeric,30,2,24,11.5,17.2,Preserve observed values; verify source and use complete cases as needed.
+real_home_price_growth_pct,numeric,30,2,30,-8.73403988371788,28.3365663727103,Keep first year missing because no prior panel year is available.
+real_median_household_income_2025_usd,numeric,30,2,30,62756.1518511904,103250.103112532,Preserve observed values; verify source and use complete cases as needed.
+real_median_rent_2025_usd,numeric,30,2,30,1361.19599500464,2089.63429360949,Observed through 2024; exclude 2025 in rent-specific analysis.
+unsheltered_share_pct,numeric,30,2,30,43.1614566548501,71.6773093245548,Keep 2021 suppressed because the PIT denominator is disrupted.
+anticamping_strictness,numeric,32,0,3,0,3,Preserve observed values; verify source and use complete cases as needed.
+average_student_debt_per_borrower,numeric,32,0,23,18500,29500,Preserve observed values; verify source and use complete cases as needed.
+avg_in_state_tuition,numeric,32,0,32,4200,12500,Preserve observed values; verify source and use complete cases as needed.
+avg_temp_f,numeric,32,0,26,57.5,73.5,Preserve observed values; verify source and use complete cases as needed.
+cooling_degree_days,numeric,32,0,32,703,4122,Preserve observed values; verify source and use complete cases as needed.
+cpi_u,numeric,32,0,16,218.076166666667,321.961909090909,Preserve observed values; verify source and use complete cases as needed.
+estimated_housing_units,numeric,32,0,32,8995389.24782563,14995410,Preserve observed values; verify source and use complete cases as needed.
+high_school_graduation_rate,numeric,32,0,26,71,89.7,Preserve observed values; verify source and use complete cases as needed.
+homeless_rate_per_10k,numeric,32,0,31,9.67,47.53,Preserve observed values; verify source and use complete cases as needed.
+homeownership_rate,numeric,32,0,26,53.8,69.3,Preserve observed values; verify source and use complete cases as needed.
+housing_units_per_capita,numeric,32,0,32,0.359360651337959,0.477306642946815,Preserve observed values; verify source and use complete cases as needed.
+labor_force_participation,numeric,32,0,30,57.53,64.17,Preserve observed values; verify source and use complete cases as needed.
+median_home_price,numeric,32,0,32,114997.5,731667,Preserve observed values; verify source and use complete cases as needed.
+medicaid_expansion,numeric,32,0,2,0,1,Preserve observed values; verify source and use complete cases as needed.
+minimum_wage,numeric,32,0,20,7.25,16.5,Preserve observed values; verify source and use complete cases as needed.
+new_housing_permits,numeric,32,0,32,38736,209219,Preserve observed values; verify source and use complete cases as needed.
+permits_per_1000_housing_units,numeric,32,0,32,3.15907948552928,20.8150418198096,Preserve observed values; verify source and use complete cases as needed.
+personal_income_per_capita,numeric,32,0,32,38779,91116,Preserve observed values; verify source and use complete cases as needed.
+pit_count_caution_flag,numeric,32,0,2,0,1,Preserve observed values; verify source and use complete cases as needed.
+population_density,numeric,32,0,32,239.445334747267,437.30790385552,Preserve observed values; verify source and use complete cases as needed.
+precip_in,numeric,32,0,32,7.28,61.54,Preserve observed values; verify source and use complete cases as needed.
+psh_beds_per_10k,numeric,32,0,32,5.443,21.758,Preserve observed values; verify source and use complete cases as needed.
+real_median_home_price_2025_usd,numeric,32,0,32,164611.065300933,772309.119778075,Preserve observed values; verify source and use complete cases as needed.
+real_minimum_wage_2025_usd,numeric,32,0,32,10.3778797228789,16.5,Preserve observed values; verify source and use complete cases as needed.
+real_personal_income_per_capita_2025_usd,numeric,32,0,32,56310.7770690321,91623.1894668411,Preserve observed values; verify source and use complete cases as needed.
+rental_vacancy_rate,numeric,32,0,28,3.6,15.1,Preserve observed values; verify source and use complete cases as needed.
+serious_mental_illness_rate,numeric,32,0,6,3.5,4,Preserve observed values; verify source and use complete cases as needed.
+shelter_beds_per_10k,numeric,32,0,31,7.503,19.361,Preserve observed values; verify source and use complete cases as needed.
+sheltered_homeless,numeric,32,0,32,13393,66351,Preserve observed values; verify source and use complete cases as needed.
+ssi_state_supplement,numeric,32,0,6,0,239.94,Preserve observed values; verify source and use complete cases as needed.
+state,character,32,0,2,,,Preserve observed values; verify source and use complete cases as needed.
+state_homeless_funding_musd,numeric,32,0,22,0,2870,Preserve observed values; verify source and use complete cases as needed.
+state_homeless_funding_per_capita,numeric,32,0,27,0,73.3,Preserve observed values; verify source and use complete cases as needed.
+state_population,numeric,32,0,32,18846143,39527808,Preserve observed values; verify source and use complete cases as needed.
+state_year,character,32,0,32,,,Preserve observed values; verify source and use complete cases as needed.
+substance_use_disorder_rate,numeric,32,0,17,7.5,9.1,Preserve observed values; verify source and use complete cases as needed.
+tanf_max_benefit_3person,numeric,32,0,12,303,1175,Preserve observed values; verify source and use complete cases as needed.
+total_beds_per_10k,numeric,32,0,32,14.665,41.119,Preserve observed values; verify source and use complete cases as needed.
+total_homeless,numeric,32,0,32,21121,187084,Preserve observed values; verify source and use complete cases as needed.
+unemployment_rate,numeric,32,0,27,2.9,12.3,Preserve observed values; verify source and use complete cases as needed.
+uninsured_rate,numeric,32,0,27,5.9,21.3,Preserve observed values; verify source and use complete cases as needed.
+unsheltered_homeless,numeric,32,0,32,6039,123974,Preserve observed values; verify source and use complete cases as needed.
+year,integer,32,0,16,2010,2025,Preserve observed values; verify source and use complete cases as needed.

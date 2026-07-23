@@ -1,0 +1,19 @@
+state_year,state,year,homeless_rate_per_10k,rent_burden_share,rental_vacancy_rate
+California 2010,California,2010,33.09,41.4,7.5
+California 2011,California,2011,33.25,45.03,6.1
+California 2012,California,2012,31.65,45.03,5.2
+California 2013,California,2013,30.99,45.03,5.1
+California 2014,California,2014,29.53,45.03,4.5
+California 2015,California,2015,29.75,45.03,4.1
+California 2016,California,2016,30.18,42.99,3.6
+California 2017,California,2017,33.44,42.99,4.3
+California 2018,California,2018,32.96,42.99,4.4
+Florida 2010,Florida,2010,30.54,40.32,15.1
+Florida 2011,Florida,2011,29.75,45.13,14.9
+Florida 2012,Florida,2012,28.58,45.13,13.1
+Florida 2013,Florida,2013,24.48,45.13,10.3
+Florida 2014,Florida,2014,20.92,45.13,10.1
+Florida 2015,Florida,2015,17.76,45.13,8
+Florida 2016,Florida,2016,16.27,43.54,8.1
+Florida 2017,Florida,2017,15.35,43.54,8.5
+Florida 2018,Florida,2018,14.6,43.54,8.2

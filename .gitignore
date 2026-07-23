@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# R session and IDE files
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# Locally installed R packages
+_r_libs/
+
+# Automatically generated plotting artifact
+Rplots.pdf
+
+# Microsoft Office temporary lock files
+~$*.xlsx
+~$*.xls
+~$*.docx
+~$*.pptx
+
+# General temporary files
+*.tmp
+*.temp

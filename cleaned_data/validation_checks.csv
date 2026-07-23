@@ -1,0 +1,11 @@
+check,passed
+32 rows,TRUE
+Unique state-year key,TRUE
+Expected states,TRUE
+Years 2010-2025,TRUE
+Homelessness components sum to total,TRUE
+No infinite numeric values,TRUE
+Selected count/dollar variables are nonnegative,TRUE
+Selected percentage variables are between 0 and 100,TRUE
+"Selected binary variables contain only 0, 1, or NA",TRUE
+Anticamping strictness contains only documented ordinal levels 0-3,TRUE
