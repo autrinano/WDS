@@ -18,12 +18,12 @@ The unit of observation is one state-year. The processed panel contains 32 rows:
 - `update_team_dataset.R`: integrates the verified housing panel, corrects deterministic fields, adds derived variables, and rebuilds the team workbook.
 - `generate_project_chart_suite.R`: produces the curated chart suite and chart manifest.
 - `PROJECT_DATA_AND_CHART_AUDIT.md`: audit of the original charts, missing-data decisions, new variables, and redesign.
-- `charts/`: current 70-chart suite, including 19 curated charts and 51 state-faceted factor scatterplots.
+- `charts/`: current 73-chart suite, including 22 curated/goal-aligned charts and 51 state-faceted factor scatterplots.
 - `charts/chart_manifest.csv`: authoritative list of current chart files.
 - `charts/scatterplot_inventory.csv`: variables included in the factor scatterplots and their usable sample sizes.
 - `charts/scatterplot_exclusions.csv`: variables excluded from factor scatterplots and the reason for each exclusion.
-- `charts/KEY_CHARTS.md`: goal-aligned guide to the six charts recommended for the preliminary EDA narrative.
-- `charts/key_chart_manifest.csv`: reproducible ordered list of those six charts.
+- `charts/KEY_CHARTS.md`: goal-aligned guide to seven study-wide charts, four mechanism follow-ups, and the individual-variable appendix.
+- `charts/key_chart_manifest.csv`: reproducible ordered list of those 11 charts.
 - `housing_metrics_CA_FL_2010_2025.xlsx`: formatted Excel deliverable with the panel, metric guide, missingness summary, and raw-file index.
 - `housing_metrics_CA_FL_2010_2025.csv`: machine-readable version of the processed panel.
 - `build_housing_metrics.R`: reproducible R pipeline that downloads, cleans, combines, validates, and exports the housing data.
@@ -108,8 +108,9 @@ After rebuilding, confirm:
 - the team panel has 32 rows, 63 columns, and no duplicated state-years;
 - `housing_units_per_capita` and `population_density` have 32 available observations;
 - the updated workbook has four sheets: `Data`, `Variable Dictionary`, `Missingness`, and `Source Notes`; and
-- `charts/chart_manifest.csv` lists 70 current PNG charts and every listed file exists.
+- `charts/chart_manifest.csv` lists 73 current PNG charts and every listed file exists.
 - `charts/scatterplot_inventory.csv` lists 51 eligible factor scatterplots.
+- `charts/key_chart_manifest.csv` lists seven study-wide and four mechanism follow-up charts.
 - no legacy chart archive or duplicate root-level chart PNG remains.
 - every check in `cleaned_data/validation_checks.csv` passes;
 - `cleaned_data/analysis_panel_core.csv` has 30 non-2021 rows and no missing values; and

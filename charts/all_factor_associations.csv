@@ -1,0 +1,52 @@
+variable,within_state_correlation,within_state_n,change_correlation,change_n,category,source_status,variable_label
+shelter_beds_per_10k,0.8894602056701443,30,0.6179872507349483,26,Service capacity and funding,source verification needed,Shelter Beds per 10k
+psh_beds_per_10k,0.4746815496949332,30,0.0603415934552829,26,Service capacity and funding,source verification needed,Psh Beds per 10k
+state_homeless_funding_musd,0.36390051903749154,30,-0.197973634721954,26,Service capacity and funding,source verification needed,State Homeless Funding Musd
+state_homeless_funding_per_capita,0.35714603269038286,30,-0.19774574701111094,26,Service capacity and funding,source verification needed,State Homeless Funding per Capita
+anticamping_strictness,-0.49683144972715354,30,-0.363939610700363,26,Policy and safety net,source verification needed,Anticamping Strictness
+medicaid_expansion,0.28091460295522325,30,-0.11347968271080286,26,Policy and safety net,source verification needed,Medicaid Expansion
+tanf_max_benefit_3person,0.6636493794052677,30,0.49507715020195514,26,Policy and safety net,source verification needed,Tanf Max Benefit 3person
+ssi_state_supplement,0.6067673719739873,30,0.31512738845503174,26,Policy and safety net,source verification needed,Ssi State Supplement
+minimum_wage,0.3356237040403335,30,0.43714234402059143,26,Policy and safety net,source verification needed,Minimum Wage
+personal_income_per_capita,0.15051289948363905,30,0.5369473331833654,26,Economy,source verification needed,Personal Income per Capita
+median_household_income,0.18009656286609552,28,0.48022874345398575,24,Economy,source verification needed,Median Household Income
+poverty_rate,0.06001276865852949,28,-0.19112781884987248,24,Economy,source verification needed,Poverty Rate
+labor_force_participation,0.38914134007856105,30,0.1488607256443173,26,Economy,source verification needed,Labor Force Participation
+unemployment_rate,0.245484097968031,30,0.32785325360551276,26,Economy,source verification needed,Unemployment Rate
+substance_use_disorder_rate,-0.6495622829286338,30,-0.40023283909232377,26,Health and social conditions,source verification needed,Substance Use Disorder Rate
+serious_mental_illness_rate,-0.1559578944608655,30,-0.06840339664779627,26,Health and social conditions,source verification needed,Serious Mental Illness Rate
+uninsured_rate,0.049453263436155685,30,0.2902368788695994,26,Health and social conditions,source verification needed,Uninsured Rate
+high_school_graduation_rate,-0.2602476575436971,30,-0.12183713260353217,26,Education,source verification needed,High School Graduation Rate
+average_student_debt_per_borrower,-0.021685332473880107,30,NA,26,Education,source verification needed,Average Student Debt per Borrower
+avg_in_state_tuition,0.15744485243756393,30,0.3408616352755905,26,Education,source verification needed,Avg in State Tuition
+state_population,-0.4262837032382644,30,-0.3885105363838131,26,Demographics,source verification needed,State Population
+population_density,-0.5682880643013295,30,-0.4295951503831795,26,Demographics,derivation documented; verify component sources,Population Density
+population_growth_rate_pct,-0.4013086306787799,28,-0.08664374400641155,24,Demographics,derivation documented; verify component sources,Population Growth Rate Pct
+pct_age_18_24,0.09208350115427057,26,-0.10094075692936635,22,Demographics,source verification needed,Pct Age 18 24
+pct_age_65plus,-0.042466032826670594,26,-0.18735405175693262,22,Demographics,source verification needed,Pct Age 65plus
+avg_household_size,-0.2824592471171686,26,-0.436762200419943,22,Demographics,source verification needed,Avg Household Size
+avg_temp_f,-0.367226678284606,30,-0.28478094919919805,26,Climate,source verification needed,Avg Temp f
+precip_in,-0.1117044241099338,30,0.12700938620606486,26,Climate,source verification needed,Precip in
+cooling_degree_days,-0.3545685069105972,30,-0.17599992231759018,26,Climate,source verification needed,Cooling Degree Days
+median_rent,0.15650026736812658,28,0.23519449220592364,24,Housing cost and supply,documented,Median Rent
+median_home_price,0.2475351084090192,30,0.0896061745720519,26,Housing cost and supply,documented,Median Home Price
+rent_as_pct_income,0.08220551902658663,10,-0.28483042306275674,6,Housing cost and supply,documented,Rent as Pct Income
+rent_burden_share,-0.1145656544609128,18,0.07161997930237422,16,Housing instability,documented,Rent Burden Share
+rental_vacancy_rate,0.5499996921270964,30,0.49341287447561755,26,Housing cost and supply,documented,Rental Vacancy Rate
+homeownership_rate,0.372201758918607,30,0.30324127819983804,26,Housing cost and supply,documented,Homeownership Rate
+housing_units_per_capita,0.8909645647557737,30,0.4196518740495325,26,Housing cost and supply,documented,Housing Units per Capita
+new_housing_permits,-0.4771635208930821,30,-0.49473509024123175,26,Housing cost and supply,documented,New Housing Permits
+housing_supply_growth_rate,-0.4098154498858819,26,-0.4308211919156856,22,Housing cost and supply,documented,Housing Supply Growth Rate
+eviction_filing_rate,0.49938533816650016,18,0.23759310254399896,16,Housing instability,documented,Eviction Filing Rate
+cpi_u,0.08504160817152386,30,0.3287372754311587,26,Economy,documented,Cpi u
+unsheltered_share_pct,0.7066337144540449,30,0.5706011888699494,26,Homelessness outcome,derivation documented; verify component sources,Unsheltered Share Pct
+total_beds_per_10k,0.7690131985189252,30,0.40960344188016146,26,Service capacity and funding,derivation documented; verify component sources,Total Beds per 10k
+estimated_housing_units,-0.087181814581678,30,0.17816882589338937,26,Housing cost and supply,derivation documented; verify component sources,Estimated Housing Units
+permits_per_1000_housing_units,-0.5644991460819521,30,-0.49068101882020715,26,Housing cost and supply,derivation documented; verify component sources,Permits per 1000 Housing Units
+home_price_to_income_ratio,-0.08314335964747362,28,-0.48859503959024075,24,Housing affordability,derivation documented; verify component sources,Home Price to Income Ratio
+real_median_rent_2025_usd,0.12322265576312506,28,0.09768712650018418,24,Housing affordability,documented,Real Median Rent 2025 Usd
+real_median_home_price_2025_usd,0.14853298329920633,30,-0.1063603512491054,26,Housing affordability,documented,Real Median Home Price 2025 Usd
+real_personal_income_per_capita_2025_usd,0.11584046280245368,30,0.3716254735303351,26,Economy,derivation documented; verify component sources,Real Personal Income per Capita 2025 Usd
+real_median_household_income_2025_usd,0.16164884712438812,28,0.35526492211812405,24,Economy,derivation documented; verify component sources,Real Median Household Income 2025 Usd
+real_minimum_wage_2025_usd,0.47529011581862735,30,0.36139342277065384,26,Policy and safety net,derivation documented; verify component sources,Real Minimum Wage 2025 Usd
+real_home_price_growth_pct,-0.3208416294949058,28,-0.05713671831031282,24,Housing affordability,documented,Real Home Price Growth Pct

@@ -141,31 +141,35 @@ The original chart archive and duplicate root-level PNG files were removed after
 
 ## Current chart design
 
-`generate_project_chart_suite.R` produces 70 PNG charts and a manifest in `charts/`: 19 curated charts and 51 factor-by-factor scatterplots. The charts are organized into:
+`generate_project_chart_suite.R` produces 73 PNG charts and a manifest in `charts/`: 22 curated or goal-aligned charts and 51 factor-by-factor scatterplots. The charts are organized into:
 
 - outcomes and homelessness composition;
 - housing cost, affordability, vacancy, stock, permits, and supply growth;
 - service capacity, funding, and real-income comparisons;
 - within-state, lagged, and first-difference relationships; and
-- missing-data and category-completeness diagnostics; and
+- missing-data and category-completeness diagnostics;
+- a study-wide screen of every eligible factor and a factor-category summary; and
 - state-faceted scatterplots of each eligible factor against `homeless_rate_per_10k`.
 
-The new charts use rates or normalized measures when state size matters, retain time on the horizontal axis when it is analytically important, show the 2021 disruption, avoid treating the disrupted count as continuous evidence, and limit correlation analysis to a selected set after removing state means. Scatterplots facet California and Florida, encode year by color, exclude 2021, show the usable observation count, and omit fitted regression lines. All relationship charts remain descriptive and should not be described as causal effects.
+The new charts use rates or normalized measures when state size matters, retain time on the horizontal axis when it is analytically important, show the 2021 disruption, and avoid treating the disrupted count as continuous evidence. The all-factor screen summarizes all 51 eligible numeric factors using both within-state levels and annual changes, while the category summary prevents the narrative from depending on a single variable. Scatterplots facet California and Florida, encode year by color, exclude 2021, show the usable observation count, and omit fitted regression lines. All relationship charts remain descriptive and should not be described as causal effects.
 
 Scatterplots exclude the target itself, raw homelessness totals and components, the change version of the homelessness outcome, the PIT warning flag, ratios with homelessness in the denominator, the temporary plotting copy of the target, and the all-missing foreclosure field. Exact exclusions and reasons are stored in `charts/scatterplot_exclusions.csv`.
 
-## Six key preliminary EDA charts
+## Study-wide and mechanism-level preliminary EDA charts
 
-The recommended main narrative uses:
+The recommended study-wide narrative uses:
 
 1. homelessness rate over time, to establish the divergence being explained;
-2. home-price-to-income ratio, to compare affordability pressure;
-3. rental vacancy rate, to compare rental-market tightness;
-4. housing units per 1,000 residents, to compare housing-stock availability;
-5. permits per 1,000 housing units, to compare the flow of newly authorized supply; and
-6. homelessness and bed capacity per 10,000 residents, to compare service-system capacity alongside the outcome.
+2. the all-factor association screen, to compare all 51 eligible factors using within-state and annual-change correlations;
+3. the category association summary, to compare broad groups of candidate explanations;
+4. the selected within-state heatmap, to reveal conceptual clustering and collinearity;
+5. the missing-data heatmap, to show which comparisons the evidence can support;
+6. category completeness, to compare coverage across the explanatory system; and
+7. representative state boxplots, to summarize between-state distributions while acknowledging that time order is hidden.
 
-The ordered paths, variables, and design reasons are stored in `charts/key_chart_manifest.csv`. `charts/KEY_CHARTS.md` provides a presentation-ready guide and preliminary interpretation boundaries.
+Four mechanism follow-ups show affordability, rental vacancy, normalized permitting, and bed capacity. The 51 individual-variable scatterplots form a diagnostic appendix for nonlinearity, outliers, state-specific patterns, and coverage. The ordered paths and design reasons for the 11 presentation charts are stored in `charts/key_chart_manifest.csv`. `charts/KEY_CHARTS.md` provides a presentation-ready guide and interpretation boundaries.
+
+The charts estimate associations, not the impact of each variable holding all others constant. Relative contribution is a later modeling question requiring a small theory-guided feature set, state and time controls, lag checks, and time-based validation.
 
 ## Reproducible build order
 

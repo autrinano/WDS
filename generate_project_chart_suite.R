@@ -24,7 +24,8 @@ chart_dirs <- file.path(
     "03_economy_and_services",
     "04_relationships",
     "05_data_quality",
-    "06_scatterplots"
+    "06_scatterplots",
+    "07_goal_eda"
   )
 )
 invisible(lapply(chart_dirs, dir.create, recursive = TRUE, showWarnings = FALSE))
@@ -686,7 +687,7 @@ correlation_variables <- c(
   "unemployment_rate",
   "poverty_rate",
   "total_beds_per_10k",
-  "funding_per_homeless_person"
+  "state_homeless_funding_per_capita"
 )
 
 correlation_labels <- c(
@@ -699,7 +700,7 @@ correlation_labels <- c(
   unemployment_rate = "Unemployment",
   poverty_rate = "Poverty",
   total_beds_per_10k = "Total beds",
-  funding_per_homeless_person = "Funding / homeless person"
+  state_homeless_funding_per_capita = "Funding per resident"
 )
 
 correlation_data <- data |>
@@ -912,7 +913,94 @@ record_chart(
 )
 
 # ---------------------------------------------------------------------------
-# 06. Factor-by-factor scatterplots against homelessness rate
+# 06. Goal-aligned state boxplots
+# ---------------------------------------------------------------------------
+
+key_boxplot_data <- data |>
+  filter(year != 2021L) |>
+  transmute(
+    state,
+    year,
+    `Homelessness rate per 10,000` = homeless_rate_per_10k,
+    `Home price / income` = home_price_to_income_ratio,
+    `Rental vacancy (%)` = rental_vacancy_rate,
+    `Housing units per 1,000 residents` =
+      1000 * housing_units_per_capita,
+    `Permits per 1,000 housing units` =
+      permits_per_1000_housing_units,
+    `Total beds per 10,000` = total_beds_per_10k
+  ) |>
+  pivot_longer(
+    -c(state, year),
+    names_to = "factor",
+    values_to = "value"
+  )
+
+key_boxplot <- ggplot(
+  key_boxplot_data,
+  aes(state, value, fill = state)
+) +
+  geom_boxplot(
+    width = 0.58,
+    alpha = 0.72,
+    outlier.shape = NA,
+    na.rm = TRUE
+  ) +
+  geom_point(
+    position = position_jitter(width = 0.10, height = 0),
+    size = 1.5,
+    alpha = 0.55,
+    color = "grey25",
+    na.rm = TRUE
+  ) +
+  facet_wrap(~factor, scales = "free_y", ncol = 3) +
+  scale_fill_manual(values = state_colors) +
+  labs(
+    title = "State distributions for the key outcome and candidate factors",
+    subtitle = "Annual observations, 2010–2025; COVID-disrupted 2021 omitted",
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    caption = paste0(
+      "Boxplots summarize distributions but discard time ordering. ",
+      "Use them alongside the main time-series charts."
+    )
+  ) +
+  base_theme +
+  theme(
+    legend.position = "top",
+    axis.text.x = element_text(angle = 20, hjust = 1)
+  )
+
+path <- save_chart(
+  key_boxplot,
+  "07_goal_eda/key_factor_state_boxplots.png",
+  width = 11,
+  height = 8
+)
+record_chart(
+  "Goal-aligned EDA",
+  "Key factor state boxplots",
+  paste(
+    c(
+      "homeless_rate_per_10k",
+      "home_price_to_income_ratio",
+      "rental_vacancy_rate",
+      "housing_units_per_capita",
+      "permits_per_1000_housing_units",
+      "total_beds_per_10k"
+    ),
+    collapse = "; "
+  ),
+  path,
+  paste0(
+    "Provides a compact California–Florida distribution comparison for the ",
+    "outcome and five goal-aligned candidate mechanisms."
+  )
+)
+
+# ---------------------------------------------------------------------------
+# 07. Factor-by-factor scatterplots against homelessness rate
 # ---------------------------------------------------------------------------
 
 # Exclude identifiers, the target, alternate outcomes, target components, and
@@ -1087,6 +1175,283 @@ for (variable in scatter_variables) {
   )
 }
 
+# ---------------------------------------------------------------------------
+# 08. Study-wide association screens
+# ---------------------------------------------------------------------------
+
+safe_correlation <- function(x, y) {
+  usable <- complete.cases(x, y)
+  if (
+    sum(usable) < 4 ||
+      sd(x[usable]) == 0 ||
+      sd(y[usable]) == 0
+  ) {
+    return(NA_real_)
+  }
+  cor(x[usable], y[usable])
+}
+
+all_factor_associations <- bind_rows(lapply(
+  scatter_variables,
+  function(variable) {
+    variable_data <- data |>
+      transmute(
+        state,
+        year,
+        factor_value = .data[[variable]],
+        homeless_rate = homeless_rate_per_10k,
+        homeless_rate_change = homeless_rate_change_per_10k
+      ) |>
+      arrange(state, year)
+
+    level_data <- variable_data |>
+      filter(year != 2021L) |>
+      group_by(state) |>
+      mutate(
+        factor_deviation =
+          factor_value - mean(factor_value, na.rm = TRUE),
+        homeless_deviation =
+          homeless_rate - mean(homeless_rate, na.rm = TRUE)
+      ) |>
+      ungroup()
+
+    change_data <- variable_data |>
+      group_by(state) |>
+      mutate(factor_change = factor_value - lag(factor_value)) |>
+      ungroup() |>
+      filter(!is.na(homeless_rate_change))
+
+    tibble(
+      variable = variable,
+      within_state_correlation = safe_correlation(
+        level_data$factor_deviation,
+        level_data$homeless_deviation
+      ),
+      within_state_n = sum(complete.cases(
+        level_data$factor_deviation,
+        level_data$homeless_deviation
+      )),
+      change_correlation = safe_correlation(
+        change_data$factor_change,
+        change_data$homeless_rate_change
+      ),
+      change_n = sum(complete.cases(
+        change_data$factor_change,
+        change_data$homeless_rate_change
+      ))
+    )
+  }
+)) |>
+  left_join(
+    dictionary |>
+      select(any_of(c("variable", "category", "source_status"))),
+    by = "variable"
+  ) |>
+  mutate(
+    category = if_else(is.na(category), "Unknown", category),
+    variable_label = tools::toTitleCase(gsub("_", " ", variable))
+  )
+
+write_csv(
+  all_factor_associations,
+  file.path(output_root, "all_factor_associations.csv")
+)
+
+variable_order <- all_factor_associations |>
+  arrange(within_state_correlation, variable_label) |>
+  pull(variable_label)
+
+association_long <- all_factor_associations |>
+  transmute(
+    variable,
+    variable_label,
+    category,
+    source_status,
+    `Within-state levels` = within_state_correlation,
+    `Annual changes` = change_correlation,
+    within_state_n,
+    change_n
+  ) |>
+  pivot_longer(
+    c(`Within-state levels`, `Annual changes`),
+    names_to = "method",
+    values_to = "correlation"
+  ) |>
+  mutate(
+    observations = if_else(
+      method == "Within-state levels",
+      within_state_n,
+      change_n
+    ),
+    method = factor(
+      method,
+      levels = c("Within-state levels", "Annual changes")
+    ),
+    variable_label = factor(variable_label, levels = variable_order)
+  )
+
+all_factor_plot <- ggplot(
+  association_long,
+  aes(correlation, variable_label, color = category)
+) +
+  geom_vline(xintercept = 0, color = "grey60") +
+  geom_segment(
+    aes(x = 0, xend = correlation, yend = variable_label),
+    alpha = 0.45,
+    linewidth = 0.7,
+    na.rm = TRUE
+  ) +
+  geom_point(
+    aes(size = observations),
+    alpha = 0.9,
+    na.rm = TRUE
+  ) +
+  facet_wrap(~method, nrow = 1) +
+  scale_x_continuous(
+    limits = c(-1, 1),
+    breaks = seq(-1, 1, 0.5)
+  ) +
+  scale_color_viridis_d(option = "D", end = 0.92) +
+  scale_size_continuous(range = c(2, 5)) +
+  labs(
+    title = "All eligible factors and the homelessness rate",
+    subtitle = paste0(
+      "Within-state correlations and annual-change correlations; ",
+      "2021-related outcome changes excluded"
+    ),
+    x = "Exploratory correlation",
+    y = NULL,
+    color = "Variable category",
+    size = "Usable rows",
+    caption = paste0(
+      "This screens all 51 eligible numeric factors. Blank change estimates ",
+      "indicate insufficient variation. Correlations are associations, not ",
+      "causal impacts or multivariable-adjusted effects."
+    )
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.title.position = "plot",
+    strip.text = element_text(face = "bold"),
+    legend.position = "bottom",
+    legend.box = "vertical",
+    axis.text.y = element_text(size = 7.5)
+  )
+
+path <- save_chart(
+  all_factor_plot,
+  "07_goal_eda/all_factor_association_screen.png",
+  width = 13,
+  height = 16
+)
+record_chart(
+  "Study-wide EDA",
+  "All-factor association screen",
+  paste(scatter_variables, collapse = "; "),
+  path,
+  paste0(
+    "Summarizes every eligible factor using within-state and annual-change ",
+    "correlations instead of privileging a single column."
+  )
+)
+
+category_associations <- all_factor_associations |>
+  group_by(category) |>
+  summarise(
+    variables_screened = n(),
+    defined_within_state = sum(!is.na(within_state_correlation)),
+    defined_changes = sum(!is.na(change_correlation)),
+    median_absolute_within_state =
+      median(abs(within_state_correlation), na.rm = TRUE),
+    median_absolute_change =
+      median(abs(change_correlation), na.rm = TRUE),
+    mean_level_coverage = mean(within_state_n / 30),
+    .groups = "drop"
+  ) |>
+  mutate(
+    median_absolute_within_state = if_else(
+      is.nan(median_absolute_within_state),
+      NA_real_,
+      median_absolute_within_state
+    ),
+    median_absolute_change = if_else(
+      is.nan(median_absolute_change),
+      NA_real_,
+      median_absolute_change
+    )
+  )
+
+write_csv(
+  category_associations,
+  file.path(output_root, "category_association_summary.csv")
+)
+
+category_association_long <- category_associations |>
+  select(
+    category,
+    variables_screened,
+    `Within-state levels` = median_absolute_within_state,
+    `Annual changes` = median_absolute_change
+  ) |>
+  pivot_longer(
+    c(`Within-state levels`, `Annual changes`),
+    names_to = "method",
+    values_to = "median_absolute_correlation"
+  )
+
+category_association_plot <- ggplot(
+  category_association_long,
+  aes(
+    median_absolute_correlation,
+    reorder(category, median_absolute_correlation, FUN = max, na.rm = TRUE),
+    color = method
+  )
+) +
+  geom_point(size = 4, na.rm = TRUE) +
+  geom_line(aes(group = category), color = "grey65", linewidth = 0.8) +
+  scale_color_manual(
+    values = c(
+      "Within-state levels" = "#2A6FBB",
+      "Annual changes" = "#C44E52"
+    )
+  ) +
+  scale_x_continuous(
+    limits = c(0, 1),
+    labels = scales::label_number(accuracy = 0.1)
+  ) +
+  labs(
+    title = "Association strength by variable category",
+    subtitle = "Median absolute correlation across all eligible variables in each category",
+    x = "Median absolute exploratory correlation",
+    y = NULL,
+    color = NULL,
+    caption = paste0(
+      "Absolute correlations show strength, not direction; ",
+      "they are not causal impacts."
+    )
+  ) +
+  base_theme
+
+path <- save_chart(
+  category_association_plot,
+  "07_goal_eda/category_association_summary.png",
+  width = 10,
+  height = 7
+)
+record_chart(
+  "Study-wide EDA",
+  "Category association summary",
+  "all eligible factors grouped by category",
+  path,
+  paste0(
+    "Summarizes the full factor set by conceptual category rather than ",
+    "selecting one variable as the explanation."
+  )
+)
+
 write_csv(
   scatterplot_inventory,
   file.path(output_root, "scatterplot_inventory.csv")
@@ -1098,9 +1463,14 @@ write_csv(
 
 key_chart_paths <- c(
   "charts/01_outcomes/homelessness_rate_over_time.png",
+  "charts/07_goal_eda/all_factor_association_screen.png",
+  "charts/07_goal_eda/category_association_summary.png",
+  "charts/04_relationships/selected_within_state_correlation_heatmap.png",
+  "charts/05_data_quality/missing_data_heatmap.png",
+  "charts/05_data_quality/category_completeness.png",
+  "charts/07_goal_eda/key_factor_state_boxplots.png",
   "charts/02_housing/home_price_to_income_ratio.png",
   "charts/02_housing/rental_vacancy_rate.png",
-  "charts/02_housing/housing_units_per_1000_residents.png",
   "charts/02_housing/permits_per_1000_housing_units.png",
   "charts/03_economy_and_services/homelessness_and_bed_capacity.png"
 )
@@ -1109,7 +1479,7 @@ key_chart_manifest <- manifest |>
   mutate(display_order = match(path, key_chart_paths)) |>
   arrange(display_order) |>
   select(display_order, everything())
-stopifnot(nrow(key_chart_manifest) == 6)
+stopifnot(nrow(key_chart_manifest) == 11)
 write_csv(
   key_chart_manifest,
   file.path(output_root, "key_chart_manifest.csv")
