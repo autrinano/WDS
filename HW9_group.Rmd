@@ -1,0 +1,58 @@
+---
+title: "Homework 10: EDA for Final Project"
+author:
+- Group Member 1
+- Group Member 2
+- Group Member 3
+- Group Member 4
+- Group Member 5
+date: 'Ju1 23, 2026'
+output:
+  html_document:
+    code_folding: show
+    highlight: haddock
+    number_sections: yes
+    theme: lumen
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: '4'
+  word_document:
+    toc: yes
+    toc_depth: '4'
+urlcolor: blue
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.width=8, fig.height=4)
+```
+
+Build upon Homework 7, we continue to work on our final project. Submit a draft of your project that includes the following components. 
+You can continue with the draft you submitted for HW7. 
+
+**1. Goal of study**. Restate the goal of study and importance of your project. 
+
+**2. Data:**
+
+i) What is your data source?
+
+ii) Describe how you acquire the data. (You can provide another set of code).
+
+iii) Describe how you clean the data (e.g. missing value, errors, outliners).
+
+iv) Is your data representative enough for your goal of study? Could there be any bias? How will you address the bias if any?
+
+**3. EDA**
+
+As the first step of our analysis, we need to make sense out of the data by EDA. 
+Please provide a complete EDA of your data using relevant plots (with title, labels, colors, legends) and descriptions.
+What have you found so far? 
+
+**4. Preliminary analysis**
+
+With all the techniques we have learned so far, let's try to build models for your goal of study. 
+Please summarize what you have learned from the model. Do the results make sense? 
