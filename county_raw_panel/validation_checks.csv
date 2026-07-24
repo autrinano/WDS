@@ -1,0 +1,13 @@
+check,expected,observed,pass
+Compiled row count equals 125 counties x 16 years,2000,2000,TRUE
+Exactly 125 unique counties,125,125,TRUE
+California has 58 counties,58,58,TRUE
+Florida has 67 counties,67,67,TRUE
+Years are exactly 2010 through 2025,2010:2011:2012:2013:2014:2015:2016:2017:2018:2019:2020:2021:2022:2023:2024:2025,2010:2011:2012:2013:2014:2015:2016:2017:2018:2019:2020:2021:2022:2023:2024:2025,TRUE
+County-year key is unique,0,0,TRUE
+No population values are negative,TRUE,TRUE,TRUE
+No housing-unit values are negative,TRUE,TRUE,TRUE
+All SAIPE poverty percentages are between 0 and 100 when observed,TRUE,TRUE,TRUE
+All BLS unemployment rates are between 0 and 100 when observed,TRUE,TRUE,TRUE
+BLS labor measures cover all county-years from 2010 through 2019,TRUE,TRUE,TRUE
+2025 rows retained for every county,125,125,TRUE

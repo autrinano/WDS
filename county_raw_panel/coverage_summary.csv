@@ -1,0 +1,55 @@
+category,variable,source,nonmissing,missing,coverage_pct,min_year,max_year
+Demographics,birth_rate_per_1000,Census PEP,1750,250,87.5,2011,2025
+Demographics,births,Census PEP,2000,0,100,2010,2025
+Demographics,death_rate_per_1000,Census PEP,1750,250,87.5,2011,2025
+Demographics,deaths,Census PEP,2000,0,100,2010,2025
+Demographics,domestic_migration,Census PEP,2000,0,100,2010,2025
+Demographics,domestic_migration_rate_per_1000,Census PEP,1750,250,87.5,2011,2025
+Demographics,group_quarters_population,Census PEP,2000,0,100,2010,2025
+Demographics,international_migration,Census PEP,2000,0,100,2010,2025
+Demographics,international_migration_rate_per_1000,Census PEP,1750,250,87.5,2011,2025
+Demographics,natural_change,Census PEP,750,1250,37.5,2020,2025
+Demographics,natural_change_rate_per_1000,Census PEP,625,1375,31.2,2021,2025
+Demographics,net_migration,Census PEP,2000,0,100,2010,2025
+Demographics,net_migration_rate_per_1000,Census PEP,1750,250,87.5,2011,2025
+Demographics,population,Census PEP,2000,0,100,2010,2025
+Demographics,population_change,Census PEP,750,1250,37.5,2020,2025
+Economic output and income,bea_current_gdp_thousands_usd,BEA CAGDP1,1875,125,93.8,2010,2024
+Economic output and income,bea_per_capita_personal_income_usd,BEA CAINC1,1875,125,93.8,2010,2024
+Economic output and income,bea_personal_income_thousands_usd,BEA CAINC1,1875,125,93.8,2010,2024
+Economic output and income,bea_population,BEA CAINC1,1875,125,93.8,2010,2024
+Economic output and income,bea_real_gdp_quantity_index,BEA CAGDP1,1875,125,93.8,2010,2024
+Economic output and income,bea_real_gdp_thousands_2017_usd,BEA CAGDP1,1875,125,93.8,2010,2024
+Housing market,annual_hpi_change_pct,FHFA HPI,1959,41,98,2010,2025
+Housing market,hpi,FHFA HPI,1960,40,98,2010,2025
+Housing market,hpi_1990_base,FHFA HPI,1504,496,75.2,2010,2025
+Housing market,hpi_2000_base,FHFA HPI,1820,180,91,2010,2025
+Housing supply,housing_units,Census PEP housing estimates,2000,0,100,2010,2025
+Housing supply,permits_five_plus_unit_units,Census/HUD BPS,2000,0,100,2010,2025
+Housing supply,permits_one_unit_units,Census/HUD BPS,2000,0,100,2010,2025
+Housing supply,permits_three_four_unit_units,Census/HUD BPS,2000,0,100,2010,2025
+Housing supply,permits_total_reported_units,Census/HUD BPS,2000,0,100,2010,2025
+Housing supply,permits_total_units_authorized,Census/HUD BPS,2000,0,100,2010,2025
+Housing supply,permits_total_value_authorized,Census/HUD BPS,2000,0,100,2010,2025
+Housing supply,permits_two_unit_units,Census/HUD BPS,2000,0,100,2010,2025
+Income and poverty,median_household_income,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,median_household_income_ci_high,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,median_household_income_ci_low,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_age_5_17_estimate,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_age_5_17_pct,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_all_ci_high,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_all_ci_low,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_all_estimate,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_all_pct,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_all_pct_ci_high,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_all_pct_ci_low,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_child_ci_high,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_child_ci_low,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_child_estimate,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_child_pct,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_child_pct_ci_high,Census SAIPE,1875,125,93.8,2010,2024
+Income and poverty,poverty_child_pct_ci_low,Census SAIPE,1875,125,93.8,2010,2024
+Labor market,civilian_labor_force,BLS LAUS,1610,390,80.5,2010,2025
+Labor market,employed_people,BLS LAUS,1610,390,80.5,2010,2025
+Labor market,unemployed_people,BLS LAUS,1610,390,80.5,2010,2025
+Labor market,unemployment_rate_pct,BLS LAUS,1610,390,80.5,2010,2025

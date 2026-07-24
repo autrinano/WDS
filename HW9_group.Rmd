@@ -1,11 +1,11 @@
 ---
 title: "Homework 10: EDA for Final Project"
 author:
-- Group Member 1
-- Group Member 2
-- Group Member 3
-- Group Member 4
-- Group Member 5
+- Neev
+- Autrin
+- Samya
+- Vlad
+- Yuxuan
 date: 'Ju1 23, 2026'
 output:
   html_document:
@@ -34,25 +34,31 @@ knitr::opts_chunk$set(echo = FALSE, fig.width=8, fig.height=4)
 Build upon Homework 7, we continue to work on our final project. Submit a draft of your project that includes the following components. 
 You can continue with the draft you submitted for HW7. 
 
-**1. Goal of study**. Restate the goal of study and importance of your project. 
+Data source- Data for this study was drawn from several public sources. Demographic variables came from the U.S. Census Bureau's American Community Survey (ACS) 1-Year Estimates, with land area figures from the Bureau's "Guide to State and Local Census Geography" and state land-area statistics. Housing cost and affordability variables came from ACS 5-Year Estimates tables B25064 (median gross rent) and B25071 (rent as a percentage of household income), supplemented by Zillow Research state median sale prices. Housing market conditions were further captured using the Census Housing Vacancy Survey and the Census/HUD Building Permits Survey, both accessed through FRED. Eviction data came from the Eviction Lab National Eviction Map. Population growth rate, net migration, and birth/death rates came from the Census Bureau's Population Estimates Program (PEP). Climate variables were sourced from NOAA's Climate at a Glance Statewide Time Series. The outcome variable, homelessness rate, came from HUD's Point-in-Time (PIT) Count. Policy and social-services variables were drawn from a combination of HUD-derived calculations and hand-collected sources, including Medicaid expansion status, TANF benefit levels, SSI state supplements, anti-camping ordinance data, and state homelessness program funding. Economic data, including the BLS CPI-U, was sourced from the Federal Reserve Economic Data (FRED) database.
 
-**2. Data:**
 
-i) What is your data source?
+Acquire data
 
-ii) Describe how you acquire the data. (You can provide another set of code).
+We acquired our data by pulling directly from government databases and public data portals — mainly using R to connect to APIs where available, and manually downloading data from agency websites when an API wasn't offered. Once collected, each source was cleaned individually and then merged together into one combined dataset, organized by state and year, so all our variables could be analyzed together.
 
-iii) Describe how you clean the data (e.g. missing value, errors, outliners).
+Clean data
 
-iv) Is your data representative enough for your goal of study? Could there be any bias? How will you address the bias if any?
+Several demographic variables had missing data points, primarily due to two factors: some data estimates for 2020/2021 were unreleased because of COVID-19, and 2025 data has not yet been published. In these cases, we chose to leave the affected data points blank rather than estimate values. We had also initially planned a few other variables like birth rate, death rate, and net migration rate in our analysis; however, reliable data for these variables was only available for 2016–2019, so we ultimately dropped them from the study rather than work with an incomplete time series. The cost of living index and foreclosure rate was excluded for similar reasons. In some data cases, such as the uninsured rate for 3 years in California and Florida, missing values were inferred by the trend of the data. 
 
-**3. EDA**
 
-As the first step of our analysis, we need to make sense out of the data by EDA. 
-Please provide a complete EDA of your data using relevant plots (with title, labels, colors, legends) and descriptions.
-What have you found so far? 
+Is data representative enough? Is there any bias?
 
-**4. Preliminary analysis**
+Overall, our data is reasonably representative for the specific comparison we're making — since nearly every variable comes from a federal government source (Census Bureau, NOAA, HUD, FRED) using consistent, standardized methodology applied identically to both states, we're not comparing numbers collected in fundamentally different ways. Several variables (net migration, birth/death rates, cost of living index) were dropped due to insufficient data coverage across our timeframe. This means our final variable set was shaped partly by data availability rather than purely by importance. Several policy variables (Medicaid expansion, SSI supplements, anti-camping strictness) are nearly constant within each state over time, meaning they would have to be treated as categorical rather than continuous variables. 
 
-With all the techniques we have learned so far, let's try to build models for your goal of study. 
-Please summarize what you have learned from the model. Do the results make sense? 
+
+EDA:
+
+
+Graph 1- This is a line graph plotting homelessness rate per 10 k over time for both California and Florida. With the datapoints for 2021 excluded (there was a significant dip in the homelessness rate measurement due to COVID), the overall trend of the graph is an increasing divergence between homelessness rates in both states. This is, in fact, the motivation of our study, to explain the factors impacting the divergence in homelessness rates in both states. 
+
+
+Graph 2- This heatmap shows how some of our variables relate to each other within the same state over time, after removing overall state differences. The biggest takeaway is that the homeless rate is strongly linked to housing per capita (0.89) and total shelter beds (0.77), but only weakly linked to poverty (0.06) and unemployment (0.25). This suggests that housing supply and shelter availability matter more to homelessness trends than economic hardship alone. We also see that permit intensity (how much new housing gets built) is negatively linked to the homeless rate (-0.56) and rental vacancy (-0.83), but positively linked to price-to-income ratio (0.80). In other words, when less housing gets built, rental vacancies shrink, homes become less affordable, and homelessness tends to rise. We have also noticed that permit intensity, price/income, and rental vacancy are all closely related to each other. This means if we use all three in the same model, it might cause problems (called multicollinearity), so this is something we will need to check before building our final model.
+
+
+Graph 3- These boxplots compare California and Florida directly across the six key variables from 2010-2025 (excluding 2021). California has a much higher home price-to-income ratio (median around 6.4 vs Florida's 3.8) and a much higher homelessness rate (median around 33 per 10,000 vs Florida's 15). This lines up with the earlier correlation findings: California also has fewer housing units per resident, fewer permits issued, and lower rental vacancy than Florida, which points to a tighter, more supply-constrained housing market. California does have more shelter beds per 10,000 residents, but even with that extra shelter capacity, its homelessness rate is still more than double Florida's. This chart also backs up the idea that housing supply and affordability differences between the two states line up closely with their gap in homelessness rates.
+

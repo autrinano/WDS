@@ -1,0 +1,55 @@
+variable,category,definition,unit,source,candidate_role,transformation_status,cleaning_status
+population,Demographics,July 1 resident population estimate,people,Census PEP,scale/control,Published value; reshaped only,Uncleaned; missing values retained
+population_change,Demographics,Annual population change,people,Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+births,Demographics,Births component of population change,people,Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+deaths,Demographics,Deaths component of population change,people,Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+natural_change,Demographics,Births minus deaths component,people,Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+international_migration,Demographics,International migration component,people,Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+domestic_migration,Demographics,Domestic migration component,people,Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+net_migration,Demographics,Net migration component,people,Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+group_quarters_population,Demographics,Population living in group quarters,people,Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+birth_rate_per_1000,Demographics,Birth rate,"per 1,000 population",Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+death_rate_per_1000,Demographics,Death rate,"per 1,000 population",Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+natural_change_rate_per_1000,Demographics,Natural change rate,"per 1,000 population",Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+international_migration_rate_per_1000,Demographics,International migration rate,"per 1,000 population",Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+domestic_migration_rate_per_1000,Demographics,Domestic migration rate,"per 1,000 population",Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+net_migration_rate_per_1000,Demographics,Net migration rate,"per 1,000 population",Census PEP,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+housing_units,Housing supply,July 1 housing-unit estimate,housing units,Census PEP housing estimates,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+permits_one_unit_units,Housing supply,One-unit housing units authorized,housing units,Census/HUD BPS,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+permits_two_unit_units,Housing supply,Units authorized in two-unit structures,housing units,Census/HUD BPS,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+permits_three_four_unit_units,Housing supply,Units authorized in 3-4 unit structures,housing units,Census/HUD BPS,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+permits_five_plus_unit_units,Housing supply,Units authorized in 5+ unit structures,housing units,Census/HUD BPS,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+permits_total_units_authorized,Housing supply,Mechanical sum of published authorized-unit categories,housing units,Census/HUD BPS,candidate covariate,Mechanical row sum; components retained,Uncleaned; missing values retained
+permits_total_value_authorized,Housing supply,Mechanical sum of published construction-value categories,nominal dollars,Census/HUD BPS,candidate covariate,Mechanical row sum; components retained,Uncleaned; missing values retained
+permits_total_reported_units,Housing supply,Mechanical sum of published units represented by reporting places,housing units,Census/HUD BPS,coverage/quality,Mechanical row sum; components retained,Uncleaned; missing values retained
+poverty_all_estimate,Income and poverty,"Estimated people in poverty, all ages",people,Census SAIPE,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+poverty_all_ci_low,Income and poverty,Lower 90% confidence bound for all-age poverty estimate,people,Census SAIPE,uncertainty,Published value; reshaped only,Uncleaned; missing values retained
+poverty_all_ci_high,Income and poverty,Upper 90% confidence bound for all-age poverty estimate,people,Census SAIPE,uncertainty,Published value; reshaped only,Uncleaned; missing values retained
+poverty_all_pct,Income and poverty,Estimated all-age poverty percent,percent,Census SAIPE,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+poverty_all_pct_ci_low,Income and poverty,Lower 90% confidence bound for poverty percent,percent,Census SAIPE,uncertainty,Published value; reshaped only,Uncleaned; missing values retained
+poverty_all_pct_ci_high,Income and poverty,Upper 90% confidence bound for poverty percent,percent,Census SAIPE,uncertainty,Published value; reshaped only,Uncleaned; missing values retained
+poverty_child_estimate,Income and poverty,Estimated children under 18 in poverty,people,Census SAIPE,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+poverty_child_ci_low,Income and poverty,Lower 90% confidence bound for child poverty estimate,people,Census SAIPE,uncertainty,Published value; reshaped only,Uncleaned; missing values retained
+poverty_child_ci_high,Income and poverty,Upper 90% confidence bound for child poverty estimate,people,Census SAIPE,uncertainty,Published value; reshaped only,Uncleaned; missing values retained
+poverty_child_pct,Income and poverty,Estimated child poverty percent,percent,Census SAIPE,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+poverty_child_pct_ci_low,Income and poverty,Lower 90% confidence bound for child poverty percent,percent,Census SAIPE,uncertainty,Published value; reshaped only,Uncleaned; missing values retained
+poverty_child_pct_ci_high,Income and poverty,Upper 90% confidence bound for child poverty percent,percent,Census SAIPE,uncertainty,Published value; reshaped only,Uncleaned; missing values retained
+poverty_age_5_17_estimate,Income and poverty,Estimated related children age 5-17 in families in poverty,people,Census SAIPE,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+poverty_age_5_17_pct,Income and poverty,Estimated poverty percent for related children age 5-17 in families,percent,Census SAIPE,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+median_household_income,Income and poverty,Estimated median household income,nominal dollars,Census SAIPE,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+median_household_income_ci_low,Income and poverty,Lower 90% confidence bound for median household income,nominal dollars,Census SAIPE,uncertainty,Published value; reshaped only,Uncleaned; missing values retained
+median_household_income_ci_high,Income and poverty,Upper 90% confidence bound for median household income,nominal dollars,Census SAIPE,uncertainty,Published value; reshaped only,Uncleaned; missing values retained
+unemployment_rate_pct,Labor market,Annual county unemployment rate,percent,BLS LAUS,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+unemployed_people,Labor market,Annual unemployed persons estimate,people,BLS LAUS,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+employed_people,Labor market,Annual employed persons estimate,people,BLS LAUS,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+civilian_labor_force,Labor market,Annual civilian labor force estimate,people,BLS LAUS,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+bea_personal_income_thousands_usd,Economic output and income,Personal income,thousands of nominal dollars,BEA CAINC1,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+bea_population,Economic output and income,Population used by BEA,people,BEA CAINC1,scale/control,Published value; reshaped only,Uncleaned; missing values retained
+bea_per_capita_personal_income_usd,Economic output and income,Per capita personal income,nominal dollars,BEA CAINC1,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+bea_real_gdp_thousands_2017_usd,Economic output and income,Real county GDP,thousands of chained 2017 dollars,BEA CAGDP1,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+bea_real_gdp_quantity_index,Economic output and income,Real GDP chain-type quantity index,index,BEA CAGDP1,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+bea_current_gdp_thousands_usd,Economic output and income,Current-dollar county GDP,thousands of nominal dollars,BEA CAGDP1,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+annual_hpi_change_pct,Housing market,Annual change in developmental county all-transactions HPI,percent,FHFA HPI,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+hpi,Housing market,Developmental county all-transactions HPI,index,FHFA HPI,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+hpi_1990_base,Housing market,HPI rebased to 1990,"index, 1990=100",FHFA HPI,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
+hpi_2000_base,Housing market,HPI rebased to 2000,"index, 2000=100",FHFA HPI,candidate covariate,Published value; reshaped only,Uncleaned; missing values retained
