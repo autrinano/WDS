@@ -1,0 +1,12 @@
+"model","lambda_rule","model_family","comparability","n","covers_both_states","rmse","mae","r2","rmse_minus_baseline","rank_rmse_overall","is_headline_model","rank_rmse_among_unified","rank_mae_among_unified"
+"separate_lasso_FL","1se","Separate LASSO - Florida only","Single-state component",208,FALSE,10.4093,7.347,0.373,-11.5221,1,FALSE,,
+"separate_lasso_FL","min","Separate LASSO - Florida only","Single-state component",208,FALSE,10.4407,7.8857,0.3693,-11.4908,2,FALSE,,
+"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",555,TRUE,13.902,10.1794,0.6745,-8.0295,3,FALSE,,
+"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",555,TRUE,14.0581,10.5756,0.6671,-7.8734,4,FALSE,,
+"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)",555,TRUE,14.6922,10.1413,0.6364,-7.2393,5,TRUE,1,3
+"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)",555,TRUE,15.1266,9.9113,0.6146,-6.8049,6,FALSE,2,2
+"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)",555,TRUE,15.2968,10.1582,0.6059,-6.6347,7,FALSE,3,4
+"separate_lasso_CA","1se","Separate LASSO - California only","Single-state component",347,FALSE,15.6257,11.8772,0.5824,-6.3058,8,FALSE,,
+"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)",555,TRUE,15.8054,9.805,0.5792,-6.1261,9,FALSE,4,1
+"separate_lasso_CA","min","Separate LASSO - California only","Single-state component",347,FALSE,15.8352,12.188,0.5712,-6.0963,10,FALSE,,
+"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)",555,TRUE,21.9315,14.9832,0.1899,0,11,FALSE,,

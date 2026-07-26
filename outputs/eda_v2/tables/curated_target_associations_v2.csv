@@ -1,0 +1,13 @@
+"variable","n","spearman_rho"
+"coc_hic_temporary_beds_per_10k",887,0.665
+"state_real_median_rent_2025_usd",887,0.441
+"coc_permits_per_1000_housing_units",887,-0.439
+"coc_domestic_migration_rate_per_1000",887,-0.415
+"state_rental_vacancy_rate",887,-0.393
+"coc_hic_psh_beds_per_10k",887,0.32
+"coc_housing_cost_burdened_households_pct",887,0.27
+"coc_population_density_per_sq_mile",887,-0.189
+"coc_unemployment_rate_pct",887,0.169
+"coc_real_median_household_income_2025_usd",887,0.131
+"coc_housing_units_per_1000_residents",887,-0.065
+"coc_poverty_all_pct",887,0.036

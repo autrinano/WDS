@@ -1,0 +1,57 @@
+"fold","validation_year","model","lambda_rule","model_family","comparability","n_validation_rows","n_train_years","n_train_rows","rmse","mae","r2"
+1,2017,"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)",68,5,332,17.2764,10.8569,0.456
+1,2017,"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)",68,5,332,15.1567,10.2818,0.5813
+1,2017,"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)",68,5,332,15.6111,10.3737,0.5558
+1,2017,"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)",68,5,332,14.1782,9.7949,0.6336
+1,2017,"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",68,5,332,14.6278,10.1507,0.61
+1,2017,"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",68,5,332,13.581,10.026,0.6638
+1,2017,"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)",68,5,332,22.5982,14.8583,0.0692
+2,2018,"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)",69,6,400,17.6916,10.5717,0.494
+2,2018,"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)",69,6,400,15.9887,10.4526,0.5867
+2,2018,"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)",69,6,400,16.1603,10.3354,0.5778
+2,2018,"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)",69,6,400,15.9594,10.1379,0.5882
+2,2018,"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",69,6,400,17.0557,10.8827,0.5297
+2,2018,"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",69,6,400,16.3296,10.8255,0.5689
+2,2018,"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)",69,6,400,24.1625,15.6709,0.0561
+3,2019,"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)",69,7,469,18.2607,11.5402,0.4279
+3,2019,"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)",69,7,469,18.11,11.8368,0.4373
+3,2019,"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)",69,7,469,18.0373,11.5934,0.4418
+3,2019,"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)",69,7,469,17.7133,11.6235,0.4617
+3,2019,"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",69,7,469,14.7827,10.3583,0.6251
+3,2019,"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",69,7,469,14.9758,10.3057,0.6152
+3,2019,"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)",69,7,469,22.478,15.3784,0.1331
+4,2020,"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)",70,8,538,16.524,10.0107,0.5074
+4,2020,"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)",70,8,538,16.5424,10.5161,0.5063
+4,2020,"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)",70,8,538,16.2367,10.1278,0.5243
+4,2020,"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)",70,8,538,15.6711,10.2207,0.5569
+4,2020,"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",70,8,538,13.2984,9.299,0.6809
+4,2020,"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",70,8,538,14.0518,10.1086,0.6437
+4,2020,"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)",70,8,538,21.1368,14.3305,0.1939
+5,2022,"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)",70,9,608,15.0622,9.3088,0.6289
+5,2022,"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)",70,9,608,14.0909,9.1253,0.6752
+5,2022,"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)",70,9,608,13.7745,8.7936,0.6896
+5,2022,"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)",70,9,608,12.7674,8.8105,0.7334
+5,2022,"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",70,9,608,12.8562,10.5237,0.7296
+5,2022,"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",70,9,608,13.717,11.361,0.6922
+5,2022,"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)",70,9,608,22.0222,15.3461,0.2067
+6,2023,"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)",69,10,678,14.1655,8.5033,0.6446
+6,2023,"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)",69,10,678,15.6004,10.8833,0.569
+6,2023,"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)",69,10,678,14.8825,10.1377,0.6077
+6,2023,"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)",69,10,678,14.4008,10.8831,0.6327
+6,2023,"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",69,10,678,13.2979,10.6231,0.6868
+6,2023,"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",69,10,678,13.8938,11.4201,0.6581
+6,2023,"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)",69,10,678,20.8667,14.6126,0.2288
+7,2024,"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)",70,11,747,14.1959,8.771,0.6841
+7,2024,"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)",70,11,747,13.7583,9.1026,0.7032
+7,2024,"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)",70,11,747,13.2765,8.8806,0.7237
+7,2024,"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)",70,11,747,13.1638,9.6421,0.7283
+7,2024,"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",70,11,747,12.5465,9.9147,0.7532
+7,2024,"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",70,11,747,12.9264,10.4574,0.738
+7,2024,"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)",70,11,747,21.7789,14.9322,0.2564
+8,2025,"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)",70,12,817,12.4201,8.9247,0.7442
+8,2025,"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)",70,12,817,12.4656,9.1091,0.7423
+8,2025,"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)",70,12,817,12.3018,9.0945,0.749
+8,2025,"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)",70,12,817,13.0213,10.0395,0.7188
+8,2025,"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",70,12,817,12.1842,9.7008,0.7538
+8,2025,"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)",70,12,817,12.6831,10.0969,0.7332
+8,2025,"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)",70,12,817,20.2159,14.743,0.3223

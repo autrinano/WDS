@@ -1,0 +1,135 @@
+"state","state_abbr","county_fips","county_name","coc_number","coc_name","allocated_tract_population_2024","county_tract_population_2024","county_population_share","assigned_tract_count","nearest_boundary_fallback_tract_count","max_nearest_boundary_distance_km","split_county_flag"
+"California","CA","06001","Alameda County","CA-502","Oakland, Berkeley/Alameda County CoC",1649473,1649473,1,379,7,3.37114262789336,0
+"California","CA","06003","Alpine County","CA-530","Alpine, Inyo, Mono Counties CoC",1616,1616,1,1,0,0,0
+"California","CA","06005","Amador County","CA-526","Amador, Calaveras, Mariposa, Tuolumne Counties CoC",41428,41428,1,10,0,0,0
+"California","CA","06007","Butte County","CA-519","Chico, Paradise/Butte County CoC",207929,207929,1,54,0,0,0
+"California","CA","06009","Calaveras County","CA-526","Amador, Calaveras, Mariposa, Tuolumne Counties CoC",46248,46248,1,14,0,0,0
+"California","CA","06011","Colusa County","CA-523","Colusa, Glenn, Trinity Counties CoC",21984,21984,1,6,0,0,0
+"California","CA","06013","Contra Costa County","CA-505","Contra Costa County CoC",1165012,1165012,1,242,3,0.817756913572367,0
+"California","CA","06015","Del Norte County","CA-516","Redding/Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC",27107,27107,1,9,3,4.13395033513688,0
+"California","CA","06017","El Dorado County","CA-525","El Dorado County CoC",192662,192662,1,55,0,0,0
+"California","CA","06019","Fresno County","CA-514","Fresno City & County/Madera County CoC",1016725,1016725,1,225,0,0,0
+"California","CA","06021","Glenn County","CA-523","Colusa, Glenn, Trinity Counties CoC",28494,28494,1,8,0,0,0
+"California","CA","06023","Humboldt County","CA-522","Humboldt County CoC",134541,134541,1,36,2,2.97706295709908,0
+"California","CA","06025","Imperial County","CA-613","Imperial County CoC",180202,180202,1,40,0,0,0
+"California","CA","06027","Inyo County","CA-530","Alpine, Inyo, Mono Counties CoC",18739,18739,1,6,0,0,0
+"California","CA","06029","Kern County","CA-604","Bakersfield/Kern County CoC",915075,915075,1,236,0,0,0
+"California","CA","06031","Kings County","CA-513","Visalia/Kings, Tulare Counties CoC",153298,153298,1,31,0,0,0
+"California","CA","06033","Lake County","CA-529","Lake County CoC",68152,68152,1,21,0,0,0
+"California","CA","06035","Lassen County","CA-516","Redding/Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC",30356,30356,1,9,0,0,0
+"California","CA","06037","Los Angeles County","CA-600","Los Angeles City & County CoC",9023013,9808667,0.919902062125261,2310,9,3.92404317634424,1
+"California","CA","06037","Los Angeles County","CA-606","Long Beach CoC",457406,9808667,0.0466328401198654,112,6,0.954272585711499,1
+"California","CA","06037","Los Angeles County","CA-612","Glendale CoC",190748,9808667,0.019446883047411,42,0,0,1
+"California","CA","06037","Los Angeles County","CA-607","Pasadena CoC",137500,9808667,0.0140182147074623,34,0,0,1
+"California","CA","06039","Madera County","CA-514","Fresno City & County/Madera County CoC",160940,160940,1,34,0,0,0
+"California","CA","06041","Marin County","CA-507","Marin County CoC",257969,257969,1,63,4,2.44045253828078,0
+"California","CA","06043","Mariposa County","CA-526","Amador, Calaveras, Mariposa, Tuolumne Counties CoC",17082,17082,1,6,0,0,0
+"California","CA","06045","Mendocino County","CA-509","Mendocino County CoC",90244,90244,1,24,1,3.17629121432755,0
+"California","CA","06047","Merced County","CA-520","Merced City & County CoC",290201,290201,1,63,0,0,0
+"California","CA","06049","Modoc County","CA-516","Redding/Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC",8600,8600,1,4,0,0,0
+"California","CA","06051","Mono County","CA-530","Alpine, Inyo, Mono Counties CoC",13148,13148,1,4,0,0,0
+"California","CA","06053","Monterey County","CA-506","Salinas/Monterey, San Benito Counties CoC",437613,437613,1,104,1,2.94881971160191,0
+"California","CA","06055","Napa County","CA-517","Napa City & County CoC",134869,134869,1,40,0,0,0
+"California","CA","06057","Nevada County","CA-531","Nevada County CoC",102481,102481,1,26,0,0,0
+"California","CA","06059","Orange County","CA-602","Santa Ana, Anaheim/Orange County CoC",3165820,3165820,1,614,5,3.69791466770703,0
+"California","CA","06061","Placer County","CA-515","Roseville, Rocklin/Placer County CoC",419156,419156,1,92,0,0,0
+"California","CA","06063","Plumas County","CA-516","Redding/Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC",19423,19423,1,7,0,0,0
+"California","CA","06065","Riverside County","CA-608","Riverside City & County CoC",2478600,2478600,1,518,0,0,0
+"California","CA","06067","Sacramento County","CA-503","Sacramento City & County CoC",1594006,1594006,1,363,0,0,0
+"California","CA","06069","San Benito County","CA-506","Salinas/Monterey, San Benito Counties CoC",67290,67290,1,12,0,0,0
+"California","CA","06071","San Bernardino County","CA-609","San Bernardino City & County CoC",2197104,2197104,1,466,0,0,0
+"California","CA","06073","San Diego County","CA-601","San Diego City and County CoC",3288774,3288774,1,737,9,3.48776332623133,0
+"California","CA","06075","San Francisco County","CA-501","San Francisco CoC",830235,830235,1,244,9,3.18513941882973,0
+"California","CA","06077","San Joaquin County","CA-511","Stockton/San Joaquin County CoC",797334,797334,1,174,0,0,0
+"California","CA","06079","San Luis Obispo County","CA-614","San Luis Obispo County CoC",281555,281555,1,70,2,3.92990028073944,0
+"California","CA","06081","San Mateo County","CA-512","Daly City/San Mateo County CoC",742340,742340,1,174,2,2.67765170453946,0
+"California","CA","06083","Santa Barbara County","CA-603","Santa Maria/Santa Barbara County CoC",443701,443701,1,109,1,3.89992267365134,0
+"California","CA","06085","Santa Clara County","CA-500","San Jose/Santa Clara City & County CoC",1902047,1902047,1,408,0,0,0
+"California","CA","06087","Santa Cruz County","CA-508","Watsonville/Santa Cruz City & County CoC",264926,264926,1,70,3,2.37813215215025,0
+"California","CA","06089","Shasta County","CA-516","Redding/Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC",181436,181436,1,50,0,0,0
+"California","CA","06091","Sierra County","CA-516","Redding/Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC",2746,2746,1,1,0,0,0
+"California","CA","06093","Siskiyou County","CA-516","Redding/Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC",43466,43466,1,16,0,0,0
+"California","CA","06095","Solano County","CA-518","Vallejo/Solano County CoC",451918,451918,1,100,1,0.846356707935794,0
+"California","CA","06097","Sonoma County","CA-504","Santa Rosa, Petaluma/Sonoma County CoC",485040,485040,1,122,1,3.2172944975859,0
+"California","CA","06099","Stanislaus County","CA-510","Turlock, Modesto/Stanislaus County CoC",553990,553990,1,112,0,0,0
+"California","CA","06101","Sutter County","CA-524","Yuba City & County/Sutter County CoC",98857,98857,1,21,0,0,0
+"California","CA","06103","Tehama County","CA-527","Tehama County CoC",65167,65167,1,14,0,0,0
+"California","CA","06105","Trinity County","CA-523","Colusa, Glenn, Trinity Counties CoC",15860,15860,1,4,0,0,0
+"California","CA","06107","Tulare County","CA-513","Visalia/Kings, Tulare Counties CoC",478693,478693,1,103,0,0,0
+"California","CA","06109","Tuolumne County","CA-526","Amador, Calaveras, Mariposa, Tuolumne Counties CoC",54498,54498,1,18,0,0,0
+"California","CA","06111","Ventura County","CA-611","Oxnard, San Buenaventura/Ventura County CoC",837469,837469,1,190,2,0.600554510059637,0
+"California","CA","06113","Yolo County","CA-521","Davis, Woodland/Yolo County CoC",220564,220564,1,53,0,0,0
+"California","CA","06115","Yuba County","CA-524","Yuba City & County/Sutter County CoC",84507,84507,1,19,0,0,0
+"Florida","FL","12001","Alachua County","FL-508","Gainesville/Alachua, Putnam Counties CoC",285492,285492,1,58,0,0,0
+"Florida","FL","12003","Baker County","FL-510","Jacksonville-Duval, Clay Counties CoC",13937,28430,0.490221596904678,2,2,14.9424779867628,1
+"Florida","FL","12003","Baker County","FL-508","Gainesville/Alachua, Putnam Counties CoC",8055,28430,0.283327470981358,1,1,7.68712427436862,1
+"Florida","FL","12003","Baker County","FL-518","Columbia, Hamilton, Lafayette, Suwannee Counties CoC",6438,28430,0.226450932113964,1,1,10.0207978643757,1
+"Florida","FL","12005","Bay County","FL-515","Panama City/Bay, Jackson Counties CoC",186393,186393,1,50,11,11.165272118753,0
+"Florida","FL","12007","Bradford County","FL-508","Gainesville/Alachua, Putnam Counties CoC",27885,27885,1,6,0,0,0
+"Florida","FL","12009","Brevard County","FL-513","Palm Bay, Melbourne/Brevard County CoC",632780,632780,1,148,24,3.7740005443024,0
+"Florida","FL","12011","Broward County","FL-601","Ft Lauderdale/Broward County CoC",1977129,1977129,1,417,6,3.02892075237815,0
+"Florida","FL","12013","Calhoun County","FL-515","Panama City/Bay, Jackson Counties CoC",13492,13492,1,4,0,0,0
+"Florida","FL","12015","Charlotte County","FL-602","Charlotte County CoC",201064,201064,1,47,2,8.03347139291366,0
+"Florida","FL","12017","Citrus County","FL-520","Citrus, Hernando, Lake, Sumter Counties CoC",162472,162472,1,42,2,8.98288429207415,0
+"Florida","FL","12019","Clay County","FL-510","Jacksonville-Duval, Clay Counties CoC",227584,227584,1,45,0,0,0
+"Florida","FL","12021","Collier County","FL-606","Naples/Collier County CoC",398291,398291,1,109,4,8.24199111540923,0
+"Florida","FL","12023","Columbia County","FL-518","Columbia, Hamilton, Lafayette, Suwannee Counties CoC",71789,71789,1,13,0,0,0
+"Florida","FL","12027","DeSoto County","FL-517","Hendry, Hardee, Highlands Counties CoC",35386,35386,1,9,0,0,0
+"Florida","FL","12029","Dixie County","FL-508","Gainesville/Alachua, Putnam Counties CoC",10938,17058,0.641224059092508,3,3,14.1820992898141,1
+"Florida","FL","12029","Dixie County","FL-518","Columbia, Hamilton, Lafayette, Suwannee Counties CoC",3805,17058,0.22306249267206,1,1,10.7481427693894,1
+"Florida","FL","12029","Dixie County","FL-506","Tallahassee/Leon County CoC",2315,17058,0.135713448235432,2,2,22.4724217651761,1
+"Florida","FL","12031","Duval County","FL-510","Jacksonville-Duval, Clay Counties CoC",1023153,1023153,1,219,3,3.5913859139297,0
+"Florida","FL","12033","Escambia County","FL-511","Pensacola/Escambia, Santa Rosa Counties CoC",325923,325923,1,79,12,7.83588457180787,0
+"Florida","FL","12035","Flagler County","FL-504","Deltona, Daytona Beach/Volusia, Flagler Counties CoC",126528,126528,1,24,1,3.06122708538556,0
+"Florida","FL","12037","Franklin County","FL-506","Tallahassee/Leon County CoC",12553,12553,1,7,4,9.09540845290885,0
+"Florida","FL","12039","Gadsden County","FL-506","Tallahassee/Leon County CoC",43710,43710,1,10,0,0,0
+"Florida","FL","12041","Gilchrist County","FL-508","Gainesville/Alachua, Putnam Counties CoC",19040,19040,1,5,0,0,0
+"Florida","FL","12043","Glades County","FL-517","Hendry, Hardee, Highlands Counties CoC",12563,12563,1,5,0,0,0
+"Florida","FL","12045","Gulf County","FL-515","Panama City/Bay, Jackson Counties CoC",15131,15131,1,6,1,1.84555731586555,0
+"Florida","FL","12047","Hamilton County","FL-518","Columbia, Hamilton, Lafayette, Suwannee Counties CoC",13616,13616,1,6,0,0,0
+"Florida","FL","12049","Hardee County","FL-517","Hendry, Hardee, Highlands Counties CoC",25675,25675,1,8,0,0,0
+"Florida","FL","12051","Hendry County","FL-517","Hendry, Hardee, Highlands Counties CoC",42382,42382,1,10,0,0,0
+"Florida","FL","12053","Hernando County","FL-520","Citrus, Hernando, Lake, Sumter Counties CoC",207018,207018,1,47,1,8.6189989014493,0
+"Florida","FL","12055","Highlands County","FL-517","Hendry, Hardee, Highlands Counties CoC",105702,105702,1,35,0,0,0
+"Florida","FL","12057","Hillsborough County","FL-501","Tampa/Hillsborough County CoC",1522748,1522748,1,334,8,8.60799536556127,0
+"Florida","FL","12057","Hillsborough County","FL-502","St. Petersburg, Clearwater, Largo/Pinellas County CoC",0,1522748,0,1,1,2.49134678526244,0
+"Florida","FL","12059","Holmes County","FL-515","Panama City/Bay, Jackson Counties CoC",19513,19513,1,7,0,0,0
+"Florida","FL","12061","Indian River County","FL-509","Fort Pierce/St. Lucie, Indian River, Martin Counties CoC",166936,166936,1,45,3,2.98568759635608,0
+"Florida","FL","12063","Jackson County","FL-515","Panama City/Bay, Jackson Counties CoC",48250,48250,1,13,0,0,0
+"Florida","FL","12065","Jefferson County","FL-506","Tallahassee/Leon County CoC",15091,15091,1,6,1,9.02121280630907,0
+"Florida","FL","12067","Lafayette County","FL-518","Columbia, Hamilton, Lafayette, Suwannee Counties CoC",8161,8161,1,3,0,0,0
+"Florida","FL","12069","Lake County","FL-520","Citrus, Hernando, Lake, Sumter Counties CoC",412924,412924,1,75,0,0,0
+"Florida","FL","12071","Lee County","FL-603","Ft Myers, Cape Coral/Lee County CoC",817666,817666,1,223,17,8.13770368244076,0
+"Florida","FL","12073","Leon County","FL-506","Tallahassee/Leon County CoC",297542,297542,1,79,0,0,0
+"Florida","FL","12075","Levy County","FL-508","Gainesville/Alachua, Putnam Counties CoC",45391,45391,1,13,1,6.79179036603638,0
+"Florida","FL","12077","Liberty County","FL-506","Tallahassee/Leon County CoC",7687,7687,1,4,0,0,0
+"Florida","FL","12079","Madison County","FL-506","Tallahassee/Leon County CoC",18089,18089,1,5,0,0,0
+"Florida","FL","12081","Manatee County","FL-500","Sarasota, Bradenton/Manatee, Sarasota Counties CoC",429792,429792,1,94,11,7.73120529641899,0
+"Florida","FL","12083","Marion County","FL-514","Ocala/Marion County CoC",400078,400078,1,93,0,0,0
+"Florida","FL","12085","Martin County","FL-509","Fort Pierce/St. Lucie, Indian River, Martin Counties CoC",162176,162176,1,43,1,3.26970170355662,0
+"Florida","FL","12086","Miami-Dade County","FL-600","Miami-Dade County CoC",2738356,2738356,1,707,24,2.66068809367982,0
+"Florida","FL","12087","Monroe County","FL-604","Monroe County CoC",81860,81860,1,29,15,8.08109349767362,0
+"Florida","FL","12089","Nassau County","FL-510","Jacksonville-Duval, Clay Counties CoC",97859,97859,1,24,1,3.04430422617738,0
+"Florida","FL","12091","Okaloosa County","FL-505","Fort Walton Beach/Okaloosa, Walton Counties CoC",216599,216599,1,49,4,12.0772391094245,0
+"Florida","FL","12093","Okeechobee County","FL-517","Hendry, Hardee, Highlands Counties CoC",40816,40816,1,12,0,0,0
+"Florida","FL","12095","Orange County","FL-507","Orlando/Orange, Osceola, Seminole Counties CoC",1471937,1471937,1,267,0,0,0
+"Florida","FL","12097","Osceola County","FL-507","Orlando/Orange, Osceola, Seminole Counties CoC",427415,427415,1,59,0,0,0
+"Florida","FL","12099","Palm Beach County","FL-605","West Palm Beach/Palm Beach County CoC",1533806,1533806,1,373,8,3.08039400571666,0
+"Florida","FL","12101","Pasco County","FL-519","Pasco County CoC",611444,611444,1,131,2,10.1497794917835,0
+"Florida","FL","12103","Pinellas County","FL-502","St. Petersburg, Clearwater, Largo/Pinellas County CoC",963481,963481,1,275,32,8.50045572883614,0
+"Florida","FL","12105","Polk County","FL-503","Lakeland/Polk County CoC",790694,790694,1,174,0,0,0
+"Florida","FL","12107","Putnam County","FL-508","Gainesville/Alachua, Putnam Counties CoC",75164,75164,1,17,0,0,0
+"Florida","FL","12109","St. Johns County","FL-512","St. Johns County CoC",306934,306934,1,51,2,3.23329038549533,0
+"Florida","FL","12111","St. Lucie County","FL-509","Fort Pierce/St. Lucie, Indian River, Martin Counties CoC",360500,360500,1,68,3,3.12836806902892,0
+"Florida","FL","12113","Santa Rosa County","FL-511","Pensacola/Escambia, Santa Rosa Counties CoC",198472,198472,1,37,7,9.28751828339585,0
+"Florida","FL","12115","Sarasota County","FL-500","Sarasota, Bradenton/Manatee, Sarasota Counties CoC",459547,459547,1,123,7,9.29018489079551,0
+"Florida","FL","12117","Seminole County","FL-507","Orlando/Orange, Osceola, Seminole Counties CoC",481470,481470,1,89,0,0,0
+"Florida","FL","12119","Sumter County","FL-520","Citrus, Hernando, Lake, Sumter Counties CoC",143408,143408,1,28,0,0,0
+"Florida","FL","12121","Suwannee County","FL-518","Columbia, Hamilton, Lafayette, Suwannee Counties CoC",45342,45342,1,11,0,0,0
+"Florida","FL","12123","Taylor County","FL-506","Tallahassee/Leon County CoC",21503,21503,1,8,1,9.42992100598571,0
+"Florida","FL","12125","Union County","FL-518","Columbia, Hamilton, Lafayette, Suwannee Counties CoC",10263,15701,0.653652633590217,2,2,5.02187405837574,1
+"Florida","FL","12125","Union County","FL-508","Gainesville/Alachua, Putnam Counties CoC",5438,15701,0.346347366409783,2,2,4.34856453478008,1
+"Florida","FL","12127","Volusia County","FL-504","Deltona, Daytona Beach/Volusia, Flagler Counties CoC",579622,579622,1,130,5,2.97324387816117,0
+"Florida","FL","12129","Wakulla County","FL-506","Tallahassee/Leon County CoC",35387,35387,1,9,1,8.9950792903684,0
+"Florida","FL","12131","Walton County","FL-505","Fort Walton Beach/Okaloosa, Walton Counties CoC",82948,82948,1,21,4,8.60957974256408,0
+"Florida","FL","12133","Washington County","FL-515","Panama City/Bay, Jackson Counties CoC",25529,25529,1,7,0,0,0

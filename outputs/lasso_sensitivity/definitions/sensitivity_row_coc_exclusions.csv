@@ -1,0 +1,20 @@
+"sample_id","level","unit","reason","n_rows_affected"
+"S1_split_county_excluded","CoC","CA-600","coc_contains_split_county_flag == 1 (county split across CoCs; predictors are fractional ACS-share estimates)",13
+"S1_split_county_excluded","CoC","CA-606","coc_contains_split_county_flag == 1 (county split across CoCs; predictors are fractional ACS-share estimates)",13
+"S1_split_county_excluded","CoC","CA-607","coc_contains_split_county_flag == 1 (county split across CoCs; predictors are fractional ACS-share estimates)",13
+"S1_split_county_excluded","CoC","CA-612","coc_contains_split_county_flag == 1 (county split across CoCs; predictors are fractional ACS-share estimates)",13
+"S1_split_county_excluded","CoC","FL-506","coc_contains_split_county_flag == 1 (county split across CoCs; predictors are fractional ACS-share estimates)",13
+"S1_split_county_excluded","CoC","FL-508","coc_contains_split_county_flag == 1 (county split across CoCs; predictors are fractional ACS-share estimates)",13
+"S1_split_county_excluded","CoC","FL-510","coc_contains_split_county_flag == 1 (county split across CoCs; predictors are fractional ACS-share estimates)",13
+"S1_split_county_excluded","column","coc_contains_split_county_flag","Predictor becomes constant (all zero) after the row filter and is dropped",0
+"S2_stable_cocs","CoC","CA-509","Observed in 12 of 13 usable v2 target years (missing 2023)",12
+"S2_stable_cocs","CoC","CA-527","Observed in 9 of 13 usable v2 target years (missing 2012;2013;2014;2015)",9
+"S2_stable_cocs","CoC","CA-529","Observed in 9 of 13 usable v2 target years (missing 2012;2013;2014;2015)",9
+"S2_stable_cocs","CoC","CA-530","Observed in 7 of 13 usable v2 target years (missing 2012;2013;2014;2015;2016;2017)",7
+"S2_stable_cocs","CoC","CA-531","Observed in 5 of 13 usable v2 target years (missing 2012;2013;2014;2015;2016;2017;2018;2019)",5
+"S3_no_structural_beds","column","coc_hic_psh_beds_per_10k","HUD HIC service-capacity predictor removed as potentially endogenous to the outcome",0
+"S3_no_structural_beds","column","coc_hic_temporary_beds_per_10k","HUD HIC service-capacity predictor removed as potentially endogenous to the outcome",0
+"S4_persistence","row","prior-year PIT eligibility","prior PIT flagged unreliable (pit_count_caution_flag == 1: COVID-disrupted 2021 count)",70
+"S4b_persistence_full_enum","row","prior-year PIT count type","Prior count is sheltered-only or partial-unsheltered, not a full sheltered-and-unsheltered enumeration",151
+"S5_no_hpi_fl518","column","coc_relative_home_price_index_2000_base","FHFA home-price index removed from the predictor requirement so HPI-dark CoCs are not excluded",0
+"S5_no_hpi_fl518","row","FL-518","Candidate-panel FL-518 rows still excluded because another required v2 predictor is missing (no imputation applied)",3

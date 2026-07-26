@@ -9,5 +9,12 @@ No population values are negative,TRUE,TRUE,TRUE
 No housing-unit values are negative,TRUE,TRUE,TRUE
 All SAIPE poverty percentages are between 0 and 100 when observed,TRUE,TRUE,TRUE
 All BLS unemployment rates are between 0 and 100 when observed,TRUE,TRUE,TRUE
-BLS labor measures cover all county-years from 2010 through 2019,TRUE,TRUE,TRUE
+"BLS labor measures cover all 2,000 county-years",TRUE,TRUE,TRUE
 2025 rows retained for every county,125,125,TRUE
+2024 Gazetteer land area covers all counties,125,125,TRUE
+Homeownership rates are between 0 and 100 when observed,TRUE,TRUE,TRUE
+Eviction filing rates are nonnegative when observed,TRUE,TRUE,TRUE
+Population growth is suppressed for 2010 and 2020,TRUE,TRUE,TRUE
+Housing supply growth is suppressed for 2010 and 2020,TRUE,TRUE,TRUE
+Foreclosure rate remains entirely blank pending a verified source,TRUE,TRUE,TRUE
+Requested-variable status log contains all 43 requested concepts,43,43,TRUE

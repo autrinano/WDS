@@ -1,0 +1,12 @@
+"model","lambda_rule","scope","n","rmse","mae","r2"
+"pooled_lasso","1se","pooled_all_folds_LOGTARGET",555,21.4659694764017,10.6724609660316,0.223880689694705
+"pooled_lasso_state_interactions","1se","pooled_all_folds_LOGTARGET",555,22.8100064652174,10.7512575558929,0.123648587767427
+"separate_lasso_CA","1se","pooled_all_folds_LOGTARGET",347,23.999026445743,14.4129833468599,0.0150037627461949
+"separate_lasso_FL","1se","pooled_all_folds_LOGTARGET",208,7.90723704555765,4.45028064572533,0.638219901310221
+"separate_state_lasso","1se","pooled_all_folds_LOGTARGET",555,19.5840006187102,10.6792136858942,0.354003295492154
+"pooled_lasso","min","pooled_all_folds_LOGTARGET",555,24.9856270868917,11.1883037604078,-0.051496863835141
+"pooled_lasso_state_interactions","min","pooled_all_folds_LOGTARGET",555,21.745764756514,11.2482962289084,0.203516386493914
+"separate_lasso_CA","min","pooled_all_folds_LOGTARGET",347,25.1003405276944,14.6494198824787,-0.0774733811043171
+"separate_lasso_FL","min","pooled_all_folds_LOGTARGET",208,8.28450793371755,4.56799899633996,0.602873752168543
+"separate_state_lasso","min","pooled_all_folds_LOGTARGET",555,20.4848914108196,10.8711576404664,0.293202822781345
+"state_time_baseline","none","pooled_all_folds_LOGTARGET",555,21.8548070825593,15.2048202782749,0.195508557938635

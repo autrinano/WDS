@@ -1,0 +1,207 @@
+"dataset","variable","rows","nonmissing","missing","coverage_pct","min_year","max_year"
+"CoC homelessness outcomes","year",1115,1115,0,100,2010,2025
+"CoC homelessness outcomes","total_homeless",1115,1115,0,100,2010,2025
+"CoC homelessness outcomes","homeless_rate_per_10k_estimated",1115,1112,3,99.7,2010,2025
+"CoC homelessness outcomes","sheltered_homeless",1115,1115,0,100,2010,2025
+"CoC homelessness outcomes","unsheltered_homeless",1115,1115,0,100,2010,2025
+"CoC homelessness outcomes","unsheltered_share_pct",1115,1044,71,93.6,2010,2025
+"CoC homelessness outcomes","homeless_individuals",1115,1115,0,100,2010,2025
+"CoC homelessness outcomes","homeless_people_in_families",1115,1115,0,100,2010,2025
+"CoC homelessness outcomes","chronically_homeless_individuals",1115,1115,0,100,2010,2025
+"CoC homelessness outcomes","homeless_veterans",1115,1047,68,93.9,2011,2025
+"CoC homelessness outcomes","homeless_unaccompanied_youth_under_25",1115,777,338,69.7,2015,2025
+"CoC homelessness outcomes","pit_count_caution_flag",1115,1115,0,100,2010,2025
+"CoC homelessness outcomes","estimated_coc_population",1115,1112,3,99.7,2010,2025
+"Allocated CoC predictors","year",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","estimated_coc_population",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","contributing_counties",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","contains_split_county_flag",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","log_estimated_coc_population",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","coc_land_area_sq_miles",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","population_density_per_sq_mile_derived",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","housing_units_per_1000_residents",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","permits_per_1000_residents",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","permits_per_1000_housing_units",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","multifamily_permit_share_pct",1136,1135,1,99.9,2010,2025
+"Allocated CoC predictors","real_median_household_income_2025_usd",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","real_per_capita_personal_income_2025_usd",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","real_median_home_sale_price_2025_usd",1136,0,1136,0,,
+"Allocated CoC predictors","real_state_minimum_wage_2025_usd",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","real_gdp_per_capita_2017_usd",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","population_change",1136,426,710,37.5,2020,2025
+"Allocated CoC predictors","births",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","deaths",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","natural_change",1136,426,710,37.5,2020,2025
+"Allocated CoC predictors","international_migration",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","domestic_migration",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","net_migration",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","group_quarters_population",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","birth_rate_per_1000",1136,994,142,87.5,2011,2025
+"Allocated CoC predictors","death_rate_per_1000",1136,994,142,87.5,2011,2025
+"Allocated CoC predictors","natural_change_rate_per_1000",1136,355,781,31.2,2021,2025
+"Allocated CoC predictors","international_migration_rate_per_1000",1136,994,142,87.5,2011,2025
+"Allocated CoC predictors","domestic_migration_rate_per_1000",1136,994,142,87.5,2011,2025
+"Allocated CoC predictors","net_migration_rate_per_1000",1136,994,142,87.5,2011,2025
+"Allocated CoC predictors","housing_units",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","permits_one_unit_units",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","permits_two_unit_units",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","permits_three_four_unit_units",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","permits_five_plus_unit_units",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","permits_total_units_authorized",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","permits_total_value_authorized",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","permits_total_reported_units",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","poverty_all_estimate",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_all_ci_low",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_all_ci_high",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_all_pct",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_all_pct_ci_low",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_all_pct_ci_high",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_child_estimate",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_child_ci_low",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_child_ci_high",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_child_pct",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_child_pct_ci_low",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_child_pct_ci_high",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_age_5_17_estimate",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","poverty_age_5_17_pct",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","median_household_income",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","median_household_income_ci_low",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","median_household_income_ci_high",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","civilian_labor_force",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","employed_people",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","unemployed_people",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","unemployment_rate_pct",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","bea_personal_income_thousands_usd",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","bea_population",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","bea_per_capita_personal_income_usd",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","bea_real_gdp_thousands_2017_usd",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","bea_real_gdp_quantity_index",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","bea_current_gdp_thousands_usd",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","annual_hpi_change_pct",1136,1133,3,99.7,2010,2025
+"Allocated CoC predictors","hpi",1136,1134,2,99.8,2010,2025
+"Allocated CoC predictors","hpi_1990_base",1136,1008,128,88.7,2010,2025
+"Allocated CoC predictors","hpi_2000_base",1136,1101,35,96.9,2010,2025
+"Allocated CoC predictors","high_school_graduate_or_higher_pct_age_18plus",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","homeownership_rate_pct",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","housing_cost_burdened_households_pct",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","income_inequality_top_bottom_quintile_ratio",1136,1065,71,93.8,2010,2024
+"Allocated CoC predictors","state_minimum_wage_usd_per_hour",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","medicaid_expansion_status",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","housing_units_per_capita",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","population_density_per_sq_mile",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","permits_total_units_per_1000_population",1136,1136,0,100,2010,2025
+"Allocated CoC predictors","population_growth_rate_pct",1136,994,142,87.5,2011,2025
+"Allocated CoC predictors","housing_supply_growth_rate_pct",1136,994,142,87.5,2011,2025
+"Allocated CoC predictors","foreclosure_rate_per_100_mortgages",1136,0,1136,0,,
+"Allocated CoC predictors","median_home_sale_price_annual_avg_usd",1136,0,1136,0,,
+"Next-year LASSO model panel","predictor_year",974,974,0,100,2010,2024
+"Next-year LASSO model panel","target_year",974,974,0,100,2010,2024
+"Next-year LASSO model panel","target_total_homeless",974,974,0,100,2010,2024
+"Next-year LASSO model panel","target_estimated_coc_population",974,974,0,100,2010,2024
+"Next-year LASSO model panel","target_homeless_rate_per_10k",974,974,0,100,2010,2024
+"Next-year LASSO model panel","estimated_coc_population",974,974,0,100,2010,2024
+"Next-year LASSO model panel","contributing_counties",974,974,0,100,2010,2024
+"Next-year LASSO model panel","contains_split_county_flag",974,974,0,100,2010,2024
+"Next-year LASSO model panel","log_estimated_coc_population",974,974,0,100,2010,2024
+"Next-year LASSO model panel","coc_land_area_sq_miles",974,974,0,100,2010,2024
+"Next-year LASSO model panel","population_density_per_sq_mile_derived",974,974,0,100,2010,2024
+"Next-year LASSO model panel","housing_units_per_1000_residents",974,974,0,100,2010,2024
+"Next-year LASSO model panel","permits_per_1000_residents",974,974,0,100,2010,2024
+"Next-year LASSO model panel","permits_per_1000_housing_units",974,974,0,100,2010,2024
+"Next-year LASSO model panel","multifamily_permit_share_pct",974,973,1,99.9,2010,2024
+"Next-year LASSO model panel","real_median_household_income_2025_usd",974,974,0,100,2010,2024
+"Next-year LASSO model panel","real_per_capita_personal_income_2025_usd",974,974,0,100,2010,2024
+"Next-year LASSO model panel","real_median_home_sale_price_2025_usd",974,0,974,0,,
+"Next-year LASSO model panel","real_state_minimum_wage_2025_usd",974,974,0,100,2010,2024
+"Next-year LASSO model panel","real_gdp_per_capita_2017_usd",974,974,0,100,2010,2024
+"Next-year LASSO model panel","population_change",974,284,690,29.2,2021,2024
+"Next-year LASSO model panel","births",974,974,0,100,2010,2024
+"Next-year LASSO model panel","deaths",974,974,0,100,2010,2024
+"Next-year LASSO model panel","natural_change",974,284,690,29.2,2021,2024
+"Next-year LASSO model panel","international_migration",974,974,0,100,2010,2024
+"Next-year LASSO model panel","domestic_migration",974,974,0,100,2010,2024
+"Next-year LASSO model panel","net_migration",974,974,0,100,2010,2024
+"Next-year LASSO model panel","group_quarters_population",974,974,0,100,2010,2024
+"Next-year LASSO model panel","birth_rate_per_1000",974,907,67,93.1,2011,2024
+"Next-year LASSO model panel","death_rate_per_1000",974,907,67,93.1,2011,2024
+"Next-year LASSO model panel","natural_change_rate_per_1000",974,284,690,29.2,2021,2024
+"Next-year LASSO model panel","international_migration_rate_per_1000",974,907,67,93.1,2011,2024
+"Next-year LASSO model panel","domestic_migration_rate_per_1000",974,907,67,93.1,2011,2024
+"Next-year LASSO model panel","net_migration_rate_per_1000",974,907,67,93.1,2011,2024
+"Next-year LASSO model panel","housing_units",974,974,0,100,2010,2024
+"Next-year LASSO model panel","permits_one_unit_units",974,974,0,100,2010,2024
+"Next-year LASSO model panel","permits_two_unit_units",974,974,0,100,2010,2024
+"Next-year LASSO model panel","permits_three_four_unit_units",974,974,0,100,2010,2024
+"Next-year LASSO model panel","permits_five_plus_unit_units",974,974,0,100,2010,2024
+"Next-year LASSO model panel","permits_total_units_authorized",974,974,0,100,2010,2024
+"Next-year LASSO model panel","permits_total_value_authorized",974,974,0,100,2010,2024
+"Next-year LASSO model panel","permits_total_reported_units",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_all_estimate",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_all_ci_low",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_all_ci_high",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_all_pct",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_all_pct_ci_low",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_all_pct_ci_high",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_child_estimate",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_child_ci_low",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_child_ci_high",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_child_pct",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_child_pct_ci_low",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_child_pct_ci_high",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_age_5_17_estimate",974,974,0,100,2010,2024
+"Next-year LASSO model panel","poverty_age_5_17_pct",974,974,0,100,2010,2024
+"Next-year LASSO model panel","median_household_income",974,974,0,100,2010,2024
+"Next-year LASSO model panel","median_household_income_ci_low",974,974,0,100,2010,2024
+"Next-year LASSO model panel","median_household_income_ci_high",974,974,0,100,2010,2024
+"Next-year LASSO model panel","civilian_labor_force",974,974,0,100,2010,2024
+"Next-year LASSO model panel","employed_people",974,974,0,100,2010,2024
+"Next-year LASSO model panel","unemployed_people",974,974,0,100,2010,2024
+"Next-year LASSO model panel","unemployment_rate_pct",974,974,0,100,2010,2024
+"Next-year LASSO model panel","bea_personal_income_thousands_usd",974,974,0,100,2010,2024
+"Next-year LASSO model panel","bea_population",974,974,0,100,2010,2024
+"Next-year LASSO model panel","bea_per_capita_personal_income_usd",974,974,0,100,2010,2024
+"Next-year LASSO model panel","bea_real_gdp_thousands_2017_usd",974,974,0,100,2010,2024
+"Next-year LASSO model panel","bea_real_gdp_quantity_index",974,974,0,100,2010,2024
+"Next-year LASSO model panel","bea_current_gdp_thousands_usd",974,974,0,100,2010,2024
+"Next-year LASSO model panel","annual_hpi_change_pct",974,972,2,99.8,2010,2024
+"Next-year LASSO model panel","hpi",974,973,1,99.9,2010,2024
+"Next-year LASSO model panel","hpi_1990_base",974,862,112,88.5,2010,2024
+"Next-year LASSO model panel","hpi_2000_base",974,944,30,96.9,2010,2024
+"Next-year LASSO model panel","high_school_graduate_or_higher_pct_age_18plus",974,974,0,100,2010,2024
+"Next-year LASSO model panel","homeownership_rate_pct",974,974,0,100,2010,2024
+"Next-year LASSO model panel","housing_cost_burdened_households_pct",974,974,0,100,2010,2024
+"Next-year LASSO model panel","income_inequality_top_bottom_quintile_ratio",974,974,0,100,2010,2024
+"Next-year LASSO model panel","state_minimum_wage_usd_per_hour",974,974,0,100,2010,2024
+"Next-year LASSO model panel","medicaid_expansion_status",974,974,0,100,2010,2024
+"Next-year LASSO model panel","housing_units_per_capita",974,974,0,100,2010,2024
+"Next-year LASSO model panel","population_density_per_sq_mile",974,974,0,100,2010,2024
+"Next-year LASSO model panel","permits_total_units_per_1000_population",974,974,0,100,2010,2024
+"Next-year LASSO model panel","population_growth_rate_pct",974,907,67,93.1,2011,2024
+"Next-year LASSO model panel","housing_supply_growth_rate_pct",974,907,67,93.1,2011,2024
+"Next-year LASSO model panel","foreclosure_rate_per_100_mortgages",974,0,974,0,,
+"Next-year LASSO model panel","median_home_sale_price_annual_avg_usd",974,0,974,0,,
+"Next-year LASSO model panel","target_pit_count_caution_flag",974,974,0,100,2010,2024
+"Core complete-case LASSO panel","predictor_year",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","target_year",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","target_total_homeless",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","target_estimated_coc_population",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","target_homeless_rate_per_10k",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","state_florida",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","time_index",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","log_estimated_coc_population",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","population_density_per_sq_mile_derived",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","housing_units_per_1000_residents",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","permits_per_1000_housing_units",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","multifamily_permit_share_pct",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","net_migration_rate_per_1000",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","poverty_all_pct",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","real_median_household_income_2025_usd",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","homeownership_rate_pct",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","housing_cost_burdened_households_pct",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","income_inequality_top_bottom_quintile_ratio",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","annual_hpi_change_pct",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","real_gdp_per_capita_2017_usd",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","real_state_minimum_wage_2025_usd",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","medicaid_expansion_status",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","contains_split_county_flag",904,904,0,100,2011,2024
+"Core complete-case LASSO panel","contributing_counties",904,904,0,100,2011,2024

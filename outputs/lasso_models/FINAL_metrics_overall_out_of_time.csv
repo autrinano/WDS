@@ -1,0 +1,12 @@
+"model","lambda_rule","scope","n","rmse","mae","r2"
+"pooled_lasso","1se","pooled_all_folds",555,15.8054158550639,9.80500824195748,0.579235270402194
+"pooled_lasso","min","pooled_all_folds",555,15.2967624581015,10.1581957463234,0.605881773925377
+"pooled_lasso_state_interactions","1se","pooled_all_folds",555,15.1265539068463,9.91126798513561,0.614603760280068
+"pooled_lasso_state_interactions","min","pooled_all_folds",555,14.6922042228507,10.1412971620357,0.636418826533998
+"separate_lasso_CA","1se","pooled_all_folds",347,15.6257218402124,11.8771617374655,0.582431719825526
+"separate_lasso_CA","min","pooled_all_folds",347,15.8351784432386,12.188017405043,0.571162015422629
+"separate_lasso_FL","1se","pooled_all_folds",208,10.4093278023429,7.34697458140855,0.373038999925975
+"separate_lasso_FL","min","pooled_all_folds",208,10.4406935389008,7.88574148368405,0.369254947450166
+"separate_state_lasso","1se","pooled_all_folds",555,13.9019914583725,10.1793618663667,0.674477127803313
+"separate_state_lasso","min","pooled_all_folds",555,14.0581116370246,10.5756329155967,0.667124792884515
+"state_time_baseline","none","pooled_all_folds",555,21.9314762498759,14.983185050086,0.189854160857864

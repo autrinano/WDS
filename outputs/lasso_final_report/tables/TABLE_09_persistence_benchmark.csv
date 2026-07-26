@@ -1,0 +1,19 @@
+"sample_id","comparison","comparison_label","lambda_rule","n","rmse","mae","r2","mean_nonzero_penalized_per_fold","rmse_diff_vs_persistence_baseline"
+"S4_persistence","a_prior_rate_only","(a) Prior-year rate only","none",485,9.1193,5.2645,0.8593,,0.2324
+"S4_persistence","b_state_time_prior_rate","(b) State + time + prior rate","none",485,8.8869,5.0166,0.8664,,0
+"S4_persistence","state_time_baseline_reference","State + linear-time baseline","none",485,22.1478,15.0172,0.1701,,13.260898
+"S4_persistence","factor_lasso_without_prior_min","Factor LASSO WITHOUT prior rate (lambda.min)","min",485,15.6576,10.4792,0.5852,13.8571428571429,6.770665
+"S4_persistence","factor_lasso_without_prior_1se","Factor LASSO WITHOUT prior rate (lambda.1se)","1se",485,16.1317,10.0113,0.5597,3,7.244801
+"S4_persistence","c_factor_lasso_plus_prior_min","(c) 38-factor LASSO + prior rate (lambda.min)","min",485,8.8869,5.0166,0.8664,0,0
+"S4_persistence","c_factor_lasso_plus_prior_1se","(c) 38-factor LASSO + prior rate (lambda.1se)","1se",485,8.8869,5.0166,0.8664,0,0
+"S4_persistence","c_factor_lasso_interactions_plus_prior_min","(c') + state interactions + prior rate (lambda.min)","min",485,8.8869,5.0166,0.8664,0,0
+"S4_persistence","c_factor_lasso_interactions_plus_prior_1se","(c') + state interactions + prior rate (lambda.1se)","1se",485,8.8869,5.0166,0.8664,0,0
+"S4b_persistence_full_enum","a_prior_rate_only","(a) Prior-year rate only","none",408,7.5792,4.2665,0.8987,,0.17398
+"S4b_persistence_full_enum","b_state_time_prior_rate","(b) State + time + prior rate","none",408,7.4052,4.0843,0.9033,,0
+"S4b_persistence_full_enum","state_time_baseline_reference","State + linear-time baseline","none",408,21.8014,14.3548,0.1622,,14.396162
+"S4b_persistence_full_enum","factor_lasso_without_prior_min","Factor LASSO WITHOUT prior rate (lambda.min)","min",408,15.3451,9.9127,0.5849,11.4285714285714,7.939869
+"S4b_persistence_full_enum","factor_lasso_without_prior_1se","Factor LASSO WITHOUT prior rate (lambda.1se)","1se",408,16.0042,9.6152,0.5485,3.71428571428571,8.598996
+"S4b_persistence_full_enum","c_factor_lasso_plus_prior_min","(c) 38-factor LASSO + prior rate (lambda.min)","min",408,7.4052,4.0843,0.9033,0,-1e-06
+"S4b_persistence_full_enum","c_factor_lasso_plus_prior_1se","(c) 38-factor LASSO + prior rate (lambda.1se)","1se",408,7.4052,4.0843,0.9033,0,-1e-06
+"S4b_persistence_full_enum","c_factor_lasso_interactions_plus_prior_min","(c') + state interactions + prior rate (lambda.min)","min",408,7.4052,4.0843,0.9033,0,-1e-06
+"S4b_persistence_full_enum","c_factor_lasso_interactions_plus_prior_1se","(c') + state interactions + prior rate (lambda.1se)","1se",408,7.4052,4.0843,0.9033,0,-1e-06

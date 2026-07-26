@@ -1,0 +1,44 @@
+request_number,requested_variable,status,panel_variable_or_decision,source_or_reason
+1,Median rent,Closest non-equivalent added,zori_annual_avg_usd,"Zillow ZORI is a typical observed market-rent index, not ACS median gross rent; it remains separately named."
+2,Median home price,Added with explicit annualization,median_home_sale_price_annual_avg_usd,Annual arithmetic mean of Zillow monthly county median sale prices; month coverage is retained.
+3,Rent as % of income / rent burden,Closest non-equivalent added,housing_cost_burdened_households_pct,FRED-distributed ACS measure covers all households with owner or renter costs; it is not renter-only median rent as percent of income.
+4,Rental vacancy rate,Not added,,"No key-free, verified county-year series spanning the requested period was available during this build."
+5,Homeownership rate,Added,homeownership_rate_pct,Census ACS 5-year homeownership rate distributed through FRED.
+6,Housing units per capita,Added derived,housing_units_per_capita,Census housing units divided by Census PEP population.
+7,New housing permits issued,Already present,permits_total_units_authorized and structure-size components,Census/HUD Building Permits Survey.
+8,Housing supply growth rate,Added derived,housing_supply_growth_rate_pct,Year-over-year Census housing-unit growth; 2010 and 2020 suppressed.
+9,Eviction filing rate,Added,eviction_filing_rate_per_100_renter_households,"Eviction Lab modeled county estimates, 2010-2018."
+10,Foreclosure rate,Reserved blank,foreclosure_rate_per_100_mortgages,No free comparable county-year series for 2010-2025 was verified; delinquency was not substituted.
+11,Unemployment rate,Already present and coverage completed,unemployment_rate_pct,BLS LAUS annual county series distributed through FRED.
+12,Per capita personal income,Already present,bea_per_capita_personal_income_usd,BEA CAINC1.
+13,Median household income,Already present,median_household_income,Census SAIPE.
+14,Poverty rate,Already present,poverty_all_pct,Census SAIPE.
+15,Income inequality / Gini coefficient,Closest non-equivalent added,income_inequality_top_bottom_quintile_ratio,ACS highest-to-lowest income-quintile ratio; it is explicitly not labeled Gini.
+16,Minimum wage,Added at state-year level,state_minimum_wage_usd_per_hour,U.S. Department of Labor series distributed through FRED and repeated across counties.
+17,Cost of living index,Not added,,No comparable annual county index covering all 125 counties was verified; metropolitan RPPs were not assigned to counties.
+18,Labor force participation rate,Not added,,BLS county LAUS lacks the civilian noninstitutional population denominator needed for the standard rate.
+19,Population density,Added derived,population_density_per_sq_mile,Census PEP population divided by 2024 Gazetteer land area.
+20,Population growth rate,Added derived,population_growth_rate_pct,Year-over-year Census PEP population growth; 2010 and 2020 suppressed.
+21,Net migration rate,Already present,net_migration_rate_per_1000,Census PEP.
+22,Percent age 18-24,Not added,,The Census API began requiring a key on 2026-07-09; a key-free complete historical county extract was not available.
+23,Percent age 65+,Not added,,The Census API began requiring a key on 2026-07-09; a key-free complete historical county extract was not available.
+24,Average household size,Not added,,The Census API began requiring a key on 2026-07-09; a key-free complete historical county extract was not available.
+25,Urbanization rate,Not added,,"County urban/rural shares are decennial, not a comparable annual county series; values were not interpolated."
+26,Average January temperature,Not added,,A consistent station-to-county aggregation and coverage rule was not established in this raw build.
+27,Days below freezing,Not added,,A consistent station-to-county aggregation and coverage rule was not established in this raw build.
+28,Extreme heat days,Not added,,A consistent station-to-county aggregation and threshold rule was not established in this raw build.
+29,January precipitation,Not added,,A consistent station-to-county aggregation and coverage rule was not established in this raw build.
+30,Cooling degree days,Not added,,A consistent station-to-county aggregation and base-temperature rule was not established in this raw build.
+31,Medicaid expansion status,Added at state-year level,medicaid_expansion_status,California expanded in 2014; Florida remained non-expansion through 2025.
+32,TANF benefit levels,Not added,,A verified annual state series with a stable family-size definition was not acquired.
+33,SSI supplement level,Not added,,State supplements vary by living arrangement and eligibility category; no single comparable annual amount was selected.
+34,Anti-camping ordinance presence / strictness,Not added,,No authoritative annual county coding exists; manual legal coding would require a separate protocol.
+35,Shelter beds per capita,Not added,,HUD HIC beds use Continuum-of-Care geography; no county allocation rule was authorized.
+36,PSH units per capita,Not added,,HUD HIC PSH units use Continuum-of-Care geography; no county allocation rule was authorized.
+37,State homelessness program funding per capita,Not added,,No consistently defined annual state funding series covering both states was verified.
+38,Substance use disorder rate,Not added,,NSDUH small-area estimates are not annual county estimates for all counties.
+39,Serious mental illness rate,Not added,,NSDUH small-area estimates are not annual county estimates for all counties.
+40,Uninsured rate,Not added,,A complete key-free historical ACS county extraction was unavailable after the Census API key change.
+41,High school graduation rate,Closest non-equivalent added,high_school_graduate_or_higher_pct_age_18plus,ACS adult educational attainment is retained under its exact name; it is not a cohort graduation rate.
+42,Average student debt per borrower,Not added,,No public annual county series with consistent borrower coverage was verified.
+43,Average in-state tuition,Not added,,Tuition is institution- or state-level; a county aggregation rule and enrollment weighting scheme were not selected.

@@ -31,6 +31,31 @@ The unit of observation is one state-year. The processed panel contains 32 rows:
 - `DECISION_LOG.md`: record of important data and modeling decisions.
 - `raw_data/`: unmodified source downloads used by the R pipeline.
 - `_r_libs/`: folder-local R packages used to build the workbook.
+- `build_coc_lasso_panel.R`: builds the CoC-year homelessness outcome,
+  county-to-CoC allocation crosswalk, and next-year LASSO candidate panels.
+- `coc_analysis/coc_lasso_analysis_CA_FL_2010_2025.xlsx`: CoC outcome and
+  modeling workbook with validation, coverage, dictionary, and source sheets.
+- `coc_analysis/lasso_core_complete_panel.csv`: first complete-case,
+  theory-driven panel for predicting the next year's homelessness rate.
+- `coc_analysis/README.md`: authoritative CoC allocation and modeling notes.
+- `build_expanded_lasso_input.R`: combines the curated CoC, county-derived,
+  state-year, and official HUD HIC predictors into one leakage-safe model table.
+- `outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT.xlsx`: primary one-sheet LASSO
+  input (898 CoC-years, six identifiers, one target, two baseline controls,
+  and 47 candidate predictors).
+- `build_expanded_lasso_input_v2.R`: audits every inherited/provisional
+  predictor from `build_expanded_lasso_input.R`, drops variables that could
+  not be verified to an official or fully documented source, and adds
+  three new local (CoC-level) predictors. Does not overwrite v1.
+- `outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT_v2.xlsx`: improved one-sheet
+  LASSO input (887 CoC-years across 70 CoCs, six identifiers, one target, two
+  baseline controls, and 38 candidate predictors). No *definitive* model had
+  been fitted on this v2 workbook at the time of its construction; a
+  preliminary pipeline-development LASSO run was fitted on v1 during earlier
+  development work (so it is not the case that no LASSO was ever fitted on v1).
+- `CHANGELOG_v1_to_v2.md`: per-variable audit disposition, the local
+  housing-affordability sources investigated and rejected, the CoC
+  boundary-matching diagnostic, and the full v1-to-v2 rationale.
 
 The integrated team dataset adds 16 documented variables, including inflation-adjusted dollar measures, homelessness composition and change measures, normalized permit and bed-capacity measures, housing affordability ratios, and a 2021 PIT data-quality flag.
 
@@ -64,8 +89,21 @@ The foreclosure-rate column is currently blank because no free, comparable state
 - Keep 2020 housing-supply growth missing because calculating it would cross the Census vintage boundary. The 2010 growth value is also missing because there is no prior year in the panel.
 - Several Eviction Lab rent and burden covariates repeat across years because benchmark values were carried forward. Do not describe this as evidence of no market change.
 - The 2021 PIT count is not directly comparable with surrounding years because COVID disrupted enumeration. Derived ratios using the PIT denominator are suppressed for 2021, and changes involving 2021 are suppressed for both 2021 and 2022.
+- The primary LASSO input predicts next-year CoC homelessness per 10,000
+  estimated residents. Modeling code should read only `LASSO Model Data`,
+  exclude the six identifier columns from the design matrix, and use the two
+  `control_` columns as unpenalized controls.
+- HIC temporary-bed and PSH-bed rates use official predictor-year HUD CoC
+  counts divided by the estimated CoC population. Do not replace unmatched HIC
+  values with zero.
 - Original non-housing variables inherited from the team spreadsheet remain in the deliverable, but many lack source documentation in this folder. The workbook dictionary identifies them as `source verification needed`.
 - A reproducible derivation does not verify an undocumented component input. Treat `derivation documented; verify component sources` as provisional until every component source is recorded.
+- The v2 LASSO input (`CA_FL_LASSO_MODEL_INPUT_v2.xlsx`) resolves this for the CoC-level model: every `source verification needed` state variable was individually audited and either reclassified as documented (citing `DATA_LOG.md`), rebuilt from a verified official series, or dropped. See `CHANGELOG_v1_to_v2.md` for the per-variable disposition. Do not re-introduce a dropped variable into a future model input without a newly verified source.
+- A CoC-level HUD funding predictor (transaction-level USAspending CFDA 14.267 extract, built by a parallel effort) is complete but intentionally excluded from v2: coverage starts in 2013, not 2010, and recipient location is not equivalent to CoC service geography. See `CHANGELOG_v1_to_v2.md` section 3.
+- HUD PIT counts are observed at CoC geography, not county geography. The CoC
+  derivative uses FY2024 boundaries and ACS 2024 tract-population shares to
+  allocate county predictors. Treat its historical denominators and subcounty
+  predictors as documented estimates, not directly observed CoC values.
 
 ## Instructions for future work
 
@@ -95,6 +133,7 @@ source("build_housing_metrics.R")
 source("update_team_dataset.R")
 source("clean_analysis_data.R")
 source("generate_project_chart_suite.R")
+source("build_coc_lasso_panel.R")
 ```
 
 After rebuilding, confirm:
@@ -115,10 +154,22 @@ After rebuilding, confirm:
 - every check in `cleaned_data/validation_checks.csv` passes;
 - `cleaned_data/analysis_panel_core.csv` has 30 non-2021 rows and no missing values; and
 - the rent-to-income, rent-burden, and eviction panels keep their definitions and coverage periods separate.
+- all checks in `coc_analysis/validation_checks.csv` pass;
+- the CoC workbook contains ten sheets, including a README overview; and
+- the core LASSO panel contains no missing target or core-predictor fields and
+  excludes 2021 as a target.
+- `build_expanded_lasso_input_v2.R` reports that all of its own validation
+  checks passed, including at least 850 modeling rows and zero non-finite
+  (NA/NaN/Inf) values across the target, controls, and predictors.
 
 ## Modeling guidance
 
 The panel is small and strongly ordered in time. Avoid random row-level train/test splits because they leak temporal structure. Prefer time-based or rolling-origin validation, compare same-year and lagged predictors, establish a simple state-and-time baseline, and treat feature-importance rankings cautiously. Do not infer causal effects from same-year associations alone.
+
+For the CoC model, predict `target_homeless_rate_per_10k` using prior-year
+predictors. Keep state and time controls in the baseline, use rolling-origin
+validation, fit scaling and any imputation inside each training window, and
+report sensitivity checks for split counties and stable CoCs.
 
 ## Team ownership
 

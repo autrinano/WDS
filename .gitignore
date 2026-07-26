@@ -22,3 +22,11 @@ Rplots.pdf
 # General temporary files
 *.tmp
 *.temp
+
+# Large geospatial archives. These are re-downloadable from stable, versioned
+# URLs by diagnose_coc_boundaries_v2.R and build_coc_lasso_panel.R, so they are
+# not tracked. The files themselves are preserved locally in raw_data/.
+raw_data/*.geojson
+raw_data/census_tl_*_tract.zip
+raw_data/census_cb_*.zip
+county_raw_panel/raw_downloads/*.zip

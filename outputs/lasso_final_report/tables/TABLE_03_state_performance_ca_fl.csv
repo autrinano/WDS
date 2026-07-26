@@ -1,0 +1,19 @@
+"model","lambda_rule","model_family","comparability","state","n","rmse","mae","r2","observed_sd_within_state","rmse_normalised_by_observed_sd"
+"separate_lasso_CA","1se","Separate LASSO - California only","Single-state component","California",347,15.6257,11.8772,0.5824,24.216,0.6453
+"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)","California",347,15.6257,11.8772,0.5824,24.216,0.6453
+"separate_lasso_CA","min","Separate LASSO - California only","Single-state component","California",347,15.8352,12.188,0.5712,24.216,0.6539
+"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)","California",347,15.8352,12.188,0.5712,24.216,0.6539
+"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)","California",347,16.7508,12.0202,0.5201,24.216,0.6917
+"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)","California",347,17.6596,12.1899,0.4667,24.216,0.7293
+"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)","California",347,17.744,12.3274,0.4615,24.216,0.7327
+"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)","California",347,18.8821,12.7287,0.3903,24.216,0.7797
+"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)","California",347,25.6559,18.6503,-0.1257,24.216,1.0595
+"pooled_lasso","1se","Pooled LASSO","Unified (one model, both states)","Florida",208,8.4715,4.9275,0.5847,13.178,0.6429
+"pooled_lasso_state_interactions","1se","Pooled LASSO + state interactions","Unified (one model, both states)","Florida",208,9.5006,6.1098,0.4777,13.178,0.7209
+"pooled_lasso","min","Pooled LASSO","Unified (one model, both states)","Florida",208,9.9547,6.5394,0.4266,13.178,0.7554
+"pooled_lasso_state_interactions","min","Pooled LASSO + state interactions","Unified (one model, both states)","Florida",208,10.3863,7.0068,0.3758,13.178,0.7882
+"separate_lasso_FL","1se","Separate LASSO - Florida only","Single-state component","Florida",208,10.4093,7.347,0.373,13.178,0.7899
+"separate_state_lasso","1se","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)","Florida",208,10.4093,7.347,0.373,13.178,0.7899
+"separate_lasso_FL","min","Separate LASSO - Florida only","Single-state component","Florida",208,10.4407,7.8857,0.3693,13.178,0.7923
+"separate_state_lasso","min","Separate-state composite (CA+FL)","Separate-state composite (not a unified model)","Florida",208,10.4407,7.8857,0.3693,13.178,0.7923
+"state_time_baseline","none","State + linear-time baseline","Baseline (state + linear time)","Florida",208,13.613,8.8655,-0.0723,13.178,1.033

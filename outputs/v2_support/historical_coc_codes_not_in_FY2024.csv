@@ -1,0 +1,6 @@
+"coc_number","state","in_pit","in_hic","pit_years","hic_years","first_year","last_year","n_distinct_years","local_coc_name","fy2024_present","local_reassignment_evidence"
+"CA-528","CA",1,1,"2010;2011;2012","2010;2011;2012",2010,2012,3,"Del Norte County CoC",FALSE,"PIT name 'Del Norte County CoC'; FY2024 crosswalk assigns Del Norte County (FIPS 06015) to CA-516 whose CoC name explicitly lists 'Del Norte' -> CA-528 folded into CA-516."
+"CA-605","CA",0,1,"","2010;2011;2012;2013",2010,2013,4,"",FALSE,"none available locally (no local name or FY2024 crosswalk row identifies a successor)"
+"CA-610","CA",0,1,"","2010",2010,2010,1,"",FALSE,"none available locally (no local name or FY2024 crosswalk row identifies a successor)"
+"CA-615","CA",0,1,"","2015;2016",2015,2016,2,"",FALSE,"none available locally (no local name or FY2024 crosswalk row identifies a successor)"
+"FL-516","FL",0,1,"","2010;2011;2012;2013;2014",2010,2014,5,"",FALSE,"none available locally (no local name or FY2024 crosswalk row identifies a successor)"

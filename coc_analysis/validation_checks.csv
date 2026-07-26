@@ -1,0 +1,13 @@
+"check","pass"
+"CoC-year key is unique",TRUE
+"PIT counts are nonnegative when observed",TRUE
+"Sheltered plus unsheltered equals total",TRUE
+"2025 contains 44 California CoCs",TRUE
+"2025 contains 27 Florida CoCs",TRUE
+"All 125 counties appear in the population crosswalk",TRUE
+"County-to-CoC population shares sum to one",TRUE
+"Every tract receives a CoC assignment after nearest-boundary fallback",TRUE
+"CoC PIT totals reproduce state PIT totals",TRUE
+"LASSO target is always the next year",TRUE
+"The LASSO model panel excludes the disrupted 2021 target",TRUE
+"The core complete-case LASSO panel has no missing model fields",TRUE

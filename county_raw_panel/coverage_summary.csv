@@ -8,30 +8,57 @@ Demographics,domestic_migration_rate_per_1000,Census PEP,1750,250,87.5,2011,2025
 Demographics,group_quarters_population,Census PEP,2000,0,100,2010,2025
 Demographics,international_migration,Census PEP,2000,0,100,2010,2025
 Demographics,international_migration_rate_per_1000,Census PEP,1750,250,87.5,2011,2025
+Demographics,land_area_sq_miles,Census Gazetteer,2000,0,100,2010,2025
 Demographics,natural_change,Census PEP,750,1250,37.5,2020,2025
 Demographics,natural_change_rate_per_1000,Census PEP,625,1375,31.2,2021,2025
 Demographics,net_migration,Census PEP,2000,0,100,2010,2025
 Demographics,net_migration_rate_per_1000,Census PEP,1750,250,87.5,2011,2025
 Demographics,population,Census PEP,2000,0,100,2010,2025
 Demographics,population_change,Census PEP,750,1250,37.5,2020,2025
+Demographics,population_density_per_sq_mile,Derived from Census PEP and Gazetteer,2000,0,100,2010,2025
+Demographics,population_growth_rate_pct,Derived from Census PEP,1750,250,87.5,2011,2025
 Economic output and income,bea_current_gdp_thousands_usd,BEA CAGDP1,1875,125,93.8,2010,2024
 Economic output and income,bea_per_capita_personal_income_usd,BEA CAINC1,1875,125,93.8,2010,2024
 Economic output and income,bea_personal_income_thousands_usd,BEA CAINC1,1875,125,93.8,2010,2024
 Economic output and income,bea_population,BEA CAINC1,1875,125,93.8,2010,2024
 Economic output and income,bea_real_gdp_quantity_index,BEA CAGDP1,1875,125,93.8,2010,2024
 Economic output and income,bea_real_gdp_thousands_2017_usd,BEA CAGDP1,1875,125,93.8,2010,2024
+Education,high_school_graduate_or_higher_pct_age_18plus,Census ACS via FRED,1875,125,93.8,2010,2024
+Eviction,eviction_filing_rate_per_100_renter_households,Derived from Eviction Lab,1125,875,56.2,2010,2018
+Eviction,eviction_filings_ci_95_high,Eviction Lab,1125,875,56.2,2010,2018
+Eviction,eviction_filings_ci_95_low,Eviction Lab,1125,875,56.2,2010,2018
+Eviction,eviction_filings_court_issued_flag,Eviction Lab,1125,875,56.2,2010,2018
+Eviction,eviction_filings_estimate,Eviction Lab,1125,875,56.2,2010,2018
+Eviction,eviction_filings_left_truncated_flag,Eviction Lab,1062,938,53.1,2010,2018
+Eviction,eviction_households_threatened_ci_95_high,Eviction Lab,1125,875,56.2,2010,2018
+Eviction,eviction_households_threatened_ci_95_low,Eviction Lab,1125,875,56.2,2010,2018
+Eviction,eviction_households_threatened_estimate,Eviction Lab,1125,875,56.2,2010,2018
+Eviction,eviction_households_threatened_observed_flag,Eviction Lab,1125,875,56.2,2010,2018
+Eviction,eviction_households_threatened_rate_per_100_renter_households,Derived from Eviction Lab,1125,875,56.2,2010,2018
+Eviction,eviction_renting_households,Eviction Lab,1125,875,56.2,2010,2018
+Housing affordability,housing_cost_burdened_households_pct,Census ACS via FRED,1875,125,93.8,2010,2024
 Housing market,annual_hpi_change_pct,FHFA HPI,1959,41,98,2010,2025
+Housing market,foreclosure_rate_per_100_mortgages,Not populated,0,2000,0,,
+Housing market,homeownership_rate_pct,Census ACS via FRED,1875,125,93.8,2010,2024
 Housing market,hpi,FHFA HPI,1960,40,98,2010,2025
 Housing market,hpi_1990_base,FHFA HPI,1504,496,75.2,2010,2025
 Housing market,hpi_2000_base,FHFA HPI,1820,180,91,2010,2025
+Housing market,median_home_sale_price_annual_avg_usd,Zillow Research,1405,595,70.2,2010,2025
+Housing market,median_home_sale_price_months_observed,Zillow Research,1600,400,80,2010,2025
+Housing market,zori_annual_avg_usd,Zillow Research,806,1194,40.3,2015,2025
+Housing market,zori_months_observed,Zillow Research,1012,988,50.6,2015,2025
+Housing supply,housing_supply_growth_rate_pct,Derived from Census PEP housing estimates,1750,250,87.5,2011,2025
 Housing supply,housing_units,Census PEP housing estimates,2000,0,100,2010,2025
+Housing supply,housing_units_per_capita,Derived from Census PEP,2000,0,100,2010,2025
 Housing supply,permits_five_plus_unit_units,Census/HUD BPS,2000,0,100,2010,2025
 Housing supply,permits_one_unit_units,Census/HUD BPS,2000,0,100,2010,2025
 Housing supply,permits_three_four_unit_units,Census/HUD BPS,2000,0,100,2010,2025
 Housing supply,permits_total_reported_units,Census/HUD BPS,2000,0,100,2010,2025
 Housing supply,permits_total_units_authorized,Census/HUD BPS,2000,0,100,2010,2025
+Housing supply,permits_total_units_per_1000_population,Derived from Census/HUD BPS and Census PEP,2000,0,100,2010,2025
 Housing supply,permits_total_value_authorized,Census/HUD BPS,2000,0,100,2010,2025
 Housing supply,permits_two_unit_units,Census/HUD BPS,2000,0,100,2010,2025
+Income and poverty,income_inequality_top_bottom_quintile_ratio,Census ACS via FRED,1875,125,93.8,2010,2024
 Income and poverty,median_household_income,Census SAIPE,1875,125,93.8,2010,2024
 Income and poverty,median_household_income_ci_high,Census SAIPE,1875,125,93.8,2010,2024
 Income and poverty,median_household_income_ci_low,Census SAIPE,1875,125,93.8,2010,2024
@@ -49,7 +76,9 @@ Income and poverty,poverty_child_estimate,Census SAIPE,1875,125,93.8,2010,2024
 Income and poverty,poverty_child_pct,Census SAIPE,1875,125,93.8,2010,2024
 Income and poverty,poverty_child_pct_ci_high,Census SAIPE,1875,125,93.8,2010,2024
 Income and poverty,poverty_child_pct_ci_low,Census SAIPE,1875,125,93.8,2010,2024
-Labor market,civilian_labor_force,BLS LAUS,1610,390,80.5,2010,2025
-Labor market,employed_people,BLS LAUS,1610,390,80.5,2010,2025
-Labor market,unemployed_people,BLS LAUS,1610,390,80.5,2010,2025
-Labor market,unemployment_rate_pct,BLS LAUS,1610,390,80.5,2010,2025
+Labor market,civilian_labor_force,BLS LAUS,2000,0,100,2010,2025
+Labor market,employed_people,BLS LAUS,2000,0,100,2010,2025
+Labor market,unemployed_people,BLS LAUS,2000,0,100,2010,2025
+Labor market,unemployment_rate_pct,BLS LAUS,2000,0,100,2010,2025
+Policy and safety net,medicaid_expansion_status,CMS/KFF documented coding,2000,0,100,2010,2025
+Policy and safety net,state_minimum_wage_usd_per_hour,U.S. Department of Labor via FRED,2000,0,100,2010,2025

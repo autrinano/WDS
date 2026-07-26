@@ -1,0 +1,6 @@
+"source","coverage","file","limitation"
+"HUD PIT","CoC PIT counts, 2010-2025","raw_data/2007-2025-PIT-Counts-by-CoC.xlsb","PIT is a one-night count; 2021 is not comparable."
+"HUD CoC boundaries","FY2024 CoC geography","raw_data/hud_coc_boundaries_FY2024_CA_FL.geojson","Applied retrospectively; historical CoC boundaries can differ."
+"Census tract boundaries","2024 TIGER/Line tracts for California and Florida","census_tl_2024_06_tract.zip; census_tl_2024_12_tract.zip","Tracts are assigned by point-on-surface, with a documented nearest fallback."
+"ACS tract population","ACS 2024 five-year B01003 total population","census_reporter_acs5_latest_CA_tract_population.json; census_reporter_acs5_latest_FL_tract_population.json","Used only to create fixed county-to-CoC population shares."
+"County predictors","California and Florida county-year panel, 2010-2025","county_raw_panel/county_year_raw_panel_CA_FL_2010_2025.csv","County totals and averages are allocated to CoCs; subcounty variation is not observed."

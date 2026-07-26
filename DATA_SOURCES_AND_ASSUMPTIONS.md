@@ -103,6 +103,142 @@ The integrated dataset retains the original nominal variables and adds constant-
 
 The original team spreadsheet is preserved as `raw_data/DSA_Group_10_Sheet1_original.csv`. Many original non-housing columns do not have a documented source in this folder; they are retained but marked `source verification needed` in the updated workbook rather than being presented as newly verified data.
 
+## CoC homelessness and LASSO derivative
+
+`build_coc_lasso_panel.R` creates a separate CoC-year analysis layer in
+`coc_analysis/`. It does not insert CoC counts into county rows.
+
+- The outcome is HUD's observed PIT count by CoC for 2010–2025.
+- The primary target is the next year's PIT homelessness rate per 10,000
+  estimated CoC residents.
+- FY2024 HUD CoC polygons are overlaid with 2024 Census tracts.
+- ACS 2024 five-year tract population determines each county's population
+  share assigned to each CoC.
+- Annual county totals are allocated with those fixed shares. County rates,
+  indices, and medians are combined with allocated-population weights.
+- A weighted average of county medians is an approximation, not a directly
+  observed CoC median.
+- FY2024 CoC boundaries are applied retrospectively. Historical CoC mergers,
+  splits, and boundary changes therefore remain a source of measurement error.
+- Tracts whose point-on-surface falls outside the published polygon are
+  assigned to the nearest CoC in the same state, with fallback counts and
+  distances retained in the crosswalk audit.
+- Historical CoCs absent from the FY2024 boundary layer retain their observed
+  PIT outcome, but no estimated denominator or allocated predictors. `CA-528`
+  (Del Norte County CoC, 3 PIT-year rows 2010-2012) is the only such PIT code;
+  the HIC-only codes `CA-605`, `CA-610`, `CA-615`, `FL-516` are also absent
+  from FY2024 but cost zero model rows because they never appear in PIT. See
+  `diagnose_coc_boundaries_v2.R` and
+  `outputs/v2_support/COC_BOUNDARY_DIAGNOSTICS.md`.
+- The core LASSO panel excludes 2021 as a target and uses prior-year
+  predictors. It contains 904 complete candidate rows across 71 CoCs.
+
+The raw inputs are HUD's `2007-2025-PIT-Counts-by-CoC.xlsb`, the FY2024 HUD
+CoC boundary service, 2024 Census TIGER/Line tract files, and ACS 2024
+five-year B01003 tract population obtained through Census Reporter. The
+official HUD 2025 AHAR page is
+`https://www.huduser.gov/portal/datasets/ahar/2025-ahar-part-1-pit-estimates-of-homelessness-in-the-us.html`.
+
+## Expanded one-sheet LASSO input
+
+`build_expanded_lasso_input.R` creates
+`outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT.xlsx`. The workbook has one
+machine-readable sheet, `LASSO Model Data`, so the modeling code needs only one
+input table.
+
+- The table contains 898 CoC-year rows and 56 columns: six identifiers, one
+  next-year homelessness-rate target, two baseline controls, and 47 candidate
+  predictors.
+- Predictor year `t` is matched to PIT target year `t + 1`; target year 2021
+  remains excluded.
+- The expanded factor pool combines nonredundant county-derived CoC measures,
+  documented state housing and policy measures, selected provisional team
+  state-year factors, and official HUD HIC service-capacity measures.
+- `coc_hic_temporary_beds_per_10k` is the sum of year-round emergency shelter,
+  transitional housing, and safe-haven beds divided by estimated CoC
+  population and multiplied by 10,000.
+- `coc_hic_psh_beds_per_10k` is year-round permanent supportive housing beds
+  divided by estimated CoC population and multiplied by 10,000.
+- The HIC source is `raw_data/2007-2025-HIC-Counts-by-CoC.xlsx`. Only
+  predictor-year HIC values are used.
+- Rows without an observed, definition-compatible HIC capacity value or any
+  other selected predictor remain excluded; no missing value is interpolated,
+  set to zero, or globally imputed.
+- Raw target components, future target denominators, per-homeless-person
+  denominators, confidence bounds, duplicate nominal/real measures, and
+  mechanically redundant totals are not included as predictors.
+- Header comments record each field's modeling role and source status.
+  Several inherited state-year policy, funding, health, education, and
+  demographic series still require source verification.
+
+## Improved one-sheet LASSO input (v2)
+
+`build_expanded_lasso_input_v2.R` creates
+`outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT_v2.xlsx` without overwriting
+v1. It has one sheet, `LASSO Model Data`: 887 CoC-year rows across **70
+CoCs**, six identifiers, one target, two baseline controls, and 38 candidate
+predictors. Full per-variable rationale is in `CHANGELOG_v1_to_v2.md`; the
+source-relevant changes are:
+
+- The CoC geography passes through **three stages that must not be
+  conflated** (reproduced by `diagnose_coc_boundaries_v2.R`; see
+  `outputs/v2_support/COC_BOUNDARY_DIAGNOSTICS.md`): the **FY2024 crosswalk
+  has 71 CoCs**; the **boundary-matched candidate panel has 71 CoCs** (974
+  rows); the **final v2 complete-case workbook has 70 CoCs** (887 rows).
+  `CA-528` is dropped at stage 1 → 2 as a boundary mismatch (see the CoC
+  derivative section above). `FL-518` is dropped at stage 2 → 3 as a
+  **predictor-coverage exclusion, not a boundary mismatch**: it is in the
+  FY2024 set (and is a split-county CoC), but the required predictor
+  `coc_relative_home_price_index_2000_base` (FHFA local home-price index) has
+  no usable value for it — its member counties never reach the 40%
+  weighted-coverage floor. FL-518 supplies 14 candidate-panel rows, 11 of
+  which were in the v1 complete panel, so requiring the FHFA index removes
+  exactly those 11 rows (v1's 898 → v2's 887) and the one CoC (71 → 70).
+
+- Every v1 variable flagged `source verification needed` was individually
+  audited. Three (`state_anticamping_strictness`, `state_tanf_max_benefit_3person`,
+  `state_ssi_state_supplement`) were reclassified as documented, citing the
+  per-year citations already recorded in `DATA_LOG.md`. One
+  (`state_labor_force_participation`) was rebuilt directly from
+  `raw_data/fred_LBSSA06.csv` / `fred_LBSSA12.csv` (BLS LAUS via FRED,
+  already downloaded for this project). Nine were dropped because no
+  official or adequately verifiable annual state-year source could be
+  confirmed within this build: `state_homeless_funding_per_capita`,
+  `state_substance_use_disorder_rate`, `state_serious_mental_illness_rate`,
+  `state_uninsured_rate`, `state_average_student_debt_per_borrower`,
+  `state_avg_in_state_tuition`, `state_pct_age_18_24`,
+  `state_pct_age_65plus`, `state_avg_household_size`.
+- `state_real_median_home_price_2025_usd`, `state_home_price_to_income_ratio`,
+  and `state_real_home_price_growth_pct` were dropped as redundant once
+  local (CoC-level) home-price measures were added or already existed
+  (`coc_annual_hpi_change_pct` already covered local price growth in v1).
+- `coc_relative_home_price_index_2000_base` (new): FHFA county House Price
+  Index, U.S. Federal Housing Finance Agency, rebased to a common 2000=100
+  point, allocated to CoC geography with an available-case,
+  population-weighted average (>=40% weighted county coverage). A true
+  dollar-denominated local median home price (Zillow) and a
+  home-price-to-income ratio were attempted first and rejected — see
+  `CHANGELOG_v1_to_v2.md` section 2 for why.
+- `coc_permits_value_per_1000_housing_units_2025_usd` (new): U.S. Census
+  Bureau/HUD Building Permits Survey construction value (already in
+  `county_raw_panel`), allocated to CoC by population share, normalized
+  per 1,000 existing housing units, constant 2025 USD.
+- `coc_real_gdp_quantity_index` (new): U.S. Bureau of Economic Analysis
+  CAGDP1 real GDP chain-type quantity index, allocated to CoC the same way.
+- A CoC-level HUD Continuum of Care Program (Assistance Listing 14.267)
+  funding series, sourced from USAspending.gov transaction-level data, was
+  built by a parallel effort and is **complete** but is **deliberately
+  excluded** from the v2 primary model for four reasons (two about time
+  coverage, two about geography): (1) CFDA 14.267 transaction coverage begins
+  in 2013, not 2010, the panel's first predictor year; (2) requiring it would
+  drop the 2010-2012 modeling years, concentrating row loss in the earliest
+  years of a trend the study examines across the whole window; (3) the
+  extract's recipient-location field identifies where a grantee is
+  headquartered, not necessarily the CoC service area the funding supports;
+  and (4) the transaction extract carries no direct county/CoC
+  service-geography field to allocate on. See `CHANGELOG_v1_to_v2.md`
+  section 3 and `outputs/v2_support/USASPENDING_TRANSACTION_EXTRACT.md`.
+
 ## Modeling cautions
 
 - With only 32 state-year rows and strong within-state time trends, a random train/test split will leak temporal information. Prefer a time-based validation split or rolling-origin evaluation.
