@@ -12,7 +12,7 @@
 - `validation_checks.csv`: reproducible structural and domain checks.
 - `raw_file_index.csv`: file sizes, timestamps, and MD5 hashes.
 - `raw_downloads/`: preserved source files and API responses.
-- `../build_county_raw_panel.R`: reproducible acquisition and workbook build.
+- `../scripts/build_county_raw_panel.R`: reproducible acquisition and workbook build.
 
 ## Scope
 
@@ -124,7 +124,7 @@ Rebuild from the workspace root with:
 
 ```r
 setwd("Final Project")
-source("build_county_raw_panel.R")
+source("scripts/build_county_raw_panel.R")
 ```
 
 The next analytical step should be a separate cleaned derivative. Define the

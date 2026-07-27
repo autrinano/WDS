@@ -1,5 +1,18 @@
 # California–Florida Homelessness Factors Project
 
+## Repository housekeeping (2026-07-27)
+
+All project R scripts were moved from the repository root into `scripts/`
+(paths below and in the rebuild instructions were updated accordingly; no
+script logic changed, since every script resolves data/library paths from
+the working directory, not from its own file location). The HW9 course
+draft (`HW9_group.Rmd`, `HW9_group.html`) was moved to
+`archive/coursework/` since it predates and is superseded by this project's
+current reports. Untracked, gitignored build artifacts (`.DS_Store`,
+`Rplots.pdf`, an Excel `~$` lock file, and the local `_r_libs/` package
+cache) were deleted; `_r_libs/` will be recreated automatically the next
+time a script installs its required packages.
+
 ## Project overview
 
 The goal of the study is to explain why homelessness rates diverged between California and Florida from 2010 through 2025. The analysis examines whether differences in housing affordability, rental-market tightness, housing stock and new supply, economic conditions, policy, and homelessness-service capacity are associated with the different state trajectories.
@@ -12,11 +25,11 @@ The unit of observation is one state-year. The processed panel contains 32 rows:
 
 - `DSA_Group_10_updated.xlsx`: current team workbook, with the integrated 63-variable panel, variable dictionary, missingness table, and source notes.
 - `DSA Group 10 - Sheet1.csv`: current machine-readable team panel (32 state-years × 63 variables).
-- `clean_analysis_data.R`: validates the integrated data and builds cleaned, purpose-specific analysis panels without statistical imputation.
+- `scripts/clean_analysis_data.R`: validates the integrated data and builds cleaned, purpose-specific analysis panels without statistical imputation.
 - `cleaned_data/cleaned_analysis_datasets.xlsx`: cleaned workbook with core, rent, eviction, audit, and validation sheets.
 - `cleaned_data/`: CSV versions of the cleaned panels, cleaning audit, and validation results.
-- `update_team_dataset.R`: integrates the verified housing panel, corrects deterministic fields, adds derived variables, and rebuilds the team workbook.
-- `generate_project_chart_suite.R`: produces the curated chart suite and chart manifest.
+- `scripts/update_team_dataset.R`: integrates the verified housing panel, corrects deterministic fields, adds derived variables, and rebuilds the team workbook.
+- `scripts/generate_project_chart_suite.R`: produces the curated chart suite and chart manifest.
 - `PROJECT_DATA_AND_CHART_AUDIT.md`: audit of the original charts, missing-data decisions, new variables, and redesign.
 - `charts/`: current 73-chart suite, including 22 curated/goal-aligned charts and 51 state-faceted factor scatterplots.
 - `charts/chart_manifest.csv`: authoritative list of current chart files.
@@ -26,25 +39,25 @@ The unit of observation is one state-year. The processed panel contains 32 rows:
 - `charts/key_chart_manifest.csv`: reproducible ordered list of those 11 charts.
 - `housing_metrics_CA_FL_2010_2025.xlsx`: formatted Excel deliverable with the panel, metric guide, missingness summary, and raw-file index.
 - `housing_metrics_CA_FL_2010_2025.csv`: machine-readable version of the processed panel.
-- `build_housing_metrics.R`: reproducible R pipeline that downloads, cleans, combines, validates, and exports the housing data.
+- `scripts/build_housing_metrics.R`: reproducible R pipeline that downloads, cleans, combines, validates, and exports the housing data.
 - `DATA_SOURCES_AND_ASSUMPTIONS.md`: authoritative definitions, source URLs, coverage, and limitations.
 - `DECISION_LOG.md`: record of important data and modeling decisions.
 - `raw_data/`: unmodified source downloads used by the R pipeline.
 - `_r_libs/`: folder-local R packages used to build the workbook.
-- `build_coc_lasso_panel.R`: builds the CoC-year homelessness outcome,
+- `scripts/build_coc_lasso_panel.R`: builds the CoC-year homelessness outcome,
   county-to-CoC allocation crosswalk, and next-year LASSO candidate panels.
 - `coc_analysis/coc_lasso_analysis_CA_FL_2010_2025.xlsx`: CoC outcome and
   modeling workbook with validation, coverage, dictionary, and source sheets.
 - `coc_analysis/lasso_core_complete_panel.csv`: first complete-case,
   theory-driven panel for predicting the next year's homelessness rate.
 - `coc_analysis/README.md`: authoritative CoC allocation and modeling notes.
-- `build_expanded_lasso_input.R`: combines the curated CoC, county-derived,
+- `scripts/build_expanded_lasso_input.R`: combines the curated CoC, county-derived,
   state-year, and official HUD HIC predictors into one leakage-safe model table.
 - `outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT.xlsx`: primary one-sheet LASSO
   input (898 CoC-years, six identifiers, one target, two baseline controls,
   and 47 candidate predictors).
-- `build_expanded_lasso_input_v2.R`: audits every inherited/provisional
-  predictor from `build_expanded_lasso_input.R`, drops variables that could
+- `scripts/build_expanded_lasso_input_v2.R`: audits every inherited/provisional
+  predictor from `scripts/build_expanded_lasso_input.R`, drops variables that could
   not be verified to an official or fully documented source, and adds
   three new local (CoC-level) predictors. Does not overwrite v1.
 - `outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT_v2.xlsx`: improved one-sheet
@@ -109,7 +122,7 @@ The foreclosure-rate column is currently blank because no free, comparable state
 
 1. Use R for project data-acquisition and processing scripts.
 2. Preserve files in `raw_data/`; do not manually edit source downloads.
-3. Make transformations reproducible in `build_housing_metrics.R` rather than editing only the Excel workbook.
+3. Make transformations reproducible in `scripts/build_housing_metrics.R` rather than editing only the Excel workbook.
 4. When adding or changing a metric, update all of the following:
    - `DATA_SOURCES_AND_ASSUMPTIONS.md`;
    - the workbook's `Metric Guide` and `Missingness` sheets through the R script;
@@ -129,11 +142,11 @@ Run from the workspace root:
 
 ```r
 setwd("Final Project")
-source("build_housing_metrics.R")
-source("update_team_dataset.R")
-source("clean_analysis_data.R")
-source("generate_project_chart_suite.R")
-source("build_coc_lasso_panel.R")
+source("scripts/build_housing_metrics.R")
+source("scripts/update_team_dataset.R")
+source("scripts/clean_analysis_data.R")
+source("scripts/generate_project_chart_suite.R")
+source("scripts/build_coc_lasso_panel.R")
 ```
 
 After rebuilding, confirm:
@@ -158,7 +171,7 @@ After rebuilding, confirm:
 - the CoC workbook contains ten sheets, including a README overview; and
 - the core LASSO panel contains no missing target or core-predictor fields and
   excludes 2021 as a target.
-- `build_expanded_lasso_input_v2.R` reports that all of its own validation
+- `scripts/build_expanded_lasso_input_v2.R` reports that all of its own validation
   checks passed, including at least 850 modeling rows and zero non-finite
   (NA/NaN/Inf) values across the target, controls, and predictors.
 

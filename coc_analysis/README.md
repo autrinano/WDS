@@ -31,8 +31,8 @@ come from the preceding year.
 - `coverage_summary.csv`: variable coverage for each derived dataset.
 - `variable_dictionary.csv` and `source_notes.csv`: definitions and provenance.
 - `raw_file_index.csv`: source-file sizes, timestamps, and MD5 hashes.
-- `../build_coc_lasso_panel.R`: reproducible build.
-- `../build_expanded_lasso_input_v2.R`: builds an improved one-sheet LASSO
+- `../scripts/build_coc_lasso_panel.R`: reproducible build.
+- `../scripts/build_expanded_lasso_input_v2.R`: builds an improved one-sheet LASSO
   input (`../outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT_v2.xlsx`, 887
   rows across 70 CoCs, 38 predictors) on top of this folder's `lasso_next_year_candidate_panel.csv`.
   It audits every inherited state-year predictor, adds three new local
@@ -81,7 +81,7 @@ have no estimated denominator or allocated predictors.
 From the workspace root:
 
 ```r
-source("build_coc_lasso_panel.R")
+source("scripts/build_coc_lasso_panel.R")
 ```
 
 The first build uses LibreOffice once to convert HUD's XLSB workbook and saves
@@ -102,7 +102,7 @@ analysis; it does not identify causal effects.
 ## Three geographic stages and exclusions
 
 The CoC geography passes through three stages that must not be conflated
-(reproduced by `../diagnose_coc_boundaries_v2.R`; see
+(reproduced by `../scripts/diagnose_coc_boundaries_v2.R`; see
 `../outputs/v2_support/COC_BOUNDARY_DIAGNOSTICS.md` and
 `excluded_model_rows_by_reason.csv`):
 
