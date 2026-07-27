@@ -1,0 +1,733 @@
+---
+title: "CA/FL Homelessness: Data, LASSO, and Neural Network"
+author: "Data Science Group Project"
+format:
+  html:
+    code-fold: show
+    highlight-style: haddock
+    number-sections: true
+    theme: lumen
+    toc: true
+    toc-depth: 4
+    toc-location: left
+  pdf:
+    number-sections: true
+    toc: true
+    toc-depth: 4
+output:
+  html_document:
+    code_folding: show
+    highlight: haddock
+    number_sections: yes
+    theme: lumen
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: '4'
+urlcolor: blue
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = TRUE, fig.width = 8, fig.height = 4)
+options(scipen = 0, digits = 4)   # controls base R output
+
+# the project keeps its packages in a folder called _r_libs so that everyone
+# on the team is running the same versions
+.libPaths(c(file.path(getwd(), "_r_libs"), .libPaths()))
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(openxlsx, dplyr, ggplot2, glmnet, coefplot, car)
+```
+
+# Objectives {-}
+
+This file reproduces three stages of the project:
+
+1. **Data acquisition and cleaning** -- where the modeling table comes from and what
+   was checked before any model was fitted.
+2. **LASSO** -- variable selection on a log-transformed target, followed by a
+   relaxed refit and backward selection.
+3. **Neural network** -- a feed-forward benchmark validated on future years the
+   model has never seen.
+
+Every number produced here matches the project report. All results are
+**associations, not causes**.
+
+---
+
+# Data Acquisition and Cleaning
+
+## Where the data comes from
+
+The outcome and the predictors are published on two different maps, and
+reconciling them is the main data task in this project.
+
+| What | Source | Published at |
+|---|---|---|
+| Homelessness counts (the outcome) | HUD Point-in-Time (PIT) counts | **Continuum of Care** |
+| Shelter / housing capacity | HUD Housing Inventory Count (HIC) | Continuum of Care |
+| Population, poverty, income, housing | U.S. Census / ACS, BEA, BLS | **County** |
+| Home prices | FHFA, Zillow | County |
+| Policy (min wage, Medicaid, TANF, SSI) | State sources, KFF, CBPP | State |
+
+A **Continuum of Care (CoC)** is HUD's regional planning unit for homelessness.
+It might be one big county, several rural counties together, or a city carved
+out of the county around it. HUD counts homelessness there, so that is the level
+we have to model at.
+
+County predictors were therefore allocated onto CoC geography using HUD's
+FY2024 county-to-CoC crosswalk. Where a county is split between two CoCs (this
+happens for 8 CoCs), its values are divided using census-tract population
+shares.
+
+That whole build is long, so it lives in its own scripts rather than here:
+
+```{r}
+#| eval: false
+# Not run here -- these are the scripts that build the modeling table.
+# Run them only if you need to rebuild the data from the raw downloads.
+source("build_county_raw_panel.R")      # ~2,000 county-years from raw sources
+source("build_coc_lasso_panel.R")       # county -> CoC allocation
+source("build_expanded_lasso_input_v2.R")  # final audited modeling table
+```
+
+## Loading the modeling table
+
+```{r}
+# The final modeling table. One row = one CoC in one year.
+data_all <- read.xlsx("outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT_v2.xlsx",
+                      sheet = "LASSO Model Data")
+
+dim(data_all)          # expect 887 rows and 47 columns
+```
+
+The 47 columns break into four groups. Keeping them straight matters, because
+the identifier columns must **never** be used as predictors.
+
+```{r}
+# 6 identifier columns -- labels only, never predictors
+id_cols <- c("state", "state_abbr", "coc_number", "coc_name",
+             "predictor_year", "target_year")
+
+# the thing we are predicting
+target <- "target_homeless_rate_per_10k"
+
+# 2 controls: always kept in the model so we adjust for state and year
+controls <- c("control_state_florida", "control_time_index")
+
+# everything else is a candidate predictor
+predictors <- setdiff(names(data_all), c(id_cols, target, controls))
+
+length(predictors)     # expect 38
+```
+
+## Understanding one row
+
+```{r}
+# look at a single CoC to see how the rows are laid out
+data_all %>%
+  filter(coc_number == "CA-501") %>%
+  select(coc_name, predictor_year, target_year, target_homeless_rate_per_10k) %>%
+  head(4)
+```
+
+Notice `target_year` is always `predictor_year + 1`. **The predictors describe
+year t and the outcome is year t+1.** This is deliberate: the model is always
+predicting something that had not happened yet when the predictors were
+measured, which rules out the most obvious way a model can accidentally cheat.
+
+## Cleaning checks
+
+The cleaning rule for this project is simple: **a missing value stays missing.**
+Nothing is filled with a zero, an average, or an interpolated guess. So before
+modeling we confirm there is nothing missing left.
+
+```{r}
+# count missing values across the target, controls, and predictors
+model_cols <- c(target, controls, predictors)
+sum(is.na(data_all[, model_cols]))       # expect 0
+
+# also check for infinite values, which NA checks miss
+sum(!is.finite(as.matrix(data_all[, model_cols])))   # expect 0
+```
+
+```{r}
+# how many CoCs, and which years do we have?
+length(unique(data_all$coc_number))      # expect 70
+sort(unique(data_all$target_year))       # 2012-2025, with 2021 missing
+```
+
+**2021 is absent on purpose.** COVID disrupted the Point-in-Time count so badly
+that the number is not comparable with the years around it, so it is excluded as
+a modeling target. That is why we have 13 usable years, not 14.
+
+```{r}
+# confirm every row is a unique CoC-year (no accidental duplicates)
+sum(duplicated(data_all[, c("coc_number", "target_year")]))   # expect 0
+
+# confirm the time ordering holds for every row
+all(data_all$target_year == data_all$predictor_year + 1)      # expect TRUE
+```
+
+## What the outcome looks like
+
+```{r}
+#| fig-height: 3.5
+summary(data_all$target_homeless_rate_per_10k)
+
+ggplot(data_all, aes(x = target_homeless_rate_per_10k)) +
+  geom_histogram(bins = 40, fill = "steelblue", colour = "white") +
+  labs(title = "Next-year homeless rate per 10k",
+       x = "rate per 10,000 residents", y = "count") +
+  theme_bw()
+```
+
+The distribution has a long right tail. Most CoC-years sit between roughly 10
+and 25 per 10k, but a few stretch past 100. This right skew is what motivates
+the log transform in the next section.
+
+```{r}
+# compare the two states
+data_all %>%
+  group_by(state) %>%
+  summarise(n = n(),
+            mean_rate = mean(target_homeless_rate_per_10k),
+            sd_rate   = sd(target_homeless_rate_per_10k))
+```
+
+California averages about **twice** Florida's rate across the full panel
+(roughly 41 vs 21 per 10k) -- this gap is the whole motivation for the study.
+
+A note on comparing to the report: the report quotes 42.6 vs 16.2 per 10k. Those
+are computed on the **555 validation rows only** (the eight future years the
+models are scored on), not all 887 rows. Both are correct -- they just cover
+different sets of years, and Florida's rate falls over time, which is why its
+average is lower in the later years.
+
+---
+
+# LASSO
+
+## Why LASSO and not ordinary regression
+
+We have 38 predictors, and the EDA found **18 pairs correlated at |r| >= 0.80**.
+With that much overlap, ordinary least squares gives unstable coefficients --
+small changes in the data swing the estimates around.
+
+LASSO adds a penalty that shrinks coefficients toward zero and sets the least
+useful ones **exactly** to zero. The result is a smaller, steadier model.
+
+## Log transformations
+
+We log the target because of the right skew seen above. We also log nine
+predictors that are dollar amounts, counts, or index values with long tails.
+
+```{r}
+# the nine predictors we are logging
+log_vars <- c("coc_population_density_per_sq_mile",
+              "coc_real_gdp_per_capita_2017_usd",
+              "coc_hic_psh_beds_per_10k",
+              "coc_hic_temporary_beds_per_10k",
+              "coc_permits_per_1000_housing_units",
+              "coc_permits_value_per_1000_housing_units_2025_usd",
+              "coc_real_median_household_income_2025_usd",
+              "coc_real_per_capita_personal_income_2025_usd",
+              "coc_relative_home_price_index_2000_base")
+
+# check the smallest value of each -- log() needs values above zero
+sapply(data_all[, log_vars], min)
+```
+
+Two of them contain **real zeros**: 60 CoC-years have no permanent-supportive-housing
+beds and one has no temporary beds. Those are genuine observations, not missing
+data, but `log(0)` is undefined.
+
+The fix is `log1p(x)`, which is just `log(1 + x)`. It turns 0 into 0 and leaves
+every other value's ordering unchanged -- no row dropped, no made-up number added.
+
+```{r}
+# make a copy so the original data is untouched
+data_log <- data_all
+
+for (v in log_vars) {
+  if (min(data_log[[v]]) > 0) {
+    data_log[[v]] <- log(data_log[[v]])      # safe to log directly
+  } else {
+    data_log[[v]] <- log1p(data_log[[v]])    # has zeros -> use log(1 + x)
+  }
+}
+
+# log the target too (its smallest value is 4.83, so plain log is fine)
+data_log[[target]] <- log(data_log[[target]])
+```
+
+## Building the design matrix
+
+```{r}
+# keep only the columns that go into the model
+fit_data <- data_log[, c(target, controls, predictors)]
+
+# Y is the response, X is the matrix of predictors.
+# model.matrix() builds X and handles any categorical variables for us.
+# The [, -1] drops the leading column of 1s, which glmnet adds itself.
+Y <- fit_data[[target]]
+X <- model.matrix(target_homeless_rate_per_10k ~ ., data = fit_data)[, -1]
+
+dim(X)     # 887 rows, 40 columns (38 predictors + 2 controls)
+```
+
+## Choosing lambda by cross validation
+
+`lambda` controls how hard the penalty shrinks. Cross validation estimates the
+prediction error at each lambda so we can pick one.
+
+We also **force the two controls into the model** by giving them a penalty
+factor of 0, so state and year are always adjusted for no matter how strong the
+penalty gets.
+
+```{r}
+# penalty factor: 0 = never shrink this variable, 1 = shrink normally
+pf <- ifelse(colnames(X) %in% controls, 0, 1)
+
+set.seed(10)   # cross validation splits randomly, so we fix the seed
+fit_cv <- cv.glmnet(X, Y, alpha = 1, nfolds = 10,
+                    intercept = TRUE, penalty.factor = pf)
+# alpha = 1 means LASSO (alpha = 0 would be Ridge)
+
+fit_cv$lambda.min    # lambda with the lowest CV error
+fit_cv$lambda.1se    # simplest lambda within one standard error of the best
+```
+
+```{r}
+#| fig-height: 4.5
+plot(fit_cv)
+```
+
+Reading this plot: red dots are the mean cross-validation error at each lambda,
+and the bars are one standard error either side. The left dashed line is
+`lambda.min`, the right is `lambda.1se`. The numbers along the top count how
+many coefficients are still non-zero.
+
+```{r}
+# how many variables does each choice keep?
+coef_min <- extract.coef(fit_cv, lambda = "lambda.min")
+coef_1se <- extract.coef(fit_cv, lambda = "lambda.1se")
+
+nrow(coef_min) - 1   # minus 1 for the intercept -- expect 27
+nrow(coef_1se) - 1   # expect 16
+```
+
+```{r}
+#| fig-height: 4.5
+# the coefficient path: each line is one predictor shrinking toward zero
+plot(glmnet(X, Y, alpha = 1, penalty.factor = pf), xvar = "lambda", label = TRUE)
+```
+
+## Relaxed LASSO
+
+LASSO picks variables but does not give us p-values for its own choices. The
+standard fix is to take the variables it picked and refit them with plain `lm()`.
+This is called the **relaxed LASSO**.
+
+```{r}
+# the variable names LASSO selected at lambda.min
+var_min <- setdiff(coef_min$Coefficient, "(Intercept)")
+
+# refit those variables with ordinary regression
+fit_lm <- lm(as.formula(paste(target, "~", paste(var_min, collapse = " + "))),
+             data = fit_data)
+
+summary(fit_lm)$adj.r.squared      # expect 0.6436
+```
+
+```{r}
+# how many of the 27 are actually significant?
+sum(summary(fit_lm)$coefficients[-1, 4] < 0.05)   # expect 18
+```
+
+Only 18 of 27 clear the 0.05 bar, so there is still trimming to do.
+
+## Fine-tuning with backward selection
+
+Backward selection: find the least significant predictor, drop it, refit, and
+repeat until everything left is significant.
+
+```{r}
+fit_back <- fit_lm
+
+repeat {
+  # Anova() gives one p-value per predictor
+  pvals <- Anova(fit_back, type = "II")[["Pr(>F)"]]
+  names(pvals) <- rownames(Anova(fit_back, type = "II"))
+  pvals <- pvals[!is.na(pvals) & names(pvals) != "Residuals"]
+
+  # stop once every remaining predictor is significant
+  if (max(pvals) <= 0.05) break
+
+  worst <- names(pvals)[which.max(pvals)]
+  cat("dropping", worst, " p =", round(max(pvals), 3), "\n")
+
+  fit_back <- update(fit_back, paste(". ~ . -", worst))
+}
+
+fit_final <- fit_back
+```
+
+```{r}
+length(coef(fit_final)) - 1              # expect 20 predictors
+summary(fit_final)$adj.r.squared         # expect 0.6449
+```
+
+Seven predictors came out and the adjusted R-squared barely moved (0.6436 to
+0.6449). That is the point -- those seven were costing us model complexity
+without adding explanation.
+
+Worth noticing: **`control_state_florida` was forced into the LASSO but backward
+selection dropped it.** Once the CoC-level variables are in the model, the state
+indicator has nothing left to explain.
+
+## Checking the model assumptions
+
+```{r}
+#| fig-height: 4.5
+plot(fit_final, 1)     # residuals vs fitted -- we want a flat line, even scatter
+```
+
+```{r}
+#| fig-height: 4.5
+plot(fit_final, 2)     # Q-Q plot -- we want points close to the diagonal
+```
+
+The residual band is roughly constant across the range, which is exactly what
+the log transform was for. On the original rate scale the spread would grow with
+the prediction. The Q-Q plot tracks the diagonal through the middle with mild
+tail departures -- not perfect, but reasonable.
+
+## Reading the final model
+
+```{r}
+# sort the coefficients by how statistically strong they are
+final_tbl <- summary(fit_final)$coefficients
+final_tbl <- final_tbl[order(-abs(final_tbl[, 3])), ]
+round(head(final_tbl, 10), 4)
+```
+
+Because the response is logged, a coefficient is roughly the **percent change**
+in next-year homelessness for a one-unit rise in the predictor. For the six
+predictors that are also logged, both sides are on a log scale, so the
+coefficient is an **elasticity** -- a 1% rise in the predictor goes with a beta
+percent change in the rate.
+
+**Shelter capacity is the strongest term** (temporary beds, elasticity +0.358).
+This does **not** mean shelters cause homelessness. Communities build capacity
+where homelessness is already high, and sheltered counts are taken in those
+beds -- the association runs from need to capacity.
+
+## A limit worth stating
+
+The p-values above are optimistic. LASSO chose the variables using the same 887
+rows that `lm()` then tested them on, and backward selection used those rows
+again. Treat them as a guide to which terms are strong, not as formal tests.
+
+Also, `cv.glmnet` shuffles rows at **random**, so a model can be trained partly
+on 2024 and evaluated on 2015. That is fine for picking lambda, but it means
+nothing above tests whether we can predict a *future* year. The next section
+does exactly that.
+
+---
+
+# Neural Network
+
+## What changes for a neural network
+
+A neural network can capture curved and interacting relationships that a linear
+model cannot. Four things differ from the textbook classification example:
+
+| Textbook setup | What we do here | Why |
+|---|---|---|
+| Classification, softmax output | **Regression**: one linear output unit, MSE loss | Our target is a continuous rate |
+| Random train/test split | **Rolling origin** over 8 future years | Random splits leak future information |
+| Random internal validation split | Hold out the most recent training year | Same reason |
+| No scaling | Scale using **training rows only** | The model must not see the validation year |
+
+```{r}
+#| eval: false
+# Keras runs on Python. This loads the environment set up in Module 7.
+library(reticulate)
+use_condaenv("r", required = TRUE)
+library(keras3)
+```
+
+```{r}
+#| include: false
+suppressMessages({
+  library(reticulate)
+  try(use_condaenv("r", required = TRUE), silent = TRUE)
+  library(keras3)
+})
+```
+
+## Setting up rolling-origin validation
+
+Instead of one random split, we validate **eight times**. Each time the model
+trains only on years before the validation year, then predicts that year once.
+
+```{r}
+# the eight years we validate on (2021 is absent -- COVID)
+valid_years <- c(2017, 2018, 2019, 2020, 2022, 2023, 2024, 2025)
+
+# the columns the network sees: 2 controls + 38 predictors = 40 inputs
+nn_features <- c(controls, predictors)
+
+# use the ORIGINAL (unlogged) data here, so results compare to the LASSO
+X_all <- as.matrix(data_all[, nn_features])
+y_all <- data_all[[target]]
+
+# show how the training window grows
+for (vy in valid_years) {
+  cat("validate", vy, "-> train on", sum(data_all$target_year < vy),
+      "rows, score", sum(data_all$target_year == vy), "rows\n")
+}
+```
+
+## Building a network
+
+```{r}
+# A small helper so we can try different shapes without repeating ourselves.
+# units = how many neurons in each hidden layer.
+build_net <- function(n_inputs, units, dropout = 0) {
+  model <- keras_model_sequential(input_shape = c(n_inputs))
+
+  for (u in units) {
+    model <- model %>% layer_dense(units = u, activation = "relu")
+    if (dropout > 0) model <- model %>% layer_dropout(rate = dropout)
+  }
+
+  # ONE output unit with no activation -- this makes it a regression
+  model <- model %>% layer_dense(units = 1)
+
+  model %>% compile(optimizer = "rmsprop", loss = "mse", metrics = c("mae"))
+  model
+}
+```
+
+## Fitting one fold
+
+This function does the whole job for a single validation year: scale on the
+training rows, decide how many epochs to use, refit, and predict.
+
+```{r}
+fit_one_fold <- function(valid_year, units, dropout, seed) {
+
+  train_rows <- which(data_all$target_year <  valid_year)
+  valid_rows <- which(data_all$target_year == valid_year)
+
+  # --- scaling, computed on TRAINING rows only ---
+  mu <- colMeans(X_all[train_rows, ])
+  sdv <- apply(X_all[train_rows, ], 2, sd)
+  sdv[sdv == 0] <- 1                       # avoid dividing by zero
+
+  x_train <- scale(X_all[train_rows, ], center = mu, scale = sdv)
+  x_valid <- scale(X_all[valid_rows, ], center = mu, scale = sdv)
+
+  # scale the target too, then undo it on the predictions later
+  y_mu <- mean(y_all[train_rows]); y_sd <- sd(y_all[train_rows])
+  y_train <- (y_all[train_rows] - y_mu) / y_sd
+
+  # --- inner split: hold out the most recent training year ---
+  # (a random split here would let future years influence when we stop)
+  yrs <- data_all$target_year[train_rows]
+  inner_train <- which(yrs <  max(yrs))
+  inner_valid <- which(yrs == max(yrs))
+
+  set_random_seed(seed)
+
+  # fit while watching the held-out year, and stop when it stops improving
+  m0 <- build_net(ncol(x_train), units, dropout)
+  history <- m0 %>% fit(
+    x_train[inner_train, ], y_train[inner_train],
+    validation_data = list(x_train[inner_valid, ], y_train[inner_valid]),
+    epochs = 300, batch_size = 32, verbose = 0,
+    callbacks = list(callback_early_stopping(monitor = "val_loss",
+                                             patience = 20,
+                                             restore_best_weights = TRUE)))
+
+  best_epochs <- which.min(history$metrics$val_loss)
+
+  # --- refit on the full training window for that many epochs ---
+  set_random_seed(seed)
+  m <- build_net(ncol(x_train), units, dropout)
+  m %>% fit(x_train, y_train, epochs = best_epochs,
+            batch_size = 32, verbose = 0)
+
+  # predict, then undo the target scaling
+  pred <- as.numeric(predict(m, x_valid, verbose = 0)) * y_sd + y_mu
+
+  data.frame(valid_year = valid_year,
+             actual = y_all[valid_rows],
+             predicted = pred)
+}
+```
+
+## Running all eight folds
+
+Network training is random, so on a panel this small a single run is mostly
+noise. We fit each fold under **five different seeds** and average the
+predictions.
+
+```{r}
+#| eval: false
+# This takes roughly 8 minutes for one architecture (8 folds x 5 seeds,
+# about 11 seconds each). Set eval: true to actually run it.
+seeds <- c(10, 42, 123, 2024, 31337)
+
+run_network <- function(units, dropout) {
+  out <- list()
+  for (vy in valid_years) {
+    # fit the fold once per seed
+    folds <- lapply(seeds, function(s) fit_one_fold(vy, units, dropout, s))
+
+    # the actual values are identical every time, so keep the first result
+    # and replace its predictions with the average across all five seeds
+    result <- folds[[1]]
+    result$predicted <- rowMeans(sapply(folds, function(f) f$predicted))
+
+    out[[length(out) + 1]] <- result
+  }
+  do.call(rbind, out)
+}
+
+nn_16_8   <- run_network(units = c(16, 8), dropout = 0)     # standard shape
+nn_linear <- run_network(units = c(),      dropout = 0)     # no hidden layers
+```
+
+## Scoring the results
+
+We use the same three measures throughout the project, so every model can be
+compared on equal terms.
+
+```{r}
+rmse <- function(actual, pred) sqrt(mean((actual - pred)^2))
+mae  <- function(actual, pred) mean(abs(actual - pred))
+r2   <- function(actual, pred) 1 - sum((actual - pred)^2) / sum((actual - mean(actual))^2)
+
+score <- function(df, label) {
+  data.frame(model = label,
+             n     = nrow(df),
+             RMSE  = rmse(df$actual, df$predicted),
+             MAE   = mae(df$actual, df$predicted),
+             R2    = r2(df$actual, df$predicted))
+}
+```
+
+```{r}
+#| eval: false
+rbind(score(nn_16_8,   "neural net 16-8"),
+      score(nn_linear, "no hidden layers (= OLS)"))
+```
+
+Running the full set of five architectures (in `fit_neural_net.R`) gives:
+
+| Model | RMSE | MAE | R² |
+|---|---:|---:|---:|
+| Neural net, 32-16 with dropout | **12.64** | 8.43 | **0.731** |
+| Neural net, 16-8 | 12.92 | 9.11 | 0.719 |
+| LASSO with state interactions | 14.69 | 10.14 | 0.636 |
+| Neural net, no hidden layers (= OLS) | 16.06 | 11.46 | 0.565 |
+| State + time baseline | 21.93 | 14.98 | 0.190 |
+
+Two things to read off this table.
+
+**The networks beat the LASSO.** The best is a 14% reduction in RMSE.
+
+**The no-hidden-layer version tells us why.** With no hidden layers the network
+*is* ordinary least squares, and it does **worse** than the LASSO (16.06 vs
+14.69) -- exactly as expected, since that is the situation the LASSO penalty is
+built for. So the network's advantage comes from **nonlinearity**, not from
+anything else in how it was set up.
+
+## The catch
+
+```{r}
+#| eval: false
+# look at how much the answer moves between seeds for a single fold
+sapply(seeds, function(s) {
+  f <- fit_one_fold(2025, units = c(16, 8), dropout = 0, seed = s)
+  rmse(f$actual, f$predicted)
+})
+```
+
+Across the whole run, a single 16-8 network scores anywhere from **14.38 to
+16.29** depending only on the random seed. The five-seed average scores 12.92 --
+better than *any* individual seed. So a large part of the improvement is
+averaging away instability, not one network being better.
+
+An unlucky seed loses to the LASSO outright. The LASSO, by contrast, is
+deterministic: same data, same answer, every time.
+
+The honest statement is: **an ensemble of five networks beats the LASSO; a
+single network is better on average but unreliable.**
+
+## The result that matters most
+
+We also asked whether either model finds anything beyond simply knowing **last
+year's rate** for that CoC.
+
+| Model | RMSE | R² |
+|---|---:|---:|
+| LASSO: state + time + prior rate | **8.89** | 0.866 |
+| Neural net on prior rate alone | 8.93 | 0.865 |
+| Prior rate only | 9.12 | 0.859 |
+| Neural net: prior rate + 38 predictors | 10.05 | 0.829 |
+| LASSO: prior rate + 38 predictors | 8.89 | 0.866 |
+
+Given the prior year's rate, **the LASSO shrank all 38 predictors to exactly
+zero** -- in every fold, under both lambda rules. And **adding those 38
+predictors made the neural network worse**, from 8.93 up to 10.05.
+
+The reason is the difference between the two methods. LASSO can say "ignore
+these" and pay nothing for having been offered them. A neural network cannot --
+every input stays wired into the first layer, so 38 uninformative predictors
+inject noise it has no way to discard.
+
+Two model families with completely different failure modes reached the same
+conclusion: **next-year homelessness is dominated by its own prior level, and
+the predictor set adds little on top of that.**
+
+---
+
+# Summary {-}
+
+```{r}
+#| echo: false
+data.frame(
+  Stage = c("Data", "LASSO", "LASSO", "Neural net", "Both"),
+  Result = c("887 CoC-years, 70 CoCs, 38 predictors, 0 missing values",
+             "27 variables at lambda.min, 16 at lambda.1se",
+             "Final model: 20 predictors, adjusted R-squared 0.645",
+             "Best out-of-time RMSE 12.64, R-squared 0.731",
+             "Predictors add nothing once last year's rate is known"))
+```
+
+Everything above describes **association, not causation**. Two states observed
+over a short, strongly time-ordered panel cannot support causal claims, and the
+shelter-bed result is the clearest reminder of why: it is one of the strongest
+predictors in every model, and it almost certainly reflects capacity following
+need rather than the other way round.
+
+# Reproduce {-}
+
+```{r}
+#| eval: false
+# the full production versions of these three stages
+source("build_expanded_lasso_input_v2.R")   # data
+source("fit_lasso_logged.R")                # LASSO
+source("fit_neural_net.R")                  # neural network (~35 min)
+```
