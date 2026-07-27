@@ -1,0 +1,13 @@
+"feature_set","architecture","architecture_label","n_inputs","hidden_layers","units","dropout","n_parameters"
+"factors","no_hidden","0 hidden layers (linear)",40,0,"",0,41
+"factors","class_16_8","16 -> 8 ReLU (lecture architecture)",40,2,"16-8",0,801
+"factors","class_16_8_drop","16 -> 8 ReLU + dropout 0.2",40,2,"16-8",0.2,801
+"factors","wide_32_16_drop","32 -> 16 ReLU + dropout 0.2",40,2,"32-16",0.2,1857
+"factors","shallow_8_drop","8 ReLU + dropout 0.2",40,1,"8",0.2,337
+"factors_plus_prior","no_hidden","0 hidden layers (linear)",41,0,"",0,42
+"factors_plus_prior","class_16_8","16 -> 8 ReLU (lecture architecture)",41,2,"16-8",0,817
+"factors_plus_prior","class_16_8_drop","16 -> 8 ReLU + dropout 0.2",41,2,"16-8",0.2,817
+"factors_plus_prior","wide_32_16_drop","32 -> 16 ReLU + dropout 0.2",41,2,"32-16",0.2,1889
+"factors_plus_prior","shallow_8_drop","8 ReLU + dropout 0.2",41,1,"8",0.2,345
+"prior_only","no_hidden","0 hidden layers (linear)",1,0,"",0,2
+"prior_only","class_16_8","16 -> 8 ReLU (lecture architecture)",1,2,"16-8",0,177

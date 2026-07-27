@@ -23,6 +23,9 @@ Rplots.pdf
 *.tmp
 *.temp
 
+# Run logs from long-running model fits
+*_run.log
+
 # Large geospatial archives. These are re-downloadable from stable, versioned
 # URLs by diagnose_coc_boundaries_v2.R and build_coc_lasso_panel.R, so they are
 # not tracked. The files themselves are preserved locally in raw_data/.
