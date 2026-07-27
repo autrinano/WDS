@@ -1,0 +1,75 @@
+
+Call:
+lm(formula = as.formula(paste(TARGET, "~", paste(keep, collapse = " + "))), 
+    data = fit_frame)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.18421 -0.26737 -0.04889  0.22515  1.96489 
+
+Coefficients:
+                                                    Estimate Std. Error t value
+(Intercept)                                       -0.4060227  4.1527988  -0.098
+control_state_florida                             -0.1378071  0.2487156  -0.554
+control_time_index                                -0.0716714  0.0187504  -3.822
+coc_log_estimated_population                      -0.1114797  0.0213262  -5.227
+coc_population_density_per_sq_mile                -0.0694406  0.0185532  -3.743
+coc_contributing_counties                         -0.0071161  0.0129035  -0.551
+coc_housing_units_per_1000_residents               0.0011704  0.0003755   3.117
+coc_multifamily_permit_share_pct                   0.0023413  0.0010342   2.264
+coc_permits_value_per_1000_housing_units_2025_usd -0.0978499  0.0298247  -3.281
+coc_death_rate_per_1000                            0.0361487  0.0126969   2.847
+coc_international_migration_rate_per_1000          0.0061494  0.0056346   1.091
+coc_domestic_migration_rate_per_1000              -0.0013082  0.0020359  -0.643
+coc_group_quarters_per_1000_residents              0.0008841  0.0014018   0.631
+coc_poverty_child_pct                             -0.0232863  0.0055803  -4.173
+coc_real_per_capita_personal_income_2025_usd       0.4155434  0.1124289   3.696
+coc_unemployment_rate_pct                          0.0155160  0.0089713   1.730
+coc_high_school_graduate_pct                      -0.0049591  0.0056964  -0.871
+coc_homeownership_rate_pct                        -0.0231632  0.0052868  -4.381
+coc_housing_cost_burdened_households_pct          -0.0171854  0.0053382  -3.219
+coc_annual_hpi_change_pct                          0.0067756  0.0032557   2.081
+coc_real_gdp_per_capita_2017_usd                  -0.5547066  0.1118872  -4.958
+coc_real_gdp_quantity_index                        0.0070863  0.0022607   3.135
+coc_relative_home_price_index_2000_base            0.1291690  0.1563577   0.826
+state_real_minimum_wage_2025_usd                   0.1127181  0.0240521   4.686
+coc_hic_temporary_beds_per_10k                     0.3710235  0.0359736  10.314
+coc_hic_psh_beds_per_10k                           0.2093487  0.0257305   8.136
+state_labor_force_participation_pct                0.1035784  0.0563324   1.839
+state_rental_vacancy_rate                          0.0517532  0.0189111   2.737
+                                                  Pr(>|t|)    
+(Intercept)                                       0.922137    
+control_state_florida                             0.579672    
+control_time_index                                0.000142 ***
+coc_log_estimated_population                      2.16e-07 ***
+coc_population_density_per_sq_mile                0.000194 ***
+coc_contributing_counties                         0.581444    
+coc_housing_units_per_1000_residents              0.001886 ** 
+coc_multifamily_permit_share_pct                  0.023833 *  
+coc_permits_value_per_1000_housing_units_2025_usd 0.001077 ** 
+coc_death_rate_per_1000                           0.004518 ** 
+coc_international_migration_rate_per_1000         0.275418    
+coc_domestic_migration_rate_per_1000              0.520666    
+coc_group_quarters_per_1000_residents             0.528399    
+coc_poverty_child_pct                             3.31e-05 ***
+coc_real_per_capita_personal_income_2025_usd      0.000233 ***
+coc_unemployment_rate_pct                         0.084077 .  
+coc_high_school_graduate_pct                      0.384238    
+coc_homeownership_rate_pct                        1.33e-05 ***
+coc_housing_cost_burdened_households_pct          0.001333 ** 
+coc_annual_hpi_change_pct                         0.037718 *  
+coc_real_gdp_per_capita_2017_usd                  8.59e-07 ***
+coc_real_gdp_quantity_index                       0.001780 ** 
+coc_relative_home_price_index_2000_base           0.408970    
+state_real_minimum_wage_2025_usd                  3.23e-06 ***
+coc_hic_temporary_beds_per_10k                     < 2e-16 ***
+coc_hic_psh_beds_per_10k                          1.42e-15 ***
+state_labor_force_participation_pct               0.066304 .  
+state_rental_vacancy_rate                         0.006335 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.4217 on 859 degrees of freedom
+Multiple R-squared:  0.6545,	Adjusted R-squared:  0.6436 
+F-statistic: 60.26 on 27 and 859 DF,  p-value: < 2.2e-16
+

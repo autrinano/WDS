@@ -1,0 +1,70 @@
+
+Call:
+lm(formula = target_homeless_rate_per_10k ~ control_time_index + 
+    coc_log_estimated_population + coc_population_density_per_sq_mile + 
+    coc_housing_units_per_1000_residents + coc_multifamily_permit_share_pct + 
+    coc_permits_value_per_1000_housing_units_2025_usd + coc_death_rate_per_1000 + 
+    coc_poverty_child_pct + coc_real_per_capita_personal_income_2025_usd + 
+    coc_unemployment_rate_pct + coc_homeownership_rate_pct + 
+    coc_housing_cost_burdened_households_pct + coc_annual_hpi_change_pct + 
+    coc_real_gdp_per_capita_2017_usd + coc_real_gdp_quantity_index + 
+    state_real_minimum_wage_2025_usd + coc_hic_temporary_beds_per_10k + 
+    coc_hic_psh_beds_per_10k + state_labor_force_participation_pct + 
+    state_rental_vacancy_rate, data = fit_frame)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.14173 -0.27506 -0.05202  0.23298  2.04058 
+
+Coefficients:
+                                                    Estimate Std. Error t value
+(Intercept)                                       -3.0214125  2.2619819  -1.336
+control_time_index                                -0.0533984  0.0132353  -4.035
+coc_log_estimated_population                      -0.1111815  0.0208740  -5.326
+coc_population_density_per_sq_mile                -0.0726654  0.0161932  -4.487
+coc_housing_units_per_1000_residents               0.0010495  0.0003506   2.993
+coc_multifamily_permit_share_pct                   0.0024939  0.0009886   2.523
+coc_permits_value_per_1000_housing_units_2025_usd -0.0997143  0.0272105  -3.665
+coc_death_rate_per_1000                            0.0357672  0.0123211   2.903
+coc_poverty_child_pct                             -0.0210905  0.0049372  -4.272
+coc_real_per_capita_personal_income_2025_usd       0.4376820  0.1079663   4.054
+coc_unemployment_rate_pct                          0.0191896  0.0074863   2.563
+coc_homeownership_rate_pct                        -0.0262723  0.0046439  -5.657
+coc_housing_cost_burdened_households_pct          -0.0132536  0.0044594  -2.972
+coc_annual_hpi_change_pct                          0.0078098  0.0030667   2.547
+coc_real_gdp_per_capita_2017_usd                  -0.5137755  0.1018700  -5.043
+coc_real_gdp_quantity_index                        0.0074089  0.0021593   3.431
+state_real_minimum_wage_2025_usd                   0.1110646  0.0204513   5.431
+coc_hic_temporary_beds_per_10k                     0.3578013  0.0341067  10.491
+coc_hic_psh_beds_per_10k                           0.2028528  0.0245983   8.247
+state_labor_force_participation_pct                0.1383241  0.0304062   4.549
+state_rental_vacancy_rate                          0.0502415  0.0120925   4.155
+                                                  Pr(>|t|)    
+(Intercept)                                       0.181986    
+control_time_index                                5.95e-05 ***
+coc_log_estimated_population                      1.28e-07 ***
+coc_population_density_per_sq_mile                8.18e-06 ***
+coc_housing_units_per_1000_residents              0.002838 ** 
+coc_multifamily_permit_share_pct                  0.011825 *  
+coc_permits_value_per_1000_housing_units_2025_usd 0.000263 ***
+coc_death_rate_per_1000                           0.003791 ** 
+coc_poverty_child_pct                             2.15e-05 ***
+coc_real_per_capita_personal_income_2025_usd      5.49e-05 ***
+coc_unemployment_rate_pct                         0.010536 *  
+coc_homeownership_rate_pct                        2.09e-08 ***
+coc_housing_cost_burdened_households_pct          0.003040 ** 
+coc_annual_hpi_change_pct                         0.011048 *  
+coc_real_gdp_per_capita_2017_usd                  5.57e-07 ***
+coc_real_gdp_quantity_index                       0.000629 ***
+state_real_minimum_wage_2025_usd                  7.30e-08 ***
+coc_hic_temporary_beds_per_10k                     < 2e-16 ***
+coc_hic_psh_beds_per_10k                          6.02e-16 ***
+state_labor_force_participation_pct               6.15e-06 ***
+state_rental_vacancy_rate                         3.58e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.421 on 866 degrees of freedom
+Multiple R-squared:  0.6529,	Adjusted R-squared:  0.6449 
+F-statistic: 81.45 on 20 and 866 DF,  p-value: < 2.2e-16
+

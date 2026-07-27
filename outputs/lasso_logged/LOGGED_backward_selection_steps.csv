@@ -1,0 +1,8 @@
+"step","dropped","p_value","n_predictors","adj_r2"
+1,"coc_contributing_counties",0.581443558610642,26,0.643914672084899
+2,"coc_group_quarters_per_1000_residents",0.674032493182779,25,0.644255024147563
+3,"control_state_florida",0.617302991865557,24,0.644564605754328
+4,"coc_domestic_migration_rate_per_1000",0.524455445741269,23,0.644809475980001
+5,"coc_high_school_graduate_pct",0.424432996698633,22,0.644958041796818
+6,"coc_relative_home_price_index_2000_base",0.312885289151266,21,0.644949977333763
+7,"coc_international_migration_rate_per_1000",0.280830064379187,20,0.644882524343503
