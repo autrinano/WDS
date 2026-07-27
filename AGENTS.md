@@ -13,6 +13,18 @@ current reports. Untracked, gitignored build artifacts (`.DS_Store`,
 cache) were deleted; `_r_libs/` will be recreated automatically the next
 time a script installs its required packages.
 
+`outputs/eda_v1/` (plots, tables, findings) was deleted: it was an interim
+EDA run against the superseded v1 LASSO input, explicitly self-documented
+in `scripts/eda_lasso_input.R` as a development-only output distinct from
+the final `outputs/eda_v2/` deliverable, and not read by any other script
+or audit check. By contrast, `outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT.xlsx`
+(the v1 input itself) and `outputs/lasso_models/PRELIMINARY_*` were
+deliberately kept: four current scripts still read the v1 workbook for
+audit/reconciliation, and `outputs/lasso_audit/AUDIT_REPORT.md` (Check 14)
+certifies that the PRELIMINARY files remain intact alongside FINAL as
+proof the final run never overwrote or reused them. Do not delete either
+without also revising that audit report.
+
 ## Project overview
 
 The goal of the study is to explain why homelessness rates diverged between California and Florida from 2010 through 2025. The analysis examines whether differences in housing affordability, rental-market tightness, housing stock and new supply, economic conditions, policy, and homelessness-service capacity are associated with the different state trajectories.
