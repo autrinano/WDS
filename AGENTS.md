@@ -29,9 +29,25 @@ without also revising that audit report.
 
 The goal of the study is to explain why homelessness rates diverged between California and Florida from 2010 through 2025. The analysis examines whether differences in housing affordability, rental-market tightness, housing stock and new supply, economic conditions, policy, and homelessness-service capacity are associated with the different state trajectories.
 
-The current work is preliminary exploratory data analysis. Its purpose is to establish the outcome divergence and identify plausible explanatory patterns for later modeling, not to make causal claims. The broad directional trends are expected to remain the same as sources and variables are refined, although exact values, sample sizes, and estimated relationships may change.
+### Two analytical levels — read this before touching anything
 
-The unit of observation is one state-year. The processed panel contains 32 rows: California and Florida for each year from 2010 through 2025. `state_year` is the merge key used to align these housing variables with the team's homelessness, policy, funding, and demographic data.
+The project has **two** units of observation. Confusing them is the single
+easiest way to get this project wrong.
+
+1. **State-year panel (original).** 32 rows: California and Florida, 2010–2025.
+   `state_year` is the merge key. This established the divergence and produced
+   the chart suite. It is complete and is **not** the current modeling target.
+2. **CoC-year panel (current).** 887 rows across 70 HUD Continuums of Care.
+   Predictors from year *t* predict the homelessness rate in year *t+1*. **All
+   modeling work happens here.**
+
+A frequent point of confusion: the raw county panel has ~2,000 rows (125
+counties × 16 years). Counties were **aggregated** to CoC geography, and HUD PIT
+and HIC records were merged on as **columns, not stacked as rows** — which is
+why ~2,000 county-years become 887 CoC-years.
+
+The EDA and modeling stages are complete through the neural network. Remaining
+work is listed under "Model families still outstanding".
 
 ## Main files
 
@@ -81,6 +97,34 @@ The unit of observation is one state-year. The processed panel contains 32 rows:
 - `CHANGELOG_v1_to_v2.md`: per-variable audit disposition, the local
   housing-affordability sources investigated and rejected, the CoC
   boundary-matching diagnostic, and the full v1-to-v2 rationale.
+
+## Modeling files (CoC stage)
+
+**EDA and validation of the model input**
+
+- `scripts/eda_lasso_input.R`, `scripts/validate_lasso_input_v2.R`: EDA and QA on the v2 workbook.
+- `outputs/eda_v2/`: `EDA_FINDINGS_v2.md`, 10 plots, 10 tables. Authoritative EDA.
+- `outputs/qa_v2/`: `QA_AUDIT_v2.md` — 17 PASS, 1 non-blocking warning, 0 FAIL.
+- `scripts/diagnose_coc_boundaries_v2.R`, `outputs/v2_support/`: boundary reconciliation, the excluded-row accounting, and the USAspending CFDA 14.267 extract.
+
+**Primary LASSO (out-of-time)**
+
+- `scripts/fit_lasso_models.R` → `outputs/lasso_models/FINAL_*`: the definitive run. Rolling-origin validation, nested forward-chaining lambda tuning, training-only scaling and Duan smearing. `PRELIMINARY_*` in the same folder is the earlier v1 development run and must be preserved.
+- `scripts/build_lasso_sensitivity_inputs.R`, `scripts/fit_lasso_sensitivities.R` → `outputs/lasso_sensitivity/`: seven sensitivity samples plus `SENSITIVITY_FINDINGS.md`.
+- `scripts/audit_final_lasso.R` → `outputs/lasso_audit/`: independent read-only audit — 93 PASS, 7 WARNING, 0 FAIL.
+- `scripts/generate_final_lasso_report.R` → `outputs/lasso_final_report/` and `LASSO_FINAL_RESULTS.md`: 10 figures, 15 tables, and the narrative. Refits nothing.
+
+**Other model families**
+
+- `scripts/fit_lasso_logged.R` → `outputs/lasso_logged/`: log-target LASSO in the course Module 4 workflow (`cv.glmnet` → relaxed refit → backward selection → diagnosis). Uses random-fold CV by design; it is a teaching/interpretability artifact, not an out-of-time result.
+- `scripts/fit_neural_net.R` → `outputs/neural_net/` and `NN_FINDINGS.md`: feed-forward benchmark on the same folds, five architectures, five seeds per fold.
+
+**Deliverables**
+
+- `CA_FL_Homelessness_Full_Report.pdf`: the 75-page combined report (data → EDA → regression → LASSO → out-of-time LASSO → neural net → conclusions). The main deliverable.
+- `CA_FL_Homelessness_EDA_and_Regression_Report.pdf`: the earlier 25-page version, kept.
+- `WDS_Project_Analysis.Rmd`: teaching walkthrough in course-module format, simple syntax, reproduces the report numbers.
+- `PRESENTATION_OUTLINE.md`: section-by-section presentation notes.
 
 The integrated team dataset adds 16 documented variables, including inflation-adjusted dollar measures, homelessness composition and change measures, normalized permit and bed-capacity measures, housing affordability ratios, and a 2021 PIT data-quality flag.
 
@@ -195,6 +239,85 @@ For the CoC model, predict `target_homeless_rate_per_10k` using prior-year
 predictors. Keep state and time controls in the baseline, use rolling-origin
 validation, fit scaling and any imputation inside each training window, and
 report sensitivity checks for split counties and stable CoCs.
+
+### The modeling contract — every new model must follow this
+
+Any new model family must match the completed ones exactly, or its numbers are
+not comparable and the cross-model comparison is meaningless.
+
+| Element | Required setting |
+|---|---|
+| Input | `outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT_v2.xlsx`, sheet `LASSO Model Data` |
+| MD5 | `5d3fd16b32c687e5207ea59c902e7bef` — verify before fitting and abort on mismatch |
+| Shape | 887 rows, 70 CoCs, 6 identifiers, 1 target, 2 controls, 38 predictors |
+| Outer validation years | **2017, 2018, 2019, 2020, 2022, 2023, 2024, 2025** (no 2021) |
+| Training rule | Every fold trains only on `target_year < validation_year` |
+| Scored rows | 555 (347 California, 208 Florida) |
+| Preprocessing | Scaling, tuning, and any imputation fit on training rows only |
+| Controls | Unpenalized / always retained |
+| Identifiers | Never in the design matrix |
+| Missing data | Hard-fail on NA/NaN/Inf. Never impute |
+| Metrics | RMSE, MAE, R² — same definitions as `scripts/fit_lasso_models.R` lines 311–314 |
+| Splits | Never random at row level |
+
+Training windows expand 332 → 400 → 469 → 538 → 608 → 678 → 747 → 817 rows. A
+new model reproducing those counts is a good sign it wired the folds correctly.
+
+### Established results — do not re-derive or contradict without evidence
+
+| Model | RMSE | R² |
+|---|---:|---:|
+| Neural net, 32-16 + dropout, 5-seed ensemble | 12.64 | 0.731 |
+| Pooled LASSO + state interactions (`lambda.min`) | 14.69 | 0.636 |
+| Pooled LASSO (`lambda.min`) | 15.30 | 0.606 |
+| OLS on all 40 inputs | 16.06 | 0.565 |
+| State + time baseline | 21.93 | 0.190 |
+
+Three findings the project rests on:
+
+1. **Persistence dominates.** Given each CoC's own prior-year rate, the LASSO shrinks all 38 predictors and every state interaction to exactly zero — all 7 folds, both lambda rules, both eligibility definitions. Prior rate alone reaches R² 0.859; state + time + prior rate reaches 0.866. The neural network gets *worse* when given the 38 predictors on top of prior rate (8.93 → 10.05). **The predictor set must never be described as improving short-horizon prediction.**
+2. **Roughly a third of out-of-time R² comes from HIC bed capacity**, which is plausibly endogenous — capacity is built where homelessness already is, and sheltered PIT counts are enumerated in those beds. Positive bed coefficients must never be read as beds causing homelessness. The bed-excluded sensitivity is the conservative structural statement.
+3. **Findings are robust to sample construction** — split-county exclusion, stable-CoC restriction, and FL-518 restoration all leave results essentially unchanged (prediction correlations 0.93–0.997).
+
+Do not rerun `scripts/fit_lasso_models.R` unless an audit finds a real blocking
+defect. Preserve all `PRELIMINARY_*` and `FINAL_*` outputs.
+
+### Reporting constraints (from the independent audit)
+
+The audit returned 0 FAIL and 7 WARNINGs, all about *wording*. Any new report
+must respect them:
+
+1. The state-interaction LASSO is best **on RMSE among unified models** — its MAE ranks 4th of 4. Never "best" unqualified.
+2. "Unified" is load-bearing: the separate-state composite scores better overall (13.90 / 0.674).
+3. The separate-state composite is the concatenation of the CA and FL models, not an independent fifth model.
+4. Pooled R² is **not** within-state explanatory power — the baseline's within-state R² is negative in both states (CA −0.126, FL −0.072).
+5. The headline model is **not** best for Florida; its win is carried by California, which is 63% of scored rows.
+6. Florida's lower RMSE reflects its narrower outcome distribution, not better explanation. RMSE is not comparable across states.
+7. `coc_population_growth_rate_pct`, `coc_real_gdp_quantity_index`, and `coc_permits_value_per_1000_housing_units_2025_usd` belong to |r| ≥ 0.80 pairs. Report them as cluster markers, never as the operative variable.
+
+LASSO and neural networks produce **no valid p-values** — the penalty biases
+coefficients and selection used the same data. Report selection frequency across
+the 8 folds and sign consistency instead. P-values appear only in the OLS and
+relaxed-LASSO sections, where they are labelled optimistic.
+
+### Model families still outstanding
+
+Ridge, Elastic Net, Random Forest, and XGBoost. All must follow the modeling
+contract above. Tree ensembles are the most informative remaining test: they can
+discard useless predictors like LASSO *and* capture nonlinearity like the
+network, so they directly test whether findings 1 and 2 are universal or
+specific to the two families already run.
+
+The final cross-model stage should identify the best predictive model, the best
+interpretable model, predictors supported across families, predictors that
+differ between states, and findings unstable across years or specifications.
+
+### Agent working conventions
+
+- One agent owns one script and one output directory. Never edit another agent's files while it is active.
+- Report scripts must refit nothing and should route every write through a guard that refuses paths outside their own output directory.
+- Inspect deliverables on disk rather than trusting an agent's completion message.
+- Treat all coefficients and feature importances as predictive associations, never causal effects.
 
 ## Team ownership
 

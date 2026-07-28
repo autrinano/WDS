@@ -93,9 +93,9 @@ That whole build is long, so it lives in its own scripts rather than here:
 #| eval: false
 # Not run here -- these are the scripts that build the modeling table.
 # Run them only if you need to rebuild the data from the raw downloads.
-source("build_county_raw_panel.R")      # ~2,000 county-years from raw sources
-source("build_coc_lasso_panel.R")       # county -> CoC allocation
-source("build_expanded_lasso_input_v2.R")  # final audited modeling table
+source("scripts/build_county_raw_panel.R")      # ~2,000 county-years from raw sources
+source("scripts/build_coc_lasso_panel.R")       # county -> CoC allocation
+source("scripts/build_expanded_lasso_input_v2.R")  # final audited modeling table
 ```
 
 ## Loading the modeling table
@@ -727,7 +727,7 @@ need rather than the other way round.
 ```{r}
 #| eval: false
 # the full production versions of these three stages
-source("build_expanded_lasso_input_v2.R")   # data
-source("fit_lasso_logged.R")                # LASSO
-source("fit_neural_net.R")                  # neural network (~35 min)
+source("scripts/build_expanded_lasso_input_v2.R")   # data
+source("scripts/fit_lasso_logged.R")                # LASSO
+source("scripts/fit_neural_net.R")                  # neural network (~35 min)
 ```
