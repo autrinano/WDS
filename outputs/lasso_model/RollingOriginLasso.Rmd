@@ -1,0 +1,532 @@
+---
+title: "Rolling-Origin LASSO"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Purpose
+
+This model predicts future CoC homelessness rates in chronological order. For
+each test year, it:
+
+1. fits candidate LASSO penalties using earlier years;
+2. selects lambda using the most recent available training year;
+3. refits the model using all observations before the test year; and
+4. evaluates predictions on the untouched test year.
+
+## Packages and data
+
+Keep this Rmd and `CA_FL_LASSO_MODEL_INPUT_v2.xlsx` in the same folder.
+
+```{r packages-and-data}
+library(readxl)
+library(dplyr)
+library(glmnet)
+library(ggplot2)
+library(knitr)
+
+input_path <- "CA_FL_LASSO_MODEL_INPUT_v2.xlsx"
+
+if (!file.exists(input_path)) {
+  stop(
+    "Cannot find ", input_path,
+    ". Put the Excel workbook in the same folder as this Rmd."
+  )
+}
+
+data_all <- read_excel(
+  input_path,
+  sheet = "LASSO Model Data"
+)
+
+target <- "target_homeless_rate_per_10k"
+controls <- c(
+  "control_state_florida",
+  "control_time_index"
+)
+
+required_columns <- c(
+  "state",
+  "coc_number",
+  "coc_name",
+  "target_year",
+  target,
+  controls
+)
+
+missing_columns <- setdiff(
+  required_columns,
+  names(data_all)
+)
+
+if (length(missing_columns) > 0) {
+  stop(
+    "The workbook is missing required columns: ",
+    paste(missing_columns, collapse = ", ")
+  )
+}
+```
+
+## Choose predictors
+
+Names, identifiers, and year columns are not used as penalized predictors.
+State and time enter separately as unpenalized controls.
+
+```{r choose-predictors}
+excluded_columns <- c(
+  "state",
+  "state_abbr",
+  "coc_number",
+  "coc_name",
+  "predictor_year",
+  "target_year",
+  target,
+  controls
+)
+
+predictors <- setdiff(
+  names(data_all),
+  excluded_columns
+)
+
+length(predictors)
+```
+
+## Log transformations
+
+The response and nine right-skewed predictors are transformed in the same way
+as in the main analysis. Ordinary `log(x)` is used when every value is positive;
+`log1p(x)` is used when genuine zeros occur.
+
+```{r log-transformations}
+log_vars <- c(
+  "coc_population_density_per_sq_mile",
+  "coc_real_gdp_per_capita_2017_usd",
+  "coc_hic_psh_beds_per_10k",
+  "coc_hic_temporary_beds_per_10k",
+  "coc_permits_per_1000_housing_units",
+  "coc_permits_value_per_1000_housing_units_2025_usd",
+  "coc_real_median_household_income_2025_usd",
+  "coc_real_per_capita_personal_income_2025_usd",
+  "coc_relative_home_price_index_2000_base"
+)
+
+missing_log_vars <- setdiff(
+  log_vars,
+  names(data_all)
+)
+
+if (length(missing_log_vars) > 0) {
+  stop(
+    "The workbook is missing log-transformed predictors: ",
+    paste(missing_log_vars, collapse = ", ")
+  )
+}
+
+data_log <- data_all
+
+for (v in log_vars) {
+  if (min(data_log[[v]], na.rm = TRUE) > 0) {
+    data_log[[v]] <- log(data_log[[v]])
+  } else {
+    data_log[[v]] <- log1p(data_log[[v]])
+  }
+}
+
+if (min(data_log[[target]], na.rm = TRUE) <= 0) {
+  stop("The target must be positive before applying log().")
+}
+
+data_log[[target]] <- log(
+  data_log[[target]]
+)
+```
+
+## Build the LASSO inputs
+
+`Y` is the logged response. `X` is the numerical predictor matrix. The two
+controls receive penalty factors of zero, meaning they remain in every model.
+
+```{r build-inputs}
+fit_data <- data_log[
+  ,
+  c(target, controls, predictors)
+]
+
+if (anyNA(fit_data)) {
+  stop(
+    "The modeling columns contain missing values. ",
+    "Resolve them before fitting the rolling LASSO."
+  )
+}
+
+Y <- fit_data[[target]]
+
+X <- model.matrix(
+  target_homeless_rate_per_10k ~ .,
+  data = fit_data
+)[, -1, drop = FALSE]
+
+pf <- ifelse(
+  colnames(X) %in% controls,
+  0,
+  1
+)
+
+dim(X)
+table(pf)
+```
+
+## Run the rolling-origin LASSO
+
+For example, when predicting 2025, candidate lambdas are fitted through 2023,
+lambda is selected using 2024, the model is refitted through 2024, and the
+final predictions are evaluated on 2025.
+
+```{r rolling-origin-lasso}
+rolling_years <- c(
+  2017, 2018, 2019, 2020,
+  2022, 2023, 2024, 2025
+)
+
+missing_test_years <- setdiff(
+  rolling_years,
+  unique(data_all$target_year)
+)
+
+if (length(missing_test_years) > 0) {
+  stop(
+    "No observations were found for test years: ",
+    paste(missing_test_years, collapse = ", ")
+  )
+}
+
+rolling_results <- vector(
+  "list",
+  length(rolling_years)
+)
+
+rolling_importance <- vector(
+  "list",
+  length(rolling_years)
+)
+
+for (i in seq_along(rolling_years)) {
+
+  test_year <- rolling_years[i]
+
+  # Outer split: the test year remains completely untouched.
+  outer_train <- which(
+    data_all$target_year < test_year
+  )
+
+  outer_test <- which(
+    data_all$target_year == test_year
+  )
+
+  # Inner split: use the latest training year to select lambda.
+  years_in_training <- data_all$target_year[
+    outer_train
+  ]
+
+  tune_year <- max(
+    years_in_training
+  )
+
+  inner_train <- outer_train[
+    years_in_training < tune_year
+  ]
+
+  inner_valid <- outer_train[
+    years_in_training == tune_year
+  ]
+
+  if (length(inner_train) == 0 ||
+      length(inner_valid) == 0 ||
+      length(outer_test) == 0) {
+    stop(
+      "Insufficient chronological data for test year ",
+      test_year
+    )
+  }
+
+  # Fit the complete LASSO path using years before the tuning year.
+  tuning_fit <- glmnet(
+    x = X[inner_train, , drop = FALSE],
+    y = Y[inner_train],
+    alpha = 1,
+    penalty.factor = pf
+  )
+
+  # Predict the tuning year at every candidate lambda.
+  tuning_predictions <- predict(
+    tuning_fit,
+    newx = X[inner_valid, , drop = FALSE],
+    s = tuning_fit$lambda
+  )
+
+  # Calculate tuning-year MSE for every lambda.
+  tuning_mse <- colMeans(
+    sweep(
+      tuning_predictions,
+      MARGIN = 1,
+      STATS = Y[inner_valid],
+      FUN = "-"
+    )^2
+  )
+
+  # Choose the lambda with the lowest next-year validation MSE.
+  best_lambda <- tuning_fit$lambda[
+    which.min(tuning_mse)
+  ]
+
+  # Refit using every observation before the final test year.
+  final_rolling_fit <- glmnet(
+    x = X[outer_train, , drop = FALSE],
+    y = Y[outer_train],
+    alpha = 1,
+    lambda = tuning_fit$lambda,
+    penalty.factor = pf
+  )
+
+  # Predict the untouched test year.
+  predicted_log_rate <- predict(
+    final_rolling_fit,
+    newx = X[outer_test, , drop = FALSE],
+    s = best_lambda
+  )
+
+  # Return predictions to homelessness rates per 10,000.
+  predicted_rate <- exp(
+    as.numeric(predicted_log_rate)
+  )
+
+  fold_coefficients <- as.vector(
+    coef(
+      final_rolling_fit,
+      s = best_lambda
+    )
+  )[-1]
+
+  number_nonzero <- sum(
+    abs(fold_coefficients) > 1e-8
+  )
+
+  # Standardize coefficient magnitudes for comparison across units.
+  training_sd <- apply(
+    X[outer_train, , drop = FALSE],
+    2,
+    sd
+  )
+
+  rolling_importance[[i]] <- data.frame(
+    test_year = test_year,
+    predictor = colnames(X),
+    coefficient = fold_coefficients,
+    standardized_effect =
+      fold_coefficients * training_sd,
+    selected =
+      abs(fold_coefficients) > 1e-8
+  )
+
+  # Save one row per CoC prediction.
+  rolling_results[[i]] <- data.frame(
+    state = data_all$state[outer_test],
+    coc_number = data_all$coc_number[outer_test],
+    coc_name = data_all$coc_name[outer_test],
+    test_year = test_year,
+    tune_year = tune_year,
+    actual = data_all[[target]][outer_test],
+    predicted = predicted_rate,
+    lambda = best_lambda,
+    nonzero_coefficients = number_nonzero
+  )
+}
+
+rolling_lasso <- bind_rows(
+  rolling_results
+)
+
+rolling_importance_all <- bind_rows(
+  rolling_importance
+)
+
+head(rolling_lasso)
+```
+
+## Overall out-of-time performance
+
+RMSE and MAE are expressed as homeless people per 10,000 residents. Predictive
+R-squared compares the out-of-time predictions with predicting the pooled mean.
+
+```{r overall-results}
+rolling_lasso_score <- data.frame(
+  observations = nrow(rolling_lasso),
+
+  RMSE = sqrt(
+    mean(
+      (rolling_lasso$actual -
+         rolling_lasso$predicted)^2
+    )
+  ),
+
+  MAE = mean(
+    abs(
+      rolling_lasso$actual -
+        rolling_lasso$predicted
+    )
+  ),
+
+  R2 = 1 -
+    sum(
+      (rolling_lasso$actual -
+         rolling_lasso$predicted)^2
+    ) /
+    sum(
+      (rolling_lasso$actual -
+         mean(rolling_lasso$actual))^2
+    )
+)
+
+kable(
+  round(rolling_lasso_score, 3),
+  caption = "Pooled rolling-origin LASSO performance"
+)
+```
+
+## Performance by test year
+
+```{r results-by-year}
+rolling_lasso_by_year <- rolling_lasso %>%
+  group_by(test_year, tune_year) %>%
+  summarise(
+    observations = n(),
+    RMSE = sqrt(
+      mean((actual - predicted)^2)
+    ),
+    MAE = mean(
+      abs(actual - predicted)
+    ),
+    lambda = first(lambda),
+    nonzero_coefficients =
+      first(nonzero_coefficients),
+    .groups = "drop"
+  )
+
+kable(
+  rolling_lasso_by_year,
+  digits = 3,
+  caption = "Rolling-origin performance by test year"
+)
+```
+
+## Most consistently useful predictors
+
+`folds_selected` shows how many of the eight chronological models selected a
+predictor. `mean_abs_standardized_effect` measures its average predictive
+magnitude when selected, after accounting for differences in predictor units.
+
+```{r predictor-importance}
+importance_table <- rolling_importance_all %>%
+  filter(
+    !predictor %in% controls
+  ) %>%
+  group_by(predictor) %>%
+  summarise(
+    folds_selected = sum(selected),
+    selection_rate = mean(selected),
+
+    mean_abs_standardized_effect =
+      if (any(selected)) {
+        mean(
+          abs(standardized_effect[selected])
+        )
+      } else {
+        0
+      },
+
+    mean_standardized_effect =
+      if (any(selected)) {
+        mean(
+          standardized_effect[selected]
+        )
+      } else {
+        0
+      },
+
+    .groups = "drop"
+  ) %>%
+  mutate(
+    average_direction = case_when(
+      mean_standardized_effect > 0 ~ "Positive",
+      mean_standardized_effect < 0 ~ "Negative",
+      TRUE ~ "None"
+    )
+  ) %>%
+  select(
+    -mean_standardized_effect
+  ) %>%
+  arrange(
+    desc(folds_selected),
+    desc(mean_abs_standardized_effect)
+  )
+
+kable(
+  head(importance_table, 15),
+  digits = 3,
+  caption = "Top 15 rolling-origin LASSO predictors"
+)
+```
+
+## Actual versus predicted values
+
+```{r prediction-plot, fig.width=8, fig.height=6}
+ggplot(
+  rolling_lasso,
+  aes(x = actual, y = predicted, color = state)
+) +
+  geom_abline(
+    slope = 1,
+    intercept = 0,
+    linetype = "dashed",
+    color = "gray45"
+  ) +
+  geom_point(
+    alpha = 0.65,
+    size = 1.8
+  ) +
+  scale_color_manual(
+    values = c(
+      "California" = "darkgreen",
+      "Florida" = "purple"
+    )
+  ) +
+  labs(
+    title = "Rolling-origin LASSO: actual versus predicted rates",
+    subtitle = "Dashed line represents perfect predictions",
+    x = "Actual homelessness rate per 10,000",
+    y = "Predicted homelessness rate per 10,000",
+    color = "State"
+  ) +
+  theme_minimal(base_size = 14)
+```
+
+## Interpretation limits
+
+- Each test year is predicted only from earlier observations.
+- Lambda is selected chronologically and never uses the final test year.
+- Selection frequency and standardized effect describe predictive usefulness,
+  not statistical significance.
+- Positive or negative coefficients describe associations, not causation.
+- Observations from the same CoCs occur across years, so this tests prediction
+  of future years for the studied CoCs rather than prediction for entirely new
+  CoCs.
+
+

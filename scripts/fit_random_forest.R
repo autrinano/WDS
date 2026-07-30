@@ -368,13 +368,117 @@ writeLines(capture.output(sessionInfo()), owned_path(file.path(OUT, "session_inf
 ## ---------------------------------------------------------------------------
 ## 7. FIGURES
 ## ---------------------------------------------------------------------------
-png(owned_path(file.path(OUT, "figures", "TREE_01_pruned_regression_tree.png")),
-    width = 1800, height = 1100, res = 160)
-plot(presentation_tree, uniform = TRUE, branch = 0.5, margin = 0.08,
-     main = "Two-level illustrative regression tree (full data; not a test score)")
-text(presentation_tree, use.n = TRUE, cex = 0.9)
-dev.off()
+pretty_name <- function(x) {
+  map <- c(
+    coc_hic_temporary_beds_per_10k = "Temporary beds per 10k",
+    coc_hic_psh_beds_per_10k = "PSH beds per 10k",
+    coc_log_estimated_population = "Estimated CoC population (log)",
+    coc_real_gdp_per_capita_2017_usd = "Real GDP per capita",
+    coc_population_density_per_sq_mile = "Population density",
+    coc_group_quarters_per_1000_residents = "Group-quarters population",
+    coc_homeownership_rate_pct = "Homeownership rate",
+    coc_housing_cost_burdened_households_pct = "Housing-cost burden",
+    coc_international_migration_rate_per_1000 = "International migration rate",
+    coc_real_per_capita_personal_income_2025_usd = "Real personal income per capita"
+  )
+  ifelse(x %in% names(map), unname(map[x]), gsub("_", " ", x))
+}
 
+draw_presentation_tree <- function(tree_fit, path) {
+  fr <- tree_fit$frame
+  root <- "1"; left <- "2"; right <- "3"
+  leaves <- c("4", "5", "6", "7")
+  internal <- rownames(fr)[fr$var != "<leaf>"]
+  # rpart stores a primary split followed by competitor and surrogate splits
+  # for each internal node. Locate the primary split for the requested node.
+  primary_split <- function(node) {
+    pos <- match(node, internal)
+    starts <- cumsum(c(1L, head(1L + fr[internal, "ncompete"] +
+                              fr[internal, "nsurrogate"], -1L)))
+    tree_fit$splits[starts[pos], "index"]
+  }
+  node_label <- function(node) {
+    variable <- pretty_name(fr[node, "var"])
+    cutoff <- primary_split(node)
+    paste0(variable, " < ", format(round(cutoff, 2), trim = TRUE))
+  }
+  leaf_label <- function(node) {
+    paste0("Predicted rate\n", format(round(fr[node, "yval"], 1), nsmall = 1),
+           " per 10k\n(n = ", fr[node, "n"], ")")
+  }
+  png(owned_path(path), width = 1800, height = 1050, res = 150)
+  par(mar = c(1, 1, 4, 1), xpd = NA)
+  plot.new(); plot.window(xlim = c(0, 1), ylim = c(0, 1))
+  title(main = "How one regression tree makes a prediction", cex.main = 1.6, font.main = 2)
+  # connections first, so the node boxes remain clean and prominent
+  segments(.50, .77, .25, .56, lwd = 2, col = "#6B7280")
+  segments(.50, .77, .75, .56, lwd = 2, col = "#6B7280")
+  segments(.25, .43, .125, .22, lwd = 2, col = "#6B7280")
+  segments(.25, .43, .375, .22, lwd = 2, col = "#6B7280")
+  segments(.75, .43, .625, .22, lwd = 2, col = "#6B7280")
+  segments(.75, .43, .875, .22, lwd = 2, col = "#6B7280")
+  text(.365, .68, "Yes", col = "#2563EB", font = 2, cex = .9)
+  text(.635, .68, "No", col = "#B45309", font = 2, cex = .9)
+  text(.17, .35, "Yes", col = "#2563EB", font = 2, cex = .85)
+  text(.33, .35, "No", col = "#B45309", font = 2, cex = .85)
+  text(.67, .35, "Yes", col = "#2563EB", font = 2, cex = .85)
+  text(.83, .35, "No", col = "#B45309", font = 2, cex = .85)
+  rect(.31, .77, .69, .89, col = "#DCEEFF", border = "#2563EB", lwd = 2)
+  text(.50, .83, node_label(root), cex = 1.15, font = 2)
+  rect(.08, .43, .42, .56, col = "#E8F3FF", border = "#60A5FA", lwd = 2)
+  rect(.58, .43, .92, .56, col = "#FFF3DF", border = "#F59E0B", lwd = 2)
+  text(.25, .495, node_label(left), cex = 1.0, font = 2)
+  text(.75, .495, node_label(right), cex = 1.0, font = 2)
+  for (i in seq_along(leaves)) {
+    xx <- c(.125, .375, .625, .875)[i]
+    rect(xx - .105, .09, xx + .105, .22, col = "#ECFDF5", border = "#10B981", lwd = 2)
+    text(xx, .155, leaf_label(leaves[i]), cex = .92, font = 2)
+  }
+  mtext("Illustrative full-data tree for explanation only; it is not a causal rule or a test score.",
+        side = 1, line = -1, cex = .85, col = "#4B5563")
+  dev.off()
+}
+
+draw_presentation_tree(presentation_tree,
+  file.path(OUT, "figures", "TREE_01_pruned_regression_tree.png"))
+
+## These compact, colour-coded figures are intentionally designed for slides.
+## The full numbers remain available in the CSV outputs.
+png(owned_path(file.path(OUT, "figures", "RF_04_permutation_importance.png")),
+    width = 1400, height = 850, res = 150)
+imp <- importance_summary[importance_summary$feature_set == "factors", ][1:10, ]
+op <- par(mar = c(5, 13, 3, 2))
+barplot(rev(imp$mean_permutation_importance), names.arg = rev(pretty_name(imp$variable)),
+        horiz = TRUE, las = 1, col = "#0EA5A4", border = NA,
+        xlab = "Mean permutation importance", cex.names = .9,
+        main = "Random Forest: most useful predictors")
+mtext("Higher values mean shuffling that variable hurt prediction more; not causal effects.",
+      side = 3, line = .15, cex = .85, col = "#4B5563")
+par(op); dev.off()
+
+png(owned_path(file.path(OUT, "figures", "RF_05_cross_model_rmse.png")),
+    width = 1400, height = 850, res = 150)
+short_model <- c(
+  random_forest = "Random Forest",
+  wide_32_16_drop = "Neural Net (32-16)",
+  class_16_8 = "Neural Net (16-8)",
+  pooled_lasso_state_interactions = "LASSO + state interactions",
+  pooled_lasso = "Pooled LASSO",
+  decision_tree = "Single decision tree"
+)
+cols <- c("Decision Tree" = "#94A3B8", "Random Forest" = "#10B981",
+          "LASSO" = "#60A5FA", "Neural Net" = "#F59E8B")
+comparison$display_model <- unname(short_model[comparison$model])
+op <- par(mar = c(5, 10, 3, 2))
+bp <- barplot(rev(comparison$rmse), names.arg = rev(comparison$display_model),
+              horiz = TRUE, las = 1, col = rev(cols[comparison$family]), border = NA,
+              xlab = "Out-of-time RMSE (lower is better)", xlim = c(0, max(comparison$rmse) * 1.22),
+              cex.names = .9, main = "Random Forest had the lowest prediction error")
+text(rev(comparison$rmse), bp, labels = sprintf("%.2f", rev(comparison$rmse)),
+     pos = 4, cex = 1, font = 2)
+par(op); dev.off()
+
+# Keep the analytic diagnostics below for appendix use.
 png(owned_path(file.path(OUT, "figures", "RF_01_oob_error_by_trees.png")),
     width = 1100, height = 700, res = 130)
 plot(seq_len(NTREE), presentation_rf$mse, type = "l", lwd = 2, col = "#1f78b4",
@@ -410,28 +514,6 @@ abline(0, 1, lty = 2)
 legend("topleft", c("California", "Florida"), pch = 19,
        col = c("#1f78b4", "#e31a1c"), bty = "n")
 dev.off()
-
-png(owned_path(file.path(OUT, "figures", "RF_04_permutation_importance.png")),
-    width = 1200, height = 800, res = 130)
-imp <- importance_summary[importance_summary$feature_set == "factors", ][1:12, ]
-op <- par(mar = c(10, 4, 3, 1))
-bp <- barplot(rev(imp$mean_permutation_importance), names.arg = rev(imp$variable),
-              horiz = TRUE, las = 1, col = "#33a02c",
-              xlab = "Mean OOB permutation importance",
-              main = "Most useful Random Forest predictors (not causal effects)")
-par(op); dev.off()
-
-png(owned_path(file.path(OUT, "figures", "RF_05_cross_model_rmse.png")),
-    width = 1200, height = 700, res = 130)
-op <- par(mar = c(10, 4, 3, 1))
-cols <- c("Decision Tree" = "#a6cee3", "Random Forest" = "#33a02c",
-          "LASSO" = "#b2df8a", "Neural Net" = "#fb9a99")
-bp <- barplot(comparison$rmse, names.arg = comparison$model, las = 2,
-              col = cols[comparison$family], ylab = "Out-of-time RMSE",
-              main = "Model comparison on the same factor-model rows")
-text(bp, comparison$rmse, sprintf("%.2f", comparison$rmse), pos = 3, cex = .8)
-legend("topleft", legend = names(cols), fill = cols, bty = "n")
-par(op); dev.off()
 
 ## ---------------------------------------------------------------------------
 ## 8. PLAIN-LANGUAGE FINDINGS
