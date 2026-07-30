@@ -24,7 +24,7 @@ df <- read_excel("CA_FL_LASSO_MODEL_INPUT_v2.xlsx", sheet = "LASSO Model Data")
 # --- add the 2021 point back in ---
 # 2021 is not in `df` because it is excluded as a modeling target.
 # This pulls it from the separate descriptive dataset, for plotting only.
-df_2021 <- read.csv("../descriptive_2021/coc_homeless_rate_by_year_INCLUDING_2021.csv",
+df_2021 <- read.csv("outputs/descriptive_2021/coc_homeless_rate_by_year_INCLUDING_2021.csv",
                     stringsAsFactors = FALSE) %>%
   filter(year == 2021) %>%
   transmute(state, coc_number,
@@ -67,6 +67,16 @@ ggplot(df_plot, aes(x = target_year, y = target_homeless_rate_per_10k, color = s
                         "\n2021 is hollow: 47 of 71 CoCs counted sheltered people only, so the dip is a counting artifact."),
        x = "target_year", y = "homeless rate per 10k") +
   theme_minimal()
+getwd()
+
+list.files(
+  recursive = TRUE,
+  pattern = "\\.csv$",
+  full.names = TRUE
+)
+csv_path <- "replace/with/the/correct/file.csv"
+
+file.exists(csv_path)
 ```
 
 ```{r graph1}
@@ -214,60 +224,6 @@ state_predictor_trends %>%
   labs(title = "Predictor trends over time by state (page 2/2)",
        x = "predictor_year", y = "state mean") +
   theme_minimal(base_size = 8)
-```
-
-## Graph 8b: Selected predictor trends over time by state (slide frames)
-
-```{r graph8b_helpers}
-# facet strip labels have no spaces to wrap on, so swap underscores for
-# spaces first, then wrap -- otherwise long variable names get clipped
-wrap_var_labels <- function(x) {
-  x <- gsub("_", " ", x)
-  vapply(x, function(s) paste(strwrap(s, width = 18), collapse = "\n"), character(1))
-}
-
-plot_predictor_trends <- function(vars, title) {
-  state_predictor_trends %>%
-    filter(variable %in% vars) %>%
-    mutate(variable = factor(variable, levels = vars)) %>%
-    ggplot(aes(x = predictor_year, y = state_mean, color = state)) +
-    geom_line(linewidth = 1.2) +
-    geom_point(size = 2) +
-    facet_wrap(~variable, scales = "free_y", nrow = 1,
-               labeller = as_labeller(wrap_var_labels)) +
-    scale_color_manual(values = c("California" = "darkgreen", "Florida" = "purple")) +
-    labs(title = title, x = "predictor_year", y = "state mean") +
-    theme_minimal(base_size = 13) +
-    theme(
-      plot.title = element_text(size = 18, face = "bold"),
-      strip.text = element_text(size = 11, face = "bold", lineheight = 0.9),
-      axis.text.x = element_text(angle = 45, hjust = 1),
-      legend.position = "bottom"
-    )
-}
-```
-
-Slide 1: housing-related predictors.
-
-```{r graph8b_slide1, fig.width=14, fig.height=4.6}
-slide1_vars <- c(
-  "coc_homeownership_rate_pct",
-  "coc_housing_cost_burdened_households_pct",
-  "coc_hic_psh_beds_per_10k"
-)
-
-plot_predictor_trends(slide1_vars, "Housing predictors trends over time by state")
-```
-
-Slide 2: migration and population predictors.
-
-```{r graph8b_slide2, fig.width=10, fig.height=4.6}
-slide2_vars <- c(
-  "coc_international_migration_rate_per_1000",
-  "coc_log_estimated_population"
-)
-
-plot_predictor_trends(slide2_vars, "Migration & population trends over time by state")
 ```
 
 ## Graph 9: Clustered predictor correlation heatmap

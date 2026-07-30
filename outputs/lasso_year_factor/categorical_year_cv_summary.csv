@@ -1,0 +1,3 @@
+"lambda_rule","lambda","cv_mse_log_scale","selected_candidate_predictors"
+"lambda.min",0.00168683380048463,0.189844449509885,23
+"lambda.1se",0.0130605415043423,0.201145407499716,11

@@ -16,58 +16,13 @@ library(dplyr)
 library(tidyr)
 library(reshape2)
 
-df <- read_excel("CA_FL_LASSO_MODEL_INPUT_v2.xlsx", sheet = "LASSO Model Data")
+df <- read_excel(
+  "outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT_v2.xlsx",
+  sheet = "LASSO Model Data"
+)
 ```
 
 ## Graph 1: Raw target distribution
-```{r graph_2021_optional, eval=FALSE, include=FALSE}
-# --- add the 2021 point back in ---
-# 2021 is not in `df` because it is excluded as a modeling target.
-# This pulls it from the separate descriptive dataset, for plotting only.
-df_2021 <- read.csv("../descriptive_2021/coc_homeless_rate_by_year_INCLUDING_2021.csv",
-                    stringsAsFactors = FALSE) %>%
-  filter(year == 2021) %>%
-  transmute(state, coc_number,
-            target_year                  = year,
-            target_homeless_rate_per_10k = homeless_rate_per_10k)
-
-df_plot <- bind_rows(
-  df %>% select(state, coc_number, target_year, target_homeless_rate_per_10k),
-  df_2021)
-
-state_trends <- df_plot %>%
-  group_by(state, target_year) %>%
-  summarise(mean_rate = mean(target_homeless_rate_per_10k), .groups = "drop")
-
-# solid line skips 2021 (the trend as the models see it);
-# dashed detour shows where the disrupted 2021 point actually sits
-trend_solid  <- state_trends %>% filter(target_year != 2021)
-trend_dashed <- state_trends %>% filter(target_year %in% 2020:2022)
-
-ggplot(df_plot, aes(x = target_year, y = target_homeless_rate_per_10k, color = state)) +
-  annotate("rect", xmin = 2020.5, xmax = 2021.5, ymin = -Inf, ymax = Inf,
-           fill = "grey60", alpha = 0.18) +
-  geom_jitter(width = 0.15, alpha = 0.25, size = 1) +
-  geom_line(data = trend_dashed, aes(x = target_year, y = mean_rate, color = state),
-            linewidth = 0.9, linetype = "dashed") +
-  geom_line(data = trend_solid, aes(x = target_year, y = mean_rate, color = state),
-            linewidth = 1.2) +
-  geom_point(data = trend_solid, aes(x = target_year, y = mean_rate, color = state),
-             size = 2.5) +
-  geom_point(data = state_trends %>% filter(target_year == 2021),
-             aes(x = target_year, y = mean_rate, color = state),
-             size = 3, shape = 21, fill = "white", stroke = 1.2, show.legend = FALSE) +
-  annotate("text", x = 2021, y = max(df_plot$target_homeless_rate_per_10k) * 0.99,
-           label = "2021\nCOVID-disrupted count", size = 3, colour = "grey25",
-           lineheight = 0.95) +
-  scale_color_manual(values = c("California" = "darkgreen", "Florida" = "purple")) +
-  scale_x_continuous(breaks = seq(2012, 2025, 2)) +
-  labs(title = "CA vs FL: next-year homeless rate over time",
-       subtitle = paste("Lines = UNWEIGHTED mean across CoCs; points = individual CoC-years.",
-                        "\n2021 is hollow: 47 of 71 CoCs counted sheltered people only, so the dip is a counting artifact."),
-       x = "target_year", y = "homeless rate per 10k") +
-  theme_minimal()
-```
 
 ```{r graph1}
 skew <- function(x) {
@@ -197,7 +152,7 @@ state_predictor_trends %>%
   geom_line(linewidth = 1) +
   geom_point(size = 1.5) +
   facet_wrap(~variable, scales = "free_y", ncol = 4) +
-  scale_color_manual(values = c("California" = "darkgreen", "Florida" = "purple")) +
+  scale_color_manual(values = c("California" = "black", "Florida" = "darkblue")) +
   labs(title = "Predictor trends over time by state (page 1/2)",
        x = "predictor_year", y = "state mean") +
   theme_minimal(base_size = 8)
@@ -210,64 +165,10 @@ state_predictor_trends %>%
   geom_line(linewidth = 1) +
   geom_point(size = 1.5) +
   facet_wrap(~variable, scales = "free_y", ncol = 4) +
-  scale_color_manual(values = c("California" = "darkgreen", "Florida" = "purple")) +
+  scale_color_manual(values = c("California" = "black", "Florida" = "darkblue")) +
   labs(title = "Predictor trends over time by state (page 2/2)",
        x = "predictor_year", y = "state mean") +
   theme_minimal(base_size = 8)
-```
-
-## Graph 8b: Selected predictor trends over time by state (slide frames)
-
-```{r graph8b_helpers}
-# facet strip labels have no spaces to wrap on, so swap underscores for
-# spaces first, then wrap -- otherwise long variable names get clipped
-wrap_var_labels <- function(x) {
-  x <- gsub("_", " ", x)
-  vapply(x, function(s) paste(strwrap(s, width = 18), collapse = "\n"), character(1))
-}
-
-plot_predictor_trends <- function(vars, title) {
-  state_predictor_trends %>%
-    filter(variable %in% vars) %>%
-    mutate(variable = factor(variable, levels = vars)) %>%
-    ggplot(aes(x = predictor_year, y = state_mean, color = state)) +
-    geom_line(linewidth = 1.2) +
-    geom_point(size = 2) +
-    facet_wrap(~variable, scales = "free_y", nrow = 1,
-               labeller = as_labeller(wrap_var_labels)) +
-    scale_color_manual(values = c("California" = "darkgreen", "Florida" = "purple")) +
-    labs(title = title, x = "predictor_year", y = "state mean") +
-    theme_minimal(base_size = 13) +
-    theme(
-      plot.title = element_text(size = 18, face = "bold"),
-      strip.text = element_text(size = 11, face = "bold", lineheight = 0.9),
-      axis.text.x = element_text(angle = 45, hjust = 1),
-      legend.position = "bottom"
-    )
-}
-```
-
-Slide 1: housing-related predictors.
-
-```{r graph8b_slide1, fig.width=14, fig.height=4.6}
-slide1_vars <- c(
-  "coc_homeownership_rate_pct",
-  "coc_housing_cost_burdened_households_pct",
-  "coc_hic_psh_beds_per_10k"
-)
-
-plot_predictor_trends(slide1_vars, "Housing predictors trends over time by state")
-```
-
-Slide 2: migration and population predictors.
-
-```{r graph8b_slide2, fig.width=10, fig.height=4.6}
-slide2_vars <- c(
-  "coc_international_migration_rate_per_1000",
-  "coc_log_estimated_population"
-)
-
-plot_predictor_trends(slide2_vars, "Migration & population trends over time by state")
 ```
 
 ## Graph 9: Clustered predictor correlation heatmap
@@ -347,26 +248,51 @@ theme(
 )
 ```
 
-```{r}
+```{r coc-boundaries, eval=FALSE}
+# Optional map setup. It requires local HUD CoC shapefiles in
+# ~/Downloads/California and ~/Downloads/Florida, and is disabled so a missing
+# map download never blocks the EDA or LASSO sections below.
 library(sf)
 library(dplyr)
 library(purrr)
 
-# 1. List every .shp file in each folder
-ca_files <- list.files("~/Downloads/California", pattern = "\\.shp$", full.names = TRUE)
-fl_files <- list.files("~/Downloads/Florida", pattern = "\\.shp$", full.names = TRUE)
+# 1. Find every .shp file, including files inside each CoC subfolder
+ca_files <- list.files(
+  "~/Downloads/California",
+  pattern = "\\.shp$",
+  full.names = TRUE,
+  recursive = TRUE,
+  ignore.case = TRUE
+)
 
-# 2. Read every shapefile in, pulling the CoC number straight from the filename
+fl_files <- list.files(
+  "~/Downloads/Florida",
+  pattern = "\\.shp$",
+  full.names = TRUE,
+  recursive = TRUE,
+  ignore.case = TRUE
+)
+
+# Skip maps when the optional local boundary downloads are unavailable. This
+# lets the EDA and LASSO sections run in a notebook without map files.
+if (length(ca_files) == 0 || length(fl_files) == 0) {
+  message(
+    "Skipping optional CoC maps: no shapefiles found in ~/Downloads/California ",
+    "and/or ~/Downloads/Florida."
+  )
+  coc_boundaries <- NULL
+  map_source <- NULL
+  map_data <- NULL
+} else {
+  # 2. Read each boundary and pull its CoC number from its filename
 #    (CA_510.shp -> "CA_510")
-ca_boundaries <- map_dfr(ca_files, function(f) {
+read_boundary <- function(f) {
   st_read(f, quiet = TRUE) %>%
     mutate(coc_number_raw = tools::file_path_sans_ext(basename(f)))
-})
+}
 
-fl_boundaries <- map_dfr(fl_files, function(f) {
-  st_read(f, quiet = TRUE) %>%
-    mutate(coc_number_raw = tools::file_path_sans_ext(basename(f)))
-})
+ca_boundaries <- map_dfr(ca_files, read_boundary)
+fl_boundaries <- map_dfr(fl_files, read_boundary)
 
 # 3. Combine both states
 coc_boundaries <- bind_rows(ca_boundaries, fl_boundaries)
@@ -375,12 +301,19 @@ coc_boundaries <- bind_rows(ca_boundaries, fl_boundaries)
 coc_boundaries <- coc_boundaries %>%
   mutate(coc_number = gsub("_", "-", coc_number_raw))
 
-# 5. Sanity check
+# 5. Sanity checks: expect 71 boundary files and 71 distinct IDs
 nrow(coc_boundaries)
+n_distinct(coc_boundaries$coc_number)
 head(coc_boundaries$coc_number)
 
-# 6. Pull the two years you want to map
-map_years <- data_all %>%
+# 6. Load the model data here so this map chunk also works by itself
+map_source <- readxl::read_excel(
+  "outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT_v2.xlsx",
+  sheet = "LASSO Model Data"
+)
+
+# Pull the two years you want to map
+map_years <- map_source %>%
   filter(target_year %in% c(2012, 2025)) %>%
   select(coc_number, target_year, target_homeless_rate_per_10k, state)
 
@@ -389,14 +322,73 @@ map_data <- coc_boundaries %>%
   inner_join(map_years, by = "coc_number")
 
 nrow(map_data)
+}
 ```
-# sanity check -- did the join
+## CoC homelessness-rate maps
+
+The states are plotted separately so each pair of maps fills the available
+space. Both states use the same color scale, so their colors remain comparable.
+
+```{r coc-maps-side-by-side, eval=FALSE, fig.width=16, fig.height=8.5, fig.retina=2, out.width='100%'}
+if (is.null(map_data)) {
+  message("Skipping optional static maps because CoC boundary files are unavailable.")
+} else {
+rate_limits <- range(
+  map_data$target_homeless_rate_per_10k,
+  na.rm = TRUE
+)
+
+make_state_map <- function(state_name) {
+  map_data %>%
+    filter(state == state_name) %>%
+    ggplot() +
+    geom_sf(
+      aes(fill = target_homeless_rate_per_10k),
+      color = "white",
+      linewidth = 0.25
+    ) +
+    facet_wrap(~ target_year, nrow = 1) +
+    scale_fill_viridis_c(
+      option = "C",
+      limits = rate_limits,
+      name = "Homelessness rate\nper 10,000"
+    ) +
+    coord_sf(datum = NA, expand = FALSE) +
+    labs(
+      title = paste("Homelessness rates across", state_name, "CoCs"),
+      subtitle = "Side-by-side comparison of 2012 and 2025"
+    ) +
+    theme_void(base_size = 16) +
+    theme(
+      plot.title = element_text(size = 24, face = "bold"),
+      plot.subtitle = element_text(size = 17),
+      strip.text = element_text(size = 20, face = "bold"),
+      legend.title = element_text(size = 15),
+      legend.text = element_text(size = 14),
+      legend.position = "bottom",
+      panel.spacing = grid::unit(1.2, "cm"),
+      plot.margin = margin(10, 10, 10, 10)
+    )
+}
+
+california_map <- make_state_map("California")
+florida_map <- make_state_map("Florida")
+
+california_map
+florida_map
+}
+```
+
+
 ```{r}
 library(car)        # for Anova()
 library(tidyverse)   # dplyr, ggplot2
 
 # Step 1: Read in the data ---------------------------------------------------
-dat <- read_excel("CA_FL_LASSO_MODEL_INPUT_v2.xlsx", sheet = "LASSO Model Data")
+dat <- read_excel(
+  "outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT_v2.xlsx",
+  sheet = "LASSO Model Data"
+)
 
 # Step 2: Drop redundant/duplicate ID columns ---------------------------------
 # These caused the 76 "singularity" NAs in the earlier fit3 -- each one is just
@@ -502,14 +494,41 @@ library(coefplot)
 # Define every object used below so the LASSO section runs in a clean session.
 data_all <- dat
 target <- "target_homeless_rate_per_10k"
-controls <- c("control_state_florida", "control_time_index")
+expected_input_md5 <- "5d3fd16b32c687e5207ea59c902e7bef"
+actual_input_md5 <- unname(
+  tools::md5sum("outputs/lasso_model/CA_FL_LASSO_MODEL_INPUT_v2.xlsx")
+)
+
+if (!identical(actual_input_md5, expected_input_md5)) {
+  stop(
+    "LASSO input MD5 mismatch. Expected ", expected_input_md5,
+    "; found ", actual_input_md5
+  )
+}
+
+if (nrow(data_all) != 887L ||
+    length(unique(data_all$coc_number)) != 70L) {
+  stop("Unexpected LASSO input shape; expected 887 rows across 70 CoCs.")
+}
+
+state_control <- "control_state_florida"
+year_control <- "predictor_year"
+# This sensitivity run uses year fixed effects rather than the linear time
+# index. The original `control_time_index` is deliberately excluded.
+controls <- state_control
+unpenalized_terms <- c(state_control, year_control)
 
 excluded_columns <- c(
   "state", "state_abbr", "coc_number", "coc_name",
-  "predictor_year", "target_year", target, controls
+  "predictor_year", "target_year", target, state_control,
+  "control_time_index"
 )
 
 predictors <- setdiff(names(data_all), excluded_columns)
+
+if (length(predictors) != 38L) {
+  stop("Expected 38 candidate predictors; found ", length(predictors), ".")
+}
 
 length(predictors)   # should return 38
 ```
@@ -568,8 +587,20 @@ data_log[[target]] <- log(data_log[[target]])
 ## Building the design matrix
 
 ```{r}
-# keep only the columns that go into the model
-fit_data <- data_log[, c(target, controls, predictors)]
+# Keep the state control, then convert predictor year into categorical fixed
+# effects. 2011 is the reference year; model.matrix creates one indicator for
+# each later observed year.
+fit_data <- data_log[, c(target, state_control, year_control, predictors)]
+fit_data[[year_control]] <- factor(
+  fit_data[[year_control]],
+  levels = sort(unique(fit_data[[year_control]]))
+)
+
+numeric_fit_cols <- vapply(fit_data, is.numeric, logical(1))
+if (anyNA(fit_data) ||
+    any(!is.finite(as.matrix(fit_data[, numeric_fit_cols, drop = FALSE])))) {
+  stop("The categorical-year LASSO inputs contain NA, NaN, or Inf values.")
+}
 
 # Y is the response, X is the matrix of predictors.
 # model.matrix() builds X and handles any categorical variables for us.
@@ -577,7 +608,13 @@ fit_data <- data_log[, c(target, controls, predictors)]
 Y <- fit_data[[target]]
 X <- model.matrix(target_homeless_rate_per_10k ~ ., data = fit_data)[, -1]
 
-dim(X)     # 887 rows, 40 columns (38 predictors + 2 controls)
+year_dummy_cols <- grep(
+  paste0("^", year_control),
+  colnames(X),
+  value = TRUE
+)
+
+dim(X)     # 887 rows, 51 columns (38 predictors + state + 12 year indicators)
 ```
 
 ## Choosing lambda by cross validation
@@ -585,13 +622,17 @@ dim(X)     # 887 rows, 40 columns (38 predictors + 2 controls)
 `lambda` controls how hard the penalty shrinks. Cross validation estimates the
 prediction error at each lambda so we can pick one.
 
-We also **force the two controls into the model** by giving them a penalty
-factor of 0, so state and year are always adjusted for no matter how strong the
-penalty gets.
+We **force the state control and every categorical year indicator into the
+model** by giving them a penalty factor of 0. This adjusts within the observed
+years without forcing the relationship with time to be linear.
 
 ```{r}
-# penalty factor: 0 = never shrink this variable, 1 = shrink normally
-pf <- ifelse(colnames(X) %in% controls, 0, 1)
+# penalty factor: 0 = never shrink a control, 1 = shrink a candidate predictor
+pf <- ifelse(
+  colnames(X) %in% c(state_control, year_dummy_cols),
+  0,
+  1
+)
 
 set.seed(10)   # cross validation splits randomly, so we fix the seed
 fit_cv <- cv.glmnet(X, Y, alpha = 1, nfolds = 10,
@@ -632,8 +673,8 @@ many coefficients are still non-zero.
 coef_min <- extract.coef(fit_cv, lambda = "lambda.min")
 coef_1se <- extract.coef(fit_cv, lambda = "lambda.1se")
 
-nrow(coef_min) - 1   # minus 1 for the intercept -- expect 27
-nrow(coef_1se) - 1   # expect 16
+nrow(coef_min) - 1   # includes the unpenalized state and year controls
+nrow(coef_1se) - 1
 coef_min
 ```
 
@@ -651,22 +692,36 @@ standard fix is to take the variables it picked and refit them with plain `lm()`
 This is called the **relaxed LASSO**.
 
 ```{r}
-# the variable names LASSO selected at lambda.min
-var_min <- setdiff(coef_min$Coefficient, "(Intercept)")
+# Keep all prespecified controls, then add only the substantive predictors
+# selected by LASSO. The factor is retained as one term, rather than trying to
+# use model.matrix's individual dummy-column names in lm().
+selected_predictors_min <- intersect(
+  setdiff(coef_min$Coefficient, "(Intercept)"),
+  predictors
+)
 
 # refit those variables with ordinary regression
-fit_lm <- lm(as.formula(paste(target, "~", paste(var_min, collapse = " + "))),
-             data = fit_data)
+fit_lm <- lm(
+  as.formula(
+    paste(
+      target,
+      "~",
+      paste(c(unpenalized_terms, selected_predictors_min), collapse = " + ")
+    )
+  ),
+  data = fit_data
+)
 summary(fit_lm)
-summary(fit_lm)$adj.r.squared     # expect 0.6436
+summary(fit_lm)$adj.r.squared
 ```
 
 ```{r}
-# how many of the 27 are actually significant?
-sum(summary(fit_lm)$coefficients[-1, 4] < 0.05)   # expect 18
+# Descriptive only: the relaxed refit reuses the data that selected the terms.
+sum(summary(fit_lm)$coefficients[-1, 4] < 0.05)
 ```
 
-Only 18 of 27 clear the 0.05 bar, so there is still trimming to do.
+These p-values are descriptive only, so backward selection is shown as an
+interpretability exercise rather than confirmatory inference.
 
 ## Fine-tuning with backward selection
 
@@ -686,7 +741,7 @@ repeat {
   # Controls stay for adjustment even when their own p-values exceed 0.05.
   removable_pvals <- pvals[
     !is.na(pvals) &
-      !names(pvals) %in% c("Residuals", controls)
+      !names(pvals) %in% c("Residuals", unpenalized_terms)
   ]
 
   # Stop once every remaining non-control predictor is significant.
@@ -704,15 +759,15 @@ fit_final <- fit_back
 ```
 
 ```{r}
-length(coef(fit_final)) - 1              # expect 21 predictors
+length(coef(fit_final)) - 1
 
 summary(fit_final)
-summary(fit_final)$adj.r.squared         # expect about 0.6445
+summary(fit_final)$adj.r.squared
 ```
 
-Six substantive predictors came out and the adjusted R-squared barely moved
-(0.6436 to about 0.6445). That is the point -- those six were costing us model
-complexity without adding explanation.
+Any terms removed here are a compact descriptive specification, not an
+independent validation result. The categorical year effect remains in the model
+throughout as a prespecified control.
 
 Worth noticing: **`control_state_florida` remains in the model as a prespecified
 control but is not individually significant.** After accounting for the
@@ -768,7 +823,311 @@ nothing above tests whether we can predict a *future* year. Different years
 from the same CoC can also appear in both training and validation folds, so the
 cross-validation error may be optimistic for predicting entirely new CoCs.
 
----
+***
+## Rolling-origin LASSO
+
+Categorical year fixed effects are not usable for this out-of-time exercise:
+the future test year has no estimated year effect. Therefore, the categorical
+year sensitivity above is limited to random-fold CV within the observed years.
+This retained rolling-origin benchmark reconstructs the original linear time
+control so it remains a valid future-year comparison; it is not a test of the
+categorical-year specification.
+
+For example, when testing 2025:
+
+1. Fit candidate lambdas using years through 2023.
+2. Select lambda using prediction error in 2024.
+3. Refit the model using all observations through 2024.
+4. Predict 2025.
+
+```{r rolling-origin-lasso}
+# Build the original, extrapolatable time-control matrix separately from the
+# categorical-year sensitivity matrix used above.
+rolling_controls <- c("control_state_florida", "control_time_index")
+rolling_fit_data <- data_log[, c(target, rolling_controls, predictors)]
+X_rolling <- model.matrix(
+  target_homeless_rate_per_10k ~ .,
+  data = rolling_fit_data
+)[, -1, drop = FALSE]
+pf_rolling <- ifelse(colnames(X_rolling) %in% rolling_controls, 0, 1)
+
+rolling_years <- c(
+  2017, 2018, 2019, 2020,
+  2022, 2023, 2024, 2025
+)
+
+rolling_results <- vector(
+  "list",
+  length(rolling_years)
+)
+
+rolling_importance <- vector(
+  "list",
+  length(rolling_years)
+)
+
+for (i in seq_along(rolling_years)) {
+
+  test_year <- rolling_years[i]
+
+  # -----------------------------------------------------------
+  # Outer split:
+  # Train on every year before the test year.
+  # Test only on the selected future year.
+  # -----------------------------------------------------------
+
+  outer_train <- which(
+    data_all$target_year < test_year
+  )
+
+  outer_test <- which(
+    data_all$target_year == test_year
+  )
+
+  # -----------------------------------------------------------
+  # Inner split:
+  # Use the latest available training year to select lambda.
+  # -----------------------------------------------------------
+
+  years_in_training <- data_all$target_year[outer_train]
+
+  tune_year <- max(years_in_training)
+
+  inner_train <- outer_train[
+    years_in_training < tune_year
+  ]
+
+  inner_valid <- outer_train[
+    years_in_training == tune_year
+  ]
+
+  # -----------------------------------------------------------
+  # Fit the complete LASSO path using only observations before
+  # the lambda-tuning year.
+  # -----------------------------------------------------------
+
+  tuning_fit <- glmnet(
+    x = X_rolling[inner_train, , drop = FALSE],
+    y = Y[inner_train],
+    alpha = 1,
+    penalty.factor = pf_rolling
+  )
+
+  # -----------------------------------------------------------
+  # Predict the next chronological year using every candidate
+  # lambda produced by glmnet.
+  # -----------------------------------------------------------
+
+  tuning_predictions <- predict(
+    tuning_fit,
+    newx = X_rolling[inner_valid, , drop = FALSE],
+    s = tuning_fit$lambda
+  )
+
+  # Calculate validation MSE for every candidate lambda.
+
+  tuning_mse <- colMeans(
+    sweep(
+      tuning_predictions,
+      MARGIN = 1,
+      STATS = Y[inner_valid],
+      FUN = "-"
+    )^2
+  )
+
+  # Select the lambda with the lowest next-year validation MSE.
+
+  best_lambda <- tuning_fit$lambda[
+    which.min(tuning_mse)
+  ]
+
+  # -----------------------------------------------------------
+  # Refit using every observation before the final test year.
+  # -----------------------------------------------------------
+
+  final_rolling_fit <- glmnet(
+    x = X_rolling[outer_train, , drop = FALSE],
+    y = Y[outer_train],
+    alpha = 1,
+    lambda = tuning_fit$lambda,
+    penalty.factor = pf_rolling
+  )
+
+  # -----------------------------------------------------------
+  # Predict the completely unseen test year.
+  #
+  # The LASSO response is log(rate), so exp() returns predictions
+  # to homelessness rates per 10,000.
+  # -----------------------------------------------------------
+
+  predicted_log_rate <- predict(
+    final_rolling_fit,
+    newx = X_rolling[outer_test, , drop = FALSE],
+    s = best_lambda
+  )
+
+  predicted_rate <- exp(
+    as.numeric(predicted_log_rate)
+  )
+
+  # Count the nonzero coefficients selected in this fold.
+
+  number_nonzero <- sum(
+    as.vector(
+      coef(final_rolling_fit, s = best_lambda)
+    )[-1] != 0
+  )
+
+  # Save comparable coefficient importance for this fold.
+  fold_coefficients <- as.vector(
+    coef(final_rolling_fit, s = best_lambda)
+  )[-1]
+
+  training_sd <- apply(
+    X_rolling[outer_train, , drop = FALSE],
+    2,
+    sd
+  )
+
+  rolling_importance[[i]] <- data.frame(
+    test_year = test_year,
+    predictor = colnames(X_rolling),
+    coefficient = fold_coefficients,
+    standardized_effect = fold_coefficients * training_sd,
+    selected = abs(fold_coefficients) > 1e-8
+  )
+
+  # Save the results from this test year.
+
+  rolling_results[[i]] <- data.frame(
+    test_year = test_year,
+    tune_year = tune_year,
+    actual = data_all[[target]][outer_test],
+    predicted = predicted_rate,
+    lambda = best_lambda,
+    nonzero_coefficients = number_nonzero
+  )
+}
+
+# Combine the results from all eight test years.
+
+rolling_lasso <- dplyr::bind_rows(
+  rolling_results
+)
+
+rolling_importance_all <- dplyr::bind_rows(
+  rolling_importance
+)
+
+head(rolling_lasso)
+```
+
+## Overall rolling-origin results
+
+```{r rolling-lasso-results}
+rolling_lasso_score <- data.frame(
+
+  observations = nrow(rolling_lasso),
+
+  RMSE = sqrt(
+    mean(
+      (rolling_lasso$actual -
+         rolling_lasso$predicted)^2
+    )
+  ),
+
+  MAE = mean(
+    abs(
+      rolling_lasso$actual -
+        rolling_lasso$predicted
+    )
+  ),
+
+  R2 = 1 -
+    sum(
+      (rolling_lasso$actual -
+         rolling_lasso$predicted)^2
+    ) /
+    sum(
+      (rolling_lasso$actual -
+         mean(rolling_lasso$actual))^2
+    )
+)
+
+round(rolling_lasso_score, 3)
+```
+
+The rolling-origin LASSO is evaluated on 555 future-year observations. Its
+overall results are approximately:
+
+- RMSE: 16.50
+- MAE: 10.07
+- Predictive R-squared: 0.542
+
+These are out-of-time results: neither coefficient fitting nor lambda selection
+uses observations from the final test year.
+
+## Rolling-origin results by year
+
+```{r rolling-lasso-by-year}
+rolling_lasso_by_year <- rolling_lasso %>%
+  group_by(test_year, tune_year) %>%
+  summarise(
+    observations = n(),
+
+    RMSE = sqrt(
+      mean((actual - predicted)^2)
+    ),
+
+    lambda = first(lambda),
+
+    nonzero_coefficients =
+      first(nonzero_coefficients),
+
+    .groups = "drop"
+  )
+
+rolling_lasso_by_year
+```
+
+## Factors selected by the rolling LASSO
+
+Because rolling-origin evaluation fits eight models, there is no single
+coefficient table. The most stable predictors are the ones selected in the
+largest number of test-year folds. Standardized effects make coefficient
+magnitudes comparable across predictors measured in different units.
+
+```{r rolling-lasso-importance}
+importance_table <- rolling_importance_all %>%
+  filter(!predictor %in% controls) %>%
+  group_by(predictor) %>%
+  summarise(
+    folds_selected = sum(selected),
+    selection_rate = mean(selected),
+    mean_abs_standardized_effect = if (any(selected)) {
+      mean(abs(standardized_effect[selected]))
+    } else {
+      0
+    },
+    average_direction = case_when(
+      mean(standardized_effect) > 0 ~ "Positive",
+      mean(standardized_effect) < 0 ~ "Negative",
+      TRUE ~ "None"
+    ),
+    .groups = "drop"
+  ) %>%
+  arrange(
+    desc(folds_selected),
+    desc(mean_abs_standardized_effect)
+  )
+
+importance_table
+```
+
+`folds_selected` ranges from 0 to 8. Predictors selected in most or all folds
+are the most consistently useful for future-year prediction. Direction
+describes association, not causation.
+
 # Neural Network
 
 ## What changes for a neural network
@@ -807,10 +1166,12 @@ trains only on years before the validation year, then predicts that year once.
 
 ```{r}
 # the eight years we validate on (2021 is absent -- COVID)
-valid_years <- c(2017, 2018, 2019, 2020, 2022, 2023, 2024, 2025)
+valid_years <- rolling_years
 
-# the columns the network sees: 2 controls + 38 predictors = 40 inputs
-nn_features <- c(controls, predictors)
+# The neural-net benchmark retains its two numerical controls; it is separate
+# from the categorical-year LASSO sensitivity above.
+nn_controls <- c("control_state_florida", "control_time_index")
+nn_features <- c(nn_controls, predictors)
 
 # use the ORIGINAL (unlogged) data here, so results compare to the LASSO
 X_all <- as.matrix(data_all[, nn_features])
@@ -965,19 +1326,21 @@ Running the full set of five architectures (in `fit_neural_net.R`) gives:
 |---|---:|---:|---:|
 | Neural net, 32-16 with dropout | **12.64** | 8.43 | **0.731** |
 | Neural net, 16-8 | 12.92 | 9.11 | 0.719 |
-| LASSO with state interactions | 14.69 | 10.14 | 0.636 |
 | Neural net, no hidden layers (= OLS) | 16.06 | 11.46 | 0.565 |
+| Rolling-origin LASSO | 16.50 | 10.07 | 0.542 |
 | State + time baseline | 21.93 | 14.98 | 0.190 |
 
 Two things to read off this table.
 
-**The networks beat the LASSO.** The best is a 14% reduction in RMSE.
+**The hidden-layer networks beat the rolling LASSO.** The best network reduces
+RMSE by about 23% relative to the time-ordered LASSO.
 
-**The no-hidden-layer version tells us why.** With no hidden layers the network
-*is* ordinary least squares, and it does **worse** than the LASSO (16.06 vs
-14.69) -- exactly as expected, since that is the situation the LASSO penalty is
-built for. So the network's advantage comes from **nonlinearity**, not from
-anything else in how it was set up.
+**The no-hidden-layer version helps identify the benefit of hidden layers.**
+It has RMSE 16.06, compared with 12.64 for the best hidden-layer network under
+the same neural-network evaluation setup. That improvement supports the value
+of nonlinear relationships. The linear network and LASSO are close, and they
+should not be treated as numerically identical because they use different
+penalties and training procedures.
 
 ## The catch
 
@@ -995,11 +1358,12 @@ Across the whole run, a single 16-8 network scores anywhere from **14.38 to
 better than *any* individual seed. So a large part of the improvement is
 averaging away instability, not one network being better.
 
-An unlucky seed loses to the LASSO outright. The LASSO, by contrast, is
-deterministic: same data, same answer, every time.
+The weakest seed only narrowly beats the rolling LASSO (16.29 versus 16.50).
+The LASSO, by contrast, is deterministic here: same data, same answer, every
+time.
 
-The honest statement is: **an ensemble of five networks beats the LASSO; a
-single network is better on average but unreliable.**
+The honest statement is: **the ensemble clearly beats the LASSO; individual
+networks are usually better here but substantially less stable.**
 
 ## The result that matters most
 
@@ -1027,17 +1391,18 @@ Two model families with completely different failure modes reached the same
 conclusion: **next-year homelessness is dominated by its own prior level, and
 the predictor set adds little on top of that.**
 
----
+***
 
 # Summary {-}
 
 ```{r}
 #| echo: false
 data.frame(
-  Stage = c("Data", "LASSO", "LASSO", "Neural net", "Both"),
+  Stage = c("Data", "Full-sample LASSO", "Rolling LASSO",
+            "Neural net", "Both"),
   Result = c("887 CoC-years, 70 CoCs, 38 predictors, 0 missing values",
-             "27 variables at lambda.min, 16 at lambda.1se",
-             "Final model: 20 predictors, adjusted R-squared 0.645",
+             "Categorical year sensitivity: 23 candidates at lambda.min, 11 at lambda.1se",
+             "Out-of-time RMSE 16.50, R-squared 0.542",
              "Best out-of-time RMSE 12.64, R-squared 0.731",
              "Predictors add nothing once last year's rate is known"))
 ```
