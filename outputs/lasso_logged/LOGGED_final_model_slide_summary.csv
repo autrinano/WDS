@@ -1,0 +1,21 @@
+predictor,coefficient,direction,nominal_post_selection_p_value
+Time trend (control),-0.0534,Negative,0.000060
+Log estimated population,-0.1112,Negative,1.28e-07
+Population density (log),-0.0727,Negative,8.18e-06
+"Housing units per 1,000 residents",0.0010,Positive,0.00284
+Multifamily permit share,0.0025,Positive,0.01182
+"Permit value per 1,000 housing units (log)",-0.0997,Negative,0.000263
+"Death rate per 1,000",0.0358,Positive,0.00379
+Child poverty rate,-0.0211,Negative,2.15e-05
+Real per-capita personal income (log),0.4377,Positive,5.49e-05
+Unemployment rate,0.0192,Positive,0.01054
+Homeownership rate,-0.0263,Negative,2.09e-08
+Housing-cost-burdened households,-0.0133,Negative,0.00304
+Annual home-price-index change,0.0078,Positive,0.01105
+Real GDP per capita (log),-0.5138,Negative,5.57e-07
+Real GDP quantity index,0.0074,Positive,0.000629
+Real minimum wage,0.1111,Positive,7.30e-08
+"Temporary beds per 10,000 (log)",0.3578,Positive,2.55e-24
+"PSH beds per 10,000 (log)",0.2029,Positive,6.02e-16
+Labor-force participation rate,0.1383,Positive,6.15e-06
+Rental vacancy rate,0.0502,Positive,3.58e-05

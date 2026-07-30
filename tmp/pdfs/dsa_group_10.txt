@@ -1,0 +1,329 @@
+                        DSA Group 10      Wharton Global Youth 2026 Cohort 2
+
+
+
+           IDENTIFYING KEY DRIVERS OF HOMELESSNESS DISPARITIES IN CALIFORNIA AND FLORIDA
+
+
+
+
+SHELTERED DATA
+Presented To :                                                                            Presented By:
+Linda Zhao                                                                            Autrin Anousheh
+Jeffrey Cai                                                                          Vladimir Bessonov
+Donald Moratz                                                                              Neev Grover
+Fred Zhang                                                                            Samya Kheterpal
+Gayoung Jeon                                                                            Yuxuan Huang
+
+
+
+
+                                               Title Page
+   Introduction
+
+
+
+
+                      Despite similar state features, homelessness
+                      varies wildly between CA and FL. Policymakers
+introduction of the   lack data-driven tools to effectively address
+                      the factors associated with the divergence. By
+
+issue                 evaluating key structural factors, we aim to
+                      identify the strongest predictors associated
+                      with the CA–FL disparity.
+
+
+
+
+                                                                2
+the problem we strive to solve
+ 1. CA and FL are both large
+                               We construct a comparative dataset spanning key structural
+   Sunbelt states, yet CA
+                               variables, like housing costs, shelter policy, climate, and mental
+   holds ~30% of U.S.
+                               health/drug policy indicators across both states to move the
+   homelessness while FL's
+                               analysis from anecdotal explanation to statistical comparison.
+   is declining
+
+2.Existing explanations are    Applying LASSO regression and Random Forest models, we
+  qualitative: no model        identify and rank the structural factors most strongly
+  ranks which factors          associated with the CA-FL disparity, replacing single-factor
+  actually predict the gap     intuition with empirically validated predictors.
+
+
+3.Without that ranking,        The resulting ranked coefficient output gives policymakers an
+  policymakers can't target    evidence-based framework for prioritizing interventions toward
+  interventions effectively.   the factors shown to have the greatest impact on the disparity.
+                                                                            Compiled
+                                                                            Data Sources
+                                                      BEA (Economic
+HUD (Dep. Housing &            U.S Census
+                                 Bureau
+                                                      Analytics) + BLS      (FRED -
+Urban Development)                                     (Labor Stat)
+                                                                            Distributor)
+ CoC-level Point-in-Time    CoC-level Population,      CoC-level Personal
+  homelessness counts,     poverty, income, housing      income, GDP,
+    Shelter & housing                                 Unemployment, labor
+  capacity, and FY2024                                       force
+    CoC boundaries.
+Data Aquistion                          Prediction Variables
+
+
+
+
+                             PREDICTION
+                             VARIABLES
+                             Prediction Target - Homelessness rate per 10k CoC residents.
+                             Splitting 38 predictors into categories:
+                               1.Housing Supply, Market and Affordability. (e.g
+                                 housing_supply_growth, median_rent)
+                               2. Economic Conditions. (e.g household_income)
+                               3. Population/Migration. (e.g birth_rate)
+                               4.Policy and Safety Net. (e.g minimum_wage)
+                               5.Geographical. (e.g population_density)
+                               6.Homelessness-Service. (e.g temporary_shelter_beds)
+
+
+
+                 Data Aquisition
+                              Data Acquistion                        Data Cleaning
+
+
+
+
+DATA
+CLEANING
+1.Selected the reliable government sources.
+  Standardized identifier fields using Codex.
+2.Converted county data to CoC estimates using
+  population-weighted geographic matching.
+3.Removed unreliable or incomplete rows, including
+  the 2021 target, heavily impacted due to COVID
+  interference and validated the final dataset.
+
+
+
+
+                                                     Data Cleaning
+Key Models
+
+
+ Multiple              Rolling Origin    Neural   Random
+             Relaxed
+Regression                LASSO         Network    Forest
+             LASSO
+                     Models           Model 1: Multiple Regression
+
+
+
+
+MULTIPLE
+REGRESSION
+ State Florida coefficient = -0.611
+ 16 of 40 predictors significant
+ANOVA
+Results
+Significant variables:
+
+Log temporary beds per 10,000
+& log PSH beds per 10,000
+Model Diagnostics
+                  Models              Model 2: RELAXED Lasso
+
+
+
+
+RELAXED
+LASSO
+             →
+λmin = 0.00221 lowest CV error.
+CV MSE = 0.1869
+             →
+λ1se = 0.01709 simpler alternative.
+λmin: 27 variables.
+λ1se: 16 variables.
+                     Models                   Model 2: RELAXED Lasso Findings
+
+
+
+
+RELAXED
+LASSO
+Selected by LASSO at λmin: 27
+Significant in initial refit: 18 of 27
+Retained after backward refit: 21
+Full regression: 40 predictors, adjusted R²
+= 0.6415
+Final LASSO model: 21 predictors,
+adjusted R² = 0.6445
+Similar explanatory power with half as
+many predictors
+                        Models                     Model 3: ROLLING ORIGIN Lasso
+
+
+
+
+ROLLING
+ORIGIN
+LASSO
+Chronological validation prevents future
+years from entering model training
+Train on earlier years, tune on the latest prior
+year, refit on all prior data, then test on the
+future year
+Eight test years used: 2017-2025 (2021
+unavailable)
+RMSE: 16.5, MAE: 10.07, R2: 0.542
+                    Models                 Model 4: Neural Network Structure
+
+
+
+
+NEURAL
+NETWORK
+38 predictor columns in, next-year
+homeless rate per 10,000 is the
+output
+Same eight rolling-origin folds as the
+LASSO
+Five architectures tested
+R² 0.731
+ for the best architecture vs. 16.06 for
+the linear model— gain from
+nonlinearity.
+                  Models        Model 5: Random Forest
+
+
+
+
+RANDOM
+FOREST
+Captures nonlinear patterns.
+Predicts next-year CoC
+homelessness through yes/no
+threshold Qs.
+One tree is easy to interpret
+but unstable: small changes
+can change splits.
+                   Models            Model 5: Random Forest
+
+
+
+
+RANDOM
+FOREST
+Solves instability: 250 different
+decision trees averaged together.
+Chooses only a few vars and a
+random sample of rows
+Evaluated using future year
+performance
+RMSE: 11.27; MAE: 8.03; R²: 0.786.
+Outperformed other models
+                    Models   Model 5: Random Forest Findings
+
+
+
+
+RANDOM
+FOREST
+We remove one
+predictor at a time and
+see how much the
+model worsens.
+This is associative, not
+causal.
+                            Total Findings
+         01                           02                        03
+
+
+   Finding 1                     Finding 2                 Finding 3
+Temporary/permanent               Housing market
+                                                            Countering all
+  beds per 10K are the             composition is
+                                                        assumptions, poverty
+most influential factors,      correlated with higher
+                                                        rate is not significant.
+ with CA exceeding FL.          homelessness in CA.
+                                 Limitations
+
+     01                         02                            03                     04
+Assosciation, not            Variable set               Data assembled           Two state design
+causation, is the            shaped by                   from various                restricts
+  focus of our                predictor                     sources.             inference about
+     study.                  availability                                          policy effect.
+
+
+
+
+                    Correlated predictor clusters limit individual attribution             05
+AI Usage                            Prediction Variables
+
+
+
+
+                       AI
+                       USAGE
+                       Helped with building and debugging R scripts.
+                             Used as a learning and editing aid to resolve coding challenges and
+                             answer questions.
+                             Separate agents handled independent auditing, being isolated from
+                             each other's work.
+                             Helped us ensure data accuracy.
+
+
+
+
+           Data Aquisition
+                                            Citations
+HUD PIT Counts (2007-2015): https://www.huduser.gov/portal/datasets/ahar/2025-ahar-part-1-pit-estimates-of-homelessness-in-
+the-us.html
+HUD HIC by CoC: https://www.huduser.gov/portal/datasets/ahar/2025-ahar-part-1-pit-estimates-of-homelessness-in-the-us.html
+HUD FY2024 CoC Grantee Area ArcGIS Layer: https://www.huduser.gov/portal/datasets/ahar/2025-ahar-part-1-pit-estimates-of-
+homelessness-in-the-us.html
+Census 2024 TIGER/Line tract: https://www2.census.gov/geo/tiger/TIGER2024/TRACT/
+Census ACS 2024, census-tract level: https://www2.census.gov/geo/tiger/TIGER2024/TRACT/
+Census SAIPE: https://www.census.gov/programs-surveys/saipe/data/datasets.html
+ACS 5-years: https://www.census.gov/data/developers/data-sets/acs-5year.html
+FHFA Annual County HPI: https://www.fhfa.gov/data/hpi
+Zillow sale price and rent: https://www.zillow.com/research/data/
+BEA Personal income, GDP by county: https://www.bea.gov/data/by-place-county-metro-local
+BLS Unemployment, labor force: https://www.bls.gov/lau/
+Envicion by Princeton Eviction Lab: https://evictionlab.org/map/?
+m=modeled&c=p&b=efr&s=all&r=states&y=2018&z=3.70&lat=38.14&lon=-97.50&lang=en
+Minimum wage: https://www.dol.gov/agencies/whd/minimum-wage/state
+Medicaid expansion: https://www.kff.org/affordable-care-act/state-indicator/state-activity-around-expanding-medicaid-under-
+the-affordable-care-act/?
+currentTimeframe=0&sortModel=%7B%22colId%22:%22Location%22,%22sort%22:%22asc%22%7D
+TANF: https://my.dpss.lacounty.gov/public/en/home/epolicy/program/calworks/payments/calworks-maximum-aid-payment.html
+SSI: https://my.dpss.lacounty.gov/public/en/home/epolicy/program/calworks/payments/calworks-maximum-aid-payment.html
+Anti-camping(Cali): https://my.dpss.lacounty.gov/public/en/home/epolicy/program/calworks/payments/calworks-maximum-aid-
+payment.html
+Anti-camping(Fl): https://www.flsenate.gov/Session/Bill/2024/1365
+Federal homelessness funding: https://www.usaspending.gov/download_center/custom_award_data
+                 DSA Group 10   Wharton Global Youth 2026 Cohort 2
+
+
+
+
+THANK YOU
+Presented To :
+Linda Zhao
+Jeffrey Cai
+Donald Moratz
+                                                                          Presented By:
+                                                                      Autrin Anousheh
+                                                                     Vladimir Bessonov
+                                                                           Neev Grover
+Fred Zhang                                                            Samya Kheterpal
+Gayoung Jeon                                                            Yuxuan Huang
+
+
+
+
+                                     Final Page
+

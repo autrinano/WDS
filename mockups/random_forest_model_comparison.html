@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Random Forest Model Comparison - Slide Mockup</title>
+  <style>
+    :root {
+      --ink: #15171e;
+      --muted: #6f7481;
+      --line: #dedfe4;
+      --soft: #f2f2f4;
+      --forest: #52b382;
+      --forest-dark: #28765a;
+      --neural: #dc8b75;
+      --lasso: #6187dc;
+      --baseline: #a1a7b5;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: #e6e8ed;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    /* A fixed 1920 x 1080 presentation canvas, scaled only to fit the window. */
+    .stage {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      padding: 52px 82px 42px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 28px;
+      background: #fff;
+      box-shadow: 0 22px 55px rgb(20 28 43 / 20%);
+      transform-origin: center center;
+    }
+
+    .topbar {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      border-radius: 999px;
+      background: #e9e9ea;
+      font-size: 25px;
+    }
+
+    .section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
+
+    .section-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--ink);
+      color: white;
+      font-size: 18px;
+    }
+
+    .model-number { font-size: 29px; }
+
+    .content {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 35% 1fr;
+      gap: 55px;
+      align-items: stretch;
+    }
+
+    .intro {
+      padding: 28px 0 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--forest-dark);
+      font-size: 17px;
+      font-weight: 850;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 460px;
+      margin: 0 0 24px;
+      font-size: 106px;
+      line-height: .86;
+      letter-spacing: -.075em;
+    }
+
+    .lead {
+      max-width: 430px;
+      margin: 0 0 25px;
+      color: #31343d;
+      font-size: 25px;
+      line-height: 1.3;
+    }
+
+    .facts {
+      display: grid;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 22px;
+      line-height: 1.22;
+    }
+
+    .facts li {
+      display: grid;
+      grid-template-columns: 10px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .facts li::before {
+      width: 10px;
+      height: 10px;
+      margin-top: .34em;
+      border-radius: 50%;
+      background: var(--forest);
+      content: "";
+    }
+
+    .chart-card {
+      min-width: 0;
+      padding: 36px 42px 30px;
+      border-radius: 36px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 22px;
+      color: #f8f9fb;
+      background: var(--ink);
+    }
+
+    .chart-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 36px;
+      letter-spacing: -.035em;
+    }
+
+    .subhead {
+      margin: 6px 0 0;
+      color: #b9bec9;
+      font-size: 18px;
+    }
+
+    .chip {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      border: 1px solid #4b5160;
+      border-radius: 999px;
+      color: #d8dbe2;
+      font-size: 14px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .metric-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 13px;
+    }
+
+    .metric {
+      padding: 15px 17px;
+      border-radius: 14px;
+      background: #252932;
+    }
+
+    .metric .label {
+      display: block;
+      color: #aeb4c0;
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--forest);
+      font-size: 31px;
+      letter-spacing: -.035em;
+    }
+
+    .bars {
+      min-height: 0;
+      display: grid;
+      align-content: space-between;
+      gap: 13px;
+      padding: 8px 0 2px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 235px 1fr 56px;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .bar-label {
+      color: #d9dce3;
+      font-size: 16px;
+      text-align: right;
+    }
+
+    .track {
+      height: 31px;
+      overflow: hidden;
+      border-radius: 6px;
+      background: #30343f;
+    }
+
+    .bar {
+      height: 100%;
+      min-width: 8px;
+      border-radius: 6px;
+      background: var(--baseline);
+    }
+
+    .bar.lasso { background: var(--lasso); }
+    .bar.neural { background: var(--neural); }
+    .bar.forest { background: var(--forest); }
+
+    .bar-value {
+      color: #f3f4f7;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .bar-row.rf .bar-label,
+    .bar-row.rf .bar-value { color: var(--forest); font-weight: 850; }
+
+    .footer {
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: #606673;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .footer strong { color: #313641; }
+
+  </style>
+</head>
+<body>
+  <div class="stage">
+  <main class="slide" id="slide" aria-label="Random Forest comparison slide mockup">
+    <header class="topbar">
+      <div class="section"><span class="section-mark">↗</span> Models</div>
+      <div class="model-number">Model 5: Random Forest</div>
+    </header>
+
+    <section class="content">
+      <div class="intro">
+        <p class="eyebrow">Best current factor-only result</p>
+        <h1>RANDOM<br>FOREST</h1>
+        <p class="lead">The ensemble reduced the instability of a single decision tree and produced the lowest out-of-time prediction error.</p>
+        <ul class="facts">
+          <li>250 bootstrap-sampled trees, averaged together</li>
+          <li>A random predictor subset is considered at every split</li>
+          <li>Tested only on eight future-year validation folds</li>
+        </ul>
+      </div>
+
+      <section class="chart-card" aria-label="Out-of-time RMSE by model">
+        <div class="chart-heading">
+          <div>
+            <h2>Out-of-time model comparison</h2>
+            <p class="subhead">Same 555 held-out CoC-year forecasts for every model</p>
+          </div>
+          <div class="chip">Lower RMSE is better</div>
+        </div>
+
+        <div class="metric-strip" aria-label="Random Forest performance">
+          <div class="metric"><span class="label">RMSE</span><strong>11.27</strong></div>
+          <div class="metric"><span class="label">MAE</span><strong>8.03</strong></div>
+          <div class="metric"><span class="label">R²</span><strong>.786</strong></div>
+        </div>
+
+        <div class="bars">
+          <div class="bar-row">
+            <div class="bar-label">State + time baseline</div>
+            <div class="track"><div class="bar" style="width:100%"></div></div><div class="bar-value">21.93</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Pruned decision tree</div>
+            <div class="track"><div class="bar" style="width:81.1%"></div></div><div class="bar-value">17.79</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">OLS, all 40 inputs</div>
+            <div class="track"><div class="bar" style="width:73.2%"></div></div><div class="bar-value">16.06</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Pooled LASSO</div>
+            <div class="track"><div class="bar lasso" style="width:69.8%"></div></div><div class="bar-value">15.30</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">LASSO + state interactions</div>
+            <div class="track"><div class="bar lasso" style="width:67.0%"></div></div><div class="bar-value">14.69</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Neural net, 32–16 + dropout</div>
+            <div class="track"><div class="bar neural" style="width:57.6%"></div></div><div class="bar-value">12.64</div>
+          </div>
+          <div class="bar-row rf">
+            <div class="bar-label">Random Forest</div>
+            <div class="track"><div class="bar forest" style="width:51.4%"></div></div><div class="bar-value">11.27</div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <strong>Comparable evaluation:</strong> 2017–2020 and 2022–2025 rolling-origin test years; two controls plus 38 candidate predictors; no random row-level splits. Relaxed LASSO is excluded because it used random-fold CV.
+    </footer>
+  </main>
+  </div>
+  <script>
+    const slide = document.getElementById('slide');
+    function fitSlide() {
+      slide.style.transform = `scale(${Math.min(innerWidth / 1920, innerHeight / 1080)})`;
+    }
+    addEventListener('resize', fitSlide);
+    fitSlide();
+  </script>
+</body>
+</html>
