@@ -1,21 +1,20 @@
-predictor,coefficient,direction,nominal_post_selection_p_value
-Time trend (control),-0.0534,Negative,0.000060
-Log estimated population,-0.1112,Negative,1.28e-07
-Population density (log),-0.0727,Negative,8.18e-06
-"Housing units per 1,000 residents",0.0010,Positive,0.00284
-Multifamily permit share,0.0025,Positive,0.01182
-"Permit value per 1,000 housing units (log)",-0.0997,Negative,0.000263
-"Death rate per 1,000",0.0358,Positive,0.00379
-Child poverty rate,-0.0211,Negative,2.15e-05
-Real per-capita personal income (log),0.4377,Positive,5.49e-05
-Unemployment rate,0.0192,Positive,0.01054
-Homeownership rate,-0.0263,Negative,2.09e-08
-Housing-cost-burdened households,-0.0133,Negative,0.00304
-Annual home-price-index change,0.0078,Positive,0.01105
-Real GDP per capita (log),-0.5138,Negative,5.57e-07
-Real GDP quantity index,0.0074,Positive,0.000629
-Real minimum wage,0.1111,Positive,7.30e-08
-"Temporary beds per 10,000 (log)",0.3578,Positive,2.55e-24
-"PSH beds per 10,000 (log)",0.2029,Positive,6.02e-16
-Labor-force participation rate,0.1383,Positive,6.15e-06
-Rental vacancy rate,0.0502,Positive,3.58e-05
+"predictor","coefficient","direction","nominal_post_selection_p_value","role"
+"Predictor-year fixed effects (control; 2011 reference)",NA,"Categorical",0.000352235878125651,"unpenalized control"
+"State: Florida vs California (control)",-0.432760885606747,"decreases",0.0111515616115944,"unpenalized control"
+"Log estimated population",-0.105121292804358,"decreases",6.1717223976401e-07,"retained term"
+"Population density (log)",-0.0688840566153978,"decreases",3.16508091720596e-05,"retained term"
+"Housing units per 1,000 residents",0.00112401530623849,"increases",0.00163389504749793,"retained term"
+"Multifamily permit share",0.00220029499729628,"increases",0.0270442923097912,"retained term"
+"Permit value per 1,000 housing units (log)",-0.103034822864706,"decreases",0.00016087523001229,"retained term"
+"Death rate per 1,000",0.0357805924657692,"increases",0.0054696122249223,"retained term"
+"Child poverty rate",-0.0230965410922167,"decreases",6.91275516233639e-06,"retained term"
+"Real per-capita personal income (log)",0.455457363930937,"increases",3.64514960191476e-05,"retained term"
+"Unemployment rate",0.0236413106796723,"increases",0.00699016641795988,"retained term"
+"Homeownership rate",-0.0280000510174227,"decreases",1.90313307130621e-08,"retained term"
+"Housing-cost-burdened households",-0.013368416225577,"decreases",0.00436827282912869,"retained term"
+"Real GDP per capita (log)",-0.539492563102053,"decreases",3.06919544883524e-07,"retained term"
+"Real GDP quantity index",0.00703735808580748,"increases",0.00120024150050758,"retained term"
+"Real minimum wage",0.120164038086453,"increases",7.02136110267174e-06,"retained term"
+"Temporary beds per 10,000 (log)",0.349847201044229,"increases",1.84641886621334e-22,"retained term"
+"PSH beds per 10,000 (log)",0.201031448564623,"increases",1.72621298618827e-15,"retained term"
+"Rental vacancy rate",0.0668983351168037,"increases",0.00262134095965031,"retained term"

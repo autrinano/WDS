@@ -1,0 +1,3 @@
+"control","encoding","lasso_treatment","backward_selection_result","final_model_effect","p_value_at_retention_or_removal"
+"Predictor year","Categorical factor: 13 observed predictor years; 2011 is the reference (2020 is absent)","Unpenalized / forced into every LASSO fit","Retained in final relaxed-LASSO model","Separate coefficient for each non-reference year",0.000352235878125651
+"State","Binary categorical indicator: California = 0 (reference), Florida = 1","Unpenalized / forced into every LASSO fit","Retained in final relaxed-LASSO model","-0.4328",0.011151561611594

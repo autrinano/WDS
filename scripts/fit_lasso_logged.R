@@ -2,7 +2,8 @@
 ## fit_lasso_logged.R
 ##
 ## LASSO on a log-transformed homelessness rate and nine log-transformed
-## predictors, following the Module 4 workflow exactly:
+## predictors, with categorical predictor-year fixed effects, following the
+## Module 4 workflow exactly:
 ##
 ##   1. model.matrix()          build the design matrix
 ##   2. cv.glmnet(alpha = 1)    K-fold cross validation to choose lambda
@@ -38,7 +39,11 @@ OUT          <- "outputs/lasso_logged"
 ID_COLS  <- c("state", "state_abbr", "coc_number", "coc_name",
               "predictor_year", "target_year")
 TARGET   <- "target_homeless_rate_per_10k"
-CONTROLS <- c("control_state_florida", "control_time_index")
+STATE_CONTROL      <- "control_state_florida"
+RAW_TIME_CONTROL   <- "control_time_index"
+TIME_FACTOR        <- "control_predictor_year"
+RAW_CONTROL_COLS   <- c(STATE_CONTROL, RAW_TIME_CONTROL)
+CONTROLS           <- c(STATE_CONTROL, TIME_FACTOR)
 
 ## The nine predictors to log.
 LOG_VARS <- c(
@@ -74,13 +79,14 @@ if (!identical(live_md5, EXPECTED_MD5))
        ", found ", live_md5, ". Stopping.")
 
 dat <- read.xlsx(INPUT_XLSX, sheet = INPUT_SHEET)
-PREDICTORS <- setdiff(names(dat), c(ID_COLS, TARGET, CONTROLS))
+PREDICTORS <- setdiff(names(dat), c(ID_COLS, TARGET, RAW_CONTROL_COLS))
 stopifnot(nrow(dat) == 887, length(PREDICTORS) == 38)
 
-chk <- dat[, c(TARGET, CONTROLS, PREDICTORS)]
+chk <- dat[, c(TARGET, RAW_CONTROL_COLS, PREDICTORS)]
 bad <- vapply(chk, function(z) sum(!is.finite(z)), integer(1))
 if (any(bad > 0)) stop("Missing or infinite values in: ",
                        paste(names(bad)[bad > 0], collapse = ", "))
+if (anyNA(dat$predictor_year)) stop("Missing predictor years.")
 msg("Data loaded: %d rows, %d predictors, no missing values.",
     nrow(dat), length(PREDICTORS))
 
@@ -122,6 +128,15 @@ write_owned(tf, file.path(OUT, "LOGGED_transformation_log.csv"))
 msg("Logged the target and %d predictors (%d used log(1+x)).",
     length(LOG_VARS), sum(tf$transform == "log(1 + x)"))
 
+## Replace the former linear time index with year fixed effects.  The first
+## observed predictor year (2011) is the reference category; 2020 is absent
+## because its corresponding 2021 PIT target is excluded by project design.
+time_levels <- sort(unique(dat$predictor_year))
+model_dat[[TIME_FACTOR]] <- factor(dat$predictor_year, levels = time_levels)
+time_reference <- as.character(time_levels[1])
+msg("Time control: %d categorical predictor-year levels; %s is the reference.",
+    length(time_levels), time_reference)
+
 ## ---------------------------------------------------------------------------
 ## Step 1: design matrix
 ## ---------------------------------------------------------------------------
@@ -138,7 +153,11 @@ msg("\nDesign matrix: %d rows x %d columns.", nrow(X.fl), ncol(X.fl))
 ## penalty.factor to 0, the technique from the "Force in" slide.
 ## ---------------------------------------------------------------------------
 
-pf <- ifelse(colnames(X.fl) %in% CONTROLS, 0, 1)
+time_dummy_cols <- grep(paste0("^", TIME_FACTOR), colnames(X.fl), value = TRUE)
+if (length(time_dummy_cols) != length(time_levels) - 1L)
+  stop("Unexpected number of time-indicator columns in the design matrix.")
+control_design_cols <- c(STATE_CONTROL, time_dummy_cols)
+pf <- ifelse(colnames(X.fl) %in% control_design_cols, 0, 1)
 
 set.seed(10)
 fit.fl.cv <- cv.glmnet(X.fl, Y, alpha = 1, nfolds = 10, intercept = TRUE,
@@ -164,7 +183,7 @@ write_owned(cv_tbl, file.path(OUT, "LOGGED_cv_summary.csv"))
 ## The two plots from the slides.
 png(file.path(OUT, "figures", "LOGGED_01_cv_curve.png"),
     width = 1000, height = 700, res = 130)
-plot(fit.fl.cv); title("cv.glmnet: log target, 9 logged predictors", line = 2.6)
+plot(fit.fl.cv); title("cv.glmnet: log target, categorical year controls", line = 2.6)
 dev.off()
 
 png(file.path(OUT, "figures", "LOGGED_02_coefficient_path.png"),
@@ -187,6 +206,10 @@ names(coef.1se)[names(coef.1se) == "Value"] <- "coefficient"
 coef.min$lambda_rule <- "lambda.min"; coef.1se$lambda_rule <- "lambda.1se"
 class_coefs <- rbind(coef.min, coef.1se)
 class_coefs$logged_variable <- class_coefs$Coefficient %in% LOG_VARS
+class_coefs$control_type <- ifelse(
+  class_coefs$Coefficient == STATE_CONTROL, "state (binary)",
+  ifelse(class_coefs$Coefficient %in% time_dummy_cols, "time (categorical)", "")
+)
 write_owned(class_coefs, file.path(OUT, "LOGGED_class_coefficients.csv"))
 
 msg("\nSelected at lambda.min: %d variables. At lambda.1se: %d.",
@@ -196,14 +219,24 @@ msg("\nSelected at lambda.min: %d variables. At lambda.1se: %d.",
 ## Step 4: Relaxed LASSO -- refit the selected variables with lm()
 ## ---------------------------------------------------------------------------
 
-keep <- intersect(var.min, names(fit_frame))
+## glmnet represents a factor as separate columns, while lm() should receive
+## the factor name once so it estimates all year effects together.
+selected_lm_terms <- function(selected_columns) {
+  selected_terms <- selected_columns[!selected_columns %in% time_dummy_cols]
+  if (any(selected_columns %in% time_dummy_cols))
+    selected_terms <- c(selected_terms, TIME_FACTOR)
+  unique(selected_terms)
+}
+keep <- unique(c(CONTROLS,
+                 intersect(selected_lm_terms(var.min), names(fit_frame))))
 fit.min.lm <- lm(as.formula(paste(TARGET, "~", paste(keep, collapse = " + "))),
                  data = fit_frame)
 s0 <- summary(fit.min.lm)
 msg("\nRelaxed LASSO lm(): %d predictors, adj R2 = %.4f, %d significant at .05",
     length(keep), s0$adj.r.squared,
     sum(s0$coefficients[-1, 4] < .05))
-writeLines(capture.output(s0), file.path(OUT, "LOGGED_relaxed_lasso_summary.txt"))
+writeLines(sub("[[:space:]]+$", "", capture.output(s0)),
+           file.path(OUT, "LOGGED_relaxed_lasso_summary.txt"))
 
 relaxed <- data.frame(term = rownames(s0$coefficients),
                       estimate = s0$coefficients[, 1],
@@ -248,7 +281,8 @@ msg("Final model: %d predictors, all significant. Adj R2 = %.4f",
     length(final_terms), s$adj.r.squared)
 
 write_owned(steps, file.path(OUT, "LOGGED_backward_selection_steps.csv"))
-writeLines(capture.output(s), file.path(OUT, "LOGGED_final_model_summary.txt"))
+writeLines(sub("[[:space:]]+$", "", capture.output(s)),
+           file.path(OUT, "LOGGED_final_model_summary.txt"))
 
 final_tbl <- data.frame(term = rownames(s$coefficients),
                         estimate = s$coefficients[, 1],
@@ -260,6 +294,99 @@ final_tbl$logged_variable <- final_tbl$term %in% LOG_VARS
 final_tbl$direction <- ifelse(final_tbl$estimate > 0, "increases", "decreases")
 final_tbl$direction[final_tbl$term == "(Intercept)"] <- ""
 write_owned(final_tbl, file.path(OUT, "LOGGED_final_model_coefficients.csv"))
+
+## Slide-facing control and finding summaries.  The year control is a single
+## categorical lm() term (with multiple level coefficients), so report its
+## joint Type-II test rather than pretending it has one slope.
+final_anova <- Anova(fit.final, type = "II")
+term_p <- function(term) {
+  if (term %in% rownames(final_anova))
+    as.numeric(final_anova[term, "Pr(>F)"])
+  else NA_real_
+}
+drop_p <- function(term) {
+  hit <- steps[steps$dropped == term, , drop = FALSE]
+  if (nrow(hit) == 1) hit$p_value else NA_real_
+}
+time_retained  <- TIME_FACTOR %in% rownames(final_anova)
+state_retained <- STATE_CONTROL %in% rownames(final_anova)
+
+control_note <- data.frame(
+  control = c("Predictor year", "State"),
+  encoding = c(
+    sprintf("Categorical factor: %d observed predictor years; %s is the reference (2020 is absent)",
+            length(time_levels), time_reference),
+    "Binary categorical indicator: California = 0 (reference), Florida = 1"
+  ),
+  lasso_treatment = c("Unpenalized / forced into every LASSO fit",
+                      "Unpenalized / forced into every LASSO fit"),
+  backward_selection_result = c(
+    if (time_retained) "Retained in final relaxed-LASSO model"
+    else "Dropped; it added no remaining explanatory value after the retained terms",
+    if (state_retained) "Retained in final relaxed-LASSO model"
+    else "Dropped; it added no remaining explanatory value after the retained terms"
+  ),
+  final_model_effect = c(
+    if (time_retained) "Separate coefficient for each non-reference year"
+    else "Not retained",
+    if (state_retained) sprintf("%.4f", unname(final_tbl$estimate[final_tbl$term == STATE_CONTROL]))
+    else "Not retained"
+  ),
+  p_value_at_retention_or_removal = c(
+    if (time_retained) term_p(TIME_FACTOR) else drop_p(TIME_FACTOR),
+    if (state_retained) term_p(STATE_CONTROL) else drop_p(STATE_CONTROL)
+  ),
+  stringsAsFactors = FALSE
+)
+write_owned(control_note, file.path(OUT, "LOGGED_control_encoding.csv"))
+
+pretty_names <- c(
+  coc_log_estimated_population = "Log estimated population",
+  coc_population_density_per_sq_mile = "Population density (log)",
+  coc_housing_units_per_1000_residents = "Housing units per 1,000 residents",
+  coc_multifamily_permit_share_pct = "Multifamily permit share",
+  coc_permits_value_per_1000_housing_units_2025_usd = "Permit value per 1,000 housing units (log)",
+  coc_death_rate_per_1000 = "Death rate per 1,000",
+  coc_poverty_child_pct = "Child poverty rate",
+  coc_real_per_capita_personal_income_2025_usd = "Real per-capita personal income (log)",
+  coc_unemployment_rate_pct = "Unemployment rate",
+  coc_homeownership_rate_pct = "Homeownership rate",
+  coc_housing_cost_burdened_households_pct = "Housing-cost-burdened households",
+  coc_annual_hpi_change_pct = "Annual home-price-index change",
+  coc_real_gdp_per_capita_2017_usd = "Real GDP per capita (log)",
+  coc_real_gdp_quantity_index = "Real GDP quantity index",
+  state_real_minimum_wage_2025_usd = "Real minimum wage",
+  coc_hic_temporary_beds_per_10k = "Temporary beds per 10,000 (log)",
+  coc_hic_psh_beds_per_10k = "PSH beds per 10,000 (log)",
+  state_labor_force_participation_pct = "Labor-force participation rate",
+  state_rental_vacancy_rate = "Rental vacancy rate",
+  control_state_florida = "State: Florida vs California (control)"
+)
+term_label <- function(term) {
+  if (term %in% names(pretty_names)) pretty_names[[term]]
+  else gsub("_", " ", term)
+}
+factor_levels_in_final <- grep(paste0("^", TIME_FACTOR), final_tbl$term, value = TRUE)
+slide_terms <- final_tbl[
+  final_tbl$term != "(Intercept)" & !final_tbl$term %in% factor_levels_in_final,
+  c("term", "estimate", "direction", "p_value"), drop = FALSE
+]
+slide_terms$predictor <- vapply(slide_terms$term, term_label, character(1))
+slide_terms$role <- ifelse(slide_terms$term == STATE_CONTROL,
+                           "unpenalized control", "retained term")
+slide_terms <- slide_terms[, c("predictor", "estimate", "direction", "p_value", "role")]
+names(slide_terms) <- c("predictor", "coefficient", "direction",
+                        "nominal_post_selection_p_value", "role")
+if (time_retained) {
+  time_row <- data.frame(
+    predictor = sprintf("Predictor-year fixed effects (control; %s reference)", time_reference),
+    coefficient = NA_real_, direction = "Categorical",
+    nominal_post_selection_p_value = term_p(TIME_FACTOR),
+    role = "unpenalized control", stringsAsFactors = FALSE
+  )
+  slide_terms <- rbind(time_row, slide_terms)
+}
+write_owned(slide_terms, file.path(OUT, "LOGGED_final_model_slide_summary.csv"))
 
 ## ---------------------------------------------------------------------------
 ## Step 6: Model diagnosis
